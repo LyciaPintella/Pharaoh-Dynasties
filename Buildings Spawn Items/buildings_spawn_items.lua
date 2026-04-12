@@ -76,7 +76,6 @@ Grand Temple of Zeus - (phar_map_religion_cult_center_grand_temple_zeus_1): Smal
 
 ! Champion's Hall: phar_main_rare_15 (Duellist: +5% Ambush Defence Channce, XP for sword and khopesh units),  phar_main_rare_16 (Blind Veteran: +20% Ambush defence chance, XP for spear units), phar_main_rare_17 (Strongman - +2 Public Order, XP for axe and club units).
 
-
     		* Variants:
 	* phar_main_amenmesse_military_administration_unit_training_type_b_1
 	* phar_main_bay_military_administration_unit_training_type_b_1
