@@ -1,0 +1,30 @@
+{
+	"Lua.workspace.ignoreDir": [
+		".vscode",
+		"docgen.lua",
+		"docgen",
+		"autotest",
+		"unit_balance_testing",
+		"benchmarks",
+		"test_battles",
+		"unit_balance_testing",
+		"bespoke_cincam_testing",
+		"export_ui_metadata.lua",
+		"patch_note_helper",
+		"**/*Older Projects*/**",
+		"**/*[Bb]ackup*/**",
+		"**/*[Ss]crap*/**",
+		"**/*[Ee]xample*/**",
+		"**/*Vanilla*/**",
+		"**/*Autogen*/**",
+	],
+	"files.exclude": {
+		"**/.gitignore": false,
+		"**/.git/**": true,
+		"**/desktop.ini": true,
+		"**/README.md": false,
+		"**/*sync.ffs_*": true,
+		"**/*-Jessica-PC*/**": true,
+		"scrap.lua": true,
+	}
+}

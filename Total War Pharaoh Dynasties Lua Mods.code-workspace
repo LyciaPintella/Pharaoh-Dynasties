@@ -1,0 +1,49 @@
+{
+	"folders": [
+		{
+			"name": "Total War Pharaoh Dynasties Lua Mods",
+			"path": "."
+		},
+		{
+			"name": "Vanilla Lua Scripts",
+			"path": "../../Vanilla Lua Scripts/Pharaoh Dynasties/"
+		},
+	],
+	"settings": {
+		"[lua]": {
+			"editor.quickSuggestions": {
+				"other": true,
+				"comments": true,
+				"strings": true
+			},
+			"editor.quickSuggestionsDelay": 1,
+			"editor.snippetSuggestions": "inline",
+			"editor.tabCompletion": "on",
+			"files.eol": "\n",
+			"files.encoding": "utf8",
+			"editor.suggest.snippetsPreventQuickSuggestions": false,
+			"editor.tabSize": 5,
+			"editor.detectIndentation": false,
+			"editor.defaultFormatter": "Koihik.vscode-lua-format"
+		},
+		"Lua.workspace.library": [
+			"../../TW Lua Autogen - Warhammer III/battle/",
+			"../../TW Lua Autogen - Warhammer III/campaign/",
+			"../../TW Lua Autogen - Warhammer III/frontend/",
+			"../../TW Lua Autogen - Warhammer III/global/",
+			"${3rd}/lfs/library"
+		],
+		"files.exclude": {
+			"**/.gitignore": false,
+			"**/.git/**": true,
+			"**/desktop.ini": true,
+			"**/README.md": false,
+			"**/*sync.ffs_*": true,
+			"**/*-Jessica-PC*/**": true
+		},
+		"metalua-formatter.indentSize": 5,
+		"workbench.colorCustomizations": {
+			"[Just Black + Comments]": {},
+		}
+	}
+}
