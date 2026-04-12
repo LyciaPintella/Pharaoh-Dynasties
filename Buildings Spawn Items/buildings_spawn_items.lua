@@ -137,7 +137,7 @@ Wisdom Codecs: Field Advisor (phar_main_common_general_16 - no effect in data.pa
      * Variant: phar_main_all_province_management_main_building_poc_legitimacy_influence_boost_3
 
 ]] --
-out("anc_mod: INIT.")
+out("Buildings Spawn Ancillaries Mod: INIT.")
 local ancillary_master_list = {
      -- ["building_id"] = {"anc1","anc2"}
 
@@ -416,64 +416,64 @@ local building_spawn_chance = {
 }
 
 core:add_listener("forge_detect", "FactionTurnStart", function(context)
-     out("anc_mod: INIT2.")
+     out("Buildings Spawn Ancillaries Mod: INIT2.")
      for building, anc_list in pairs(ancillary_master_list) do
           if context:faction():building_exists(building) then
-               out("anc_mod: " .. building .. " detected for " .. context:faction():name())
+               out("Buildings Spawn Ancillaries Mod: " .. building .. " detected for " .. context:faction():name())
                return true
           end
      end
-     out("anc_mod: " .. context:faction():name() .. " has no tracked buildings.")
+     out("Buildings Spawn Ancillaries Mod: " .. context:faction():name() .. " has no tracked buildings.")
      return false
 end, function(context)
-     out("anc_mod: Faction has at least one tracked building, but we need to check for others.")
+     out("Buildings Spawn Ancillaries Mod: Faction has at least one tracked building, but we need to check for others.")
      local region_list = context:faction():region_list()
 
      for building, anc_list in pairs(ancillary_master_list) do
-          out("anc_mod: checks for building " .. building)
+          out("Buildings Spawn Ancillaries Mod: checks for building " .. building)
           local chances_to_spawn = return_building_number(building, region_list)
           spawn_ancillaries(context:faction():name(), chances_to_spawn, anc_list, building)
      end
 end, true)
 
 function return_building_number(building_key, region_list)
-     out("anc_mod: func called to find number of " .. building_key)
+     out("Buildings Spawn Ancillaries Mod: func called to find number of " .. building_key)
      local number_to_return = 0
      for i = 0, region_list:num_items() - 1 do
           this_region = region_list:item_at(i)
 
           if this_region:building_exists(building_key) then
-               -- out("anc_mod: "..building_key.."detected in region")
+               -- out("Buildings Spawn Ancillaries Mod: "..building_key.."detected in region")
                local this_slot_list = this_region:slot_list()
 
                for j = 0, this_slot_list:num_items() - 1 do
                     local this_slot = this_slot_list:item_at(j)
 
                     if this_slot:has_building() and this_slot:building():name() == building_key then
-                         out("anc_mod: " .. building_key .. "detected in slot")
+                         out("Buildings Spawn Ancillaries Mod: " .. building_key .. "detected in slot")
                          number_to_return = number_to_return + 1
                     end
                end
           end
      end
-     out("anc_mod: returning value of " .. number_to_return)
+     out("Buildings Spawn Ancillaries Mod: returning value of " .. number_to_return)
      return number_to_return
 end
 
 function spawn_ancillaries(faction, chances, ancillary_list, building)
-     out("anc_mod: func called to spawn ancillaries")
+     out("Buildings Spawn Ancillaries Mod: func called to spawn ancillaries")
      if chances == 0 then
-          out("anc_mod: no buildings, no chance - ending script")
+          out("Buildings Spawn Ancillaries Mod: no buildings, no chance - ending script")
           return
      end
      local dice_roll = building_spawn_chance[building]
-     out("anc_mod: func called to spawn ancillaries2")
-     out("anc_mod: func called to spawn ancillaries2" .. dice_roll)
+     out("Buildings Spawn Ancillaries Mod: func called to spawn ancillaries2")
+     out("Buildings Spawn Ancillaries Mod: func called to spawn ancillaries2" .. dice_roll)
 
      for i = 1, chances do
           if cm:model():random_percent(dice_roll) then
                local random_number = cm:model():random_int(1, #ancillary_list)
-               out("anc_mod: Awarding ancillary: " .. ancillary_list[random_number])
+               out("Buildings Spawn Ancillaries Mod: Awarding ancillary: " .. ancillary_list[random_number])
                cm:add_ancillary_to_faction(faction, ancillary_list[random_number], true)
           end
      end
