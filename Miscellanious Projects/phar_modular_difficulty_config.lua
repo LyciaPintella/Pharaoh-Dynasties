@@ -474,8 +474,8 @@ modular_difficulty_campaign.config = {
           bundle_key = "phar_main_effect_bundle_modular_difficulty_resource_availability",
           effect_key = "troy_effect_economy_add_deposit_stone", -- Pharaoh has only stone deposits in provinces - 22/12/2022
           effect_scope = "faction_to_province_own",
-          low = -3500,                                  -- flat amount to add to a province's current mineral deposits
-          medium = 3500,                                -- flat amount to add to a province's current mineral deposits
+          low = -2500,                                  -- flat amount to add to a province's current mineral deposits
+          medium = 2500,                                -- flat amount to add to a province's current mineral deposits
           high = 5000,                                 -- flat amount to add to a province's current mineral deposits
      },
 
@@ -564,17 +564,17 @@ modular_difficulty_campaign.config = {
           bundle_key = "phar_main_modular_difficulty_player_replenishment",
           effect_key = "phar_sea_unrestricted_replenishment_bonus",
           effect_scope = "faction_to_force_own_factionwide",
-          low = -20,
+          low = -12.5,
           --medium = 25,
-          high = 20,
+          high = 12.50,
      },
 
      ai_replenishment = {
           bundle_key = "phar_main_modular_difficulty_ai_replenishment",
           effect_key = "troy_rem_rhesus_countless_host_unit_replenishment",
           effect_scope = "faction_to_faction_own_unseen",
-          low = -20,
-          medium = 15,
+          low = -12.5,
+          medium = 12.5,
           high = 25,
      },
 
@@ -582,27 +582,27 @@ modular_difficulty_campaign.config = {
           bundle_key = "phar_main_modular_difficulty_ranged_ammo",
           effect_key = "troy_effect_army_ammunitions_all",
           effect_scope = "faction_to_force_own_factionwide",
-          low = -20,
+          low = -15,
           medium = 15,
-          high = 30,
+          high = 25,
      },
 
      player_unit_upkeep = {
           bundle_key = "troy_mth_effect_bundle_mercenaries_from_griffin_dilemma_dummy",
           effect_key = "troy_effect_army_upkeep_mod_all",
           effect_scope = "faction_to_force_own_factionwide",
-          low = -25,
-          medium = 25,
-          high = 35,
+          low = -15,
+          medium = 15,
+          high = 25,
      },
 
      ai_unit_upkeep = {
           bundle_key = "troy_mth_effect_bundle_mercenaries_from_griffin_dilemma_dummy",
           effect_key = "troy_effect_army_upkeep_mod_all",
           effect_scope = "faction_to_force_own_factionwide",
-          low = -25,
-          medium = 25,
-          high = 35,
+          low = -12.5,
+          medium = 12.5,
+          high = 25,
      },
 
      adjust_ai_public_order = {
@@ -628,7 +628,7 @@ modular_difficulty_campaign.config = {
           low = 0.75,
           medium = 1.00,
           high = 1.25,
-          very_high = 1.35
+          very_high = 1.4
      },
 
      flanking_morale_penalties_mod = {
@@ -655,39 +655,39 @@ modular_difficulty_campaign.config = {
      },
 
      general_xp_gain = {
-          None   = 0.50,
-          Low    = 0.75,
+          None   = 0.65,
+          Low    = 0.80,
           Medium = 1, -- default
-          High   = 1.25,
+          High   = 1.35,
      },
 
      character_aging = {
-          None    = {
-               age_of_elderhood_override = 80,
-               base_die_chance_override = 2,
-               per_year_die_chance_override = 2,
-          },
-          Low     = {
-               age_of_elderhood_override = 80,
-               base_die_chance_override = 2,
-               per_year_die_chance_override = 2,
-          },
-          Medium  = {
-               age_of_elderhood_override = 80,
-               base_die_chance_override = 2,
-               per_year_die_chance_override = 2,
-          },
-          High    = { -- defaults
-               age_of_elderhood_override = 80,
-               base_die_chance_override = 2,
-               per_year_die_chance_override = 2,
-          },
-          Option4 = {
-               age_of_elderhood_override = 80,
-               base_die_chance_override = 2,
-               per_year_die_chance_override = 2,
-          },
-     },
+         None  = {
+             age_of_elderhood_override = 30,
+             base_die_chance_override = 10,
+             per_year_die_chance_override = 10,
+         },
+         Low  = {
+             age_of_elderhood_override = 40,
+             base_die_chance_override = 8,
+             per_year_die_chance_override = 8,
+         },
+         Medium = {
+             age_of_elderhood_override = 50,
+             base_die_chance_override = 4,
+             per_year_die_chance_override = 4,
+         }, 
+         High = { -- defaults
+             age_of_elderhood_override = 65,
+             base_die_chance_override = 2,
+             per_year_die_chance_override = 2,
+         },
+         Option4 = {
+             age_of_elderhood_override = 80,
+             base_die_chance_override = 2,
+             per_year_die_chance_override = 2,
+         },
+},
 }
 
 modular_difficulty_campaign.ui_panel = {
@@ -720,7 +720,7 @@ modular_difficulty_campaign.ui_panel = {
           checkbox = "checkbox",
           dropdown = "dropdown",
           slider = "slider"
-     }
+     },
 }
 
 local function configure_and_apply_bundle_from_standard_dropdown(setting_name, apply_for_ai, apply_for_human)
@@ -915,23 +915,23 @@ modular_difficulty_campaign.settings = {
                if state_value == "None" then
                     -- default value, do nothing.
                elseif state_value == "Low" then
-                    resource_to_give.food.value   = -2400
-                    resource_to_give.stone.value  = -600
-                    resource_to_give.wood.value   = -100
-                    resource_to_give.bronze.value = -350
-                    resource_to_give.gold.value   = -70
+                    resource_to_give.food.value   = -1250
+                    resource_to_give.stone.value  = -250
+                    resource_to_give.wood.value   = -75
+                    resource_to_give.bronze.value = -125
+                    resource_to_give.gold.value   = -40
                elseif state_value == "Medium" then
-                    resource_to_give.food.value   = 2750
-                    resource_to_give.stone.value  = 550
-                    resource_to_give.wood.value   = 150
-                    resource_to_give.bronze.value = 450
-                    resource_to_give.gold.value   = 110
+				resource_to_give.food.value   = 1250
+                    resource_to_give.stone.value  = 250
+                    resource_to_give.wood.value   = 75
+                    resource_to_give.bronze.value = 125
+                    resource_to_give.gold.value   = 40
                elseif state_value == "High" then
-                    resource_to_give.food.value   = 5500
-                    resource_to_give.stone.value  = 1200
-                    resource_to_give.wood.value   = 300
-                    resource_to_give.bronze.value = 800
-                    resource_to_give.gold.value   = 180
+                    resource_to_give.food.value   = 3750
+                    resource_to_give.stone.value  = 750
+                    resource_to_give.wood.value   = 225
+                    resource_to_give.bronze.value = 375
+                    resource_to_give.gold.value   = 120
                end
 
                for _, resource in dpairs(resource_to_give) do
@@ -985,26 +985,26 @@ modular_difficulty_campaign.settings = {
                     },
                }
 
-               if state_value == "None" then
+			if state_value == "None" then
                     -- default value, do nothing.
                elseif state_value == "Low" then
-                    resource_to_give.food.value   = -100
-                    resource_to_give.stone.value  = -100
-                    resource_to_give.wood.value   = -100
-                    resource_to_give.bronze.value = -100
-                    resource_to_give.gold.value   = -100
+                    resource_to_give.food.value   = -1250
+                    resource_to_give.stone.value  = -250
+                    resource_to_give.wood.value   = -75
+                    resource_to_give.bronze.value = -125
+                    resource_to_give.gold.value   = -40
                elseif state_value == "Medium" then
-                    resource_to_give.food.value   = 100
-                    resource_to_give.stone.value  = 100
-                    resource_to_give.wood.value   = 100
-                    resource_to_give.bronze.value = 100
-                    resource_to_give.gold.value   = 100
+				resource_to_give.food.value   = 1250
+                    resource_to_give.stone.value  = 250
+                    resource_to_give.wood.value   = 75
+                    resource_to_give.bronze.value = 125
+                    resource_to_give.gold.value   = 40
                elseif state_value == "High" then
-                    resource_to_give.food.value   = 500
-                    resource_to_give.stone.value  = 500
-                    resource_to_give.wood.value   = 500
-                    resource_to_give.bronze.value = 500
-                    resource_to_give.gold.value   = 500
+                    resource_to_give.food.value   = 3750
+                    resource_to_give.stone.value  = 750
+                    resource_to_give.wood.value   = 225
+                    resource_to_give.bronze.value = 375
+                    resource_to_give.gold.value   = 120
                end
 
                local faction_list = cm:model():world():faction_list()
