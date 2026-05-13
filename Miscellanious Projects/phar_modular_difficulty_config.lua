@@ -497,9 +497,9 @@ modular_difficulty_campaign.config = {
           bundle_key = "phar_main_modular_difficulty_attrition_intensity",
           effect_key = "phar_main_damage_mod_attrition_record_all",
           effect_scope = "faction_to_force_own_unseen",
-          low = -25,
-          medium = 25,
-          high = 50
+          low = -15,
+          medium = 15,
+          high = 30
      },
 
      ai_building_cost = {
@@ -590,8 +590,8 @@ modular_difficulty_campaign.config = {
      lethality_mode = {enabled = 0, disabled = 1, max_value = 2},
 
      general_xp_gain = {
-          None = 0.65,
-          Low = 0.80,
+          None = 0.60,
+          Low = 0.85,
           Medium = 1, -- default
           High = 1.35
      },
@@ -686,29 +686,29 @@ modular_difficulty_campaign.settings = {
      -- The localisation key should be defined in the random_localisation_strings table in the database, and should be reused if possible.
      -- See also the option_infos database tables
      --[[
-	["example_setting"] = {                          -- The key of the setting. Used for localisation (database table modular_difficulty_localised_strings) and to access the setting in the code.
-		achievement_key = "phar_main_ach_example",   -- Not currently used. The achievement key for this setting.
-		is_locked = false,                           -- Not currently used. If this setting is locked behind an achievement.
-		was_previously_locked = true,                -- Not currently used. If this setting was locked until the player unlocked the achievement.
-		ui = {
-			category = modular_difficulty_campaign.ui_panel.settings_category_tabs.campaign,          -- The category of the setting, see settings_category_tabs above
-			component_type = modular_difficulty_campaign.ui_panel.settings_component_types.dropdown,  -- The type of the component, see settings_component_types above
-			campaign_changeable = true,              -- If this setting can be changed during the campaign rather than only at the start
-			dropdown_first_option_idx = 1,           -- Only for dropdowns: the index of the first option in the dropdown, if the component type is dropdown, see the note above
-			dropdown_options = {                     -- Only for dropdowns: the options for the dropdown, see the note above
-				{"Low", "modular_difficulty_5"},     -- In this example, we start at "Low" rather than "None" because dropdown_first_option_idx is 1
-				{"Medium", "modular_difficulty_2"},
-				{"High", "modular_difficulty_4"},
-			},
-			ui_order = 1,                            -- The order of the setting in the UI
-		},
-		default_value = "Low",                       -- The default value of the setting. An option key from the dropdown_options table, 0/1 for checkboxes, or a number for sliders.
-		callback = function()                        -- The callback function for the setting
-			local state_value = mdm.state["example_setting"].value
-			-- Apply the setting to the game state here
-		end,
-	},
-	]] --
+                                                                ["example_setting"] = {                          -- The key of the setting. Used for localisation (database table modular_difficulty_localised_strings) and to access the setting in the code.
+                                                                achievement_key = "phar_main_ach_example",   -- Not currently used. The achievement key for this setting.
+                                                                is_locked = false,                           -- Not currently used. If this setting is locked behind an achievement.
+                                                                was_previously_locked = true,                -- Not currently used. If this setting was locked until the player unlocked the achievement.
+                                                                ui = {
+                                                                category = modular_difficulty_campaign.ui_panel.settings_category_tabs.campaign,          -- The category of the setting, see settings_category_tabs above
+                                                                component_type = modular_difficulty_campaign.ui_panel.settings_component_types.dropdown,  -- The type of the component, see settings_component_types above
+                                                                campaign_changeable = true,              -- If this setting can be changed during the campaign rather than only at the start
+                                                                dropdown_first_option_idx = 1,           -- Only for dropdowns: the index of the first option in the dropdown, if the component type is dropdown, see the note above
+                                                                dropdown_options = {                     -- Only for dropdowns: the options for the dropdown, see the note above
+                                                                {"Low", "modular_difficulty_5"},     -- In this example, we start at "Low" rather than "None" because dropdown_first_option_idx is 1
+                                                                {"Medium", "modular_difficulty_2"},
+                                                                {"High", "modular_difficulty_4"},
+                                                            },
+                                                            ui_order = 1,                            -- The order of the setting in the UI
+                                                            },
+                                                            default_value = "Low",                       -- The default value of the setting. An option key from the dropdown_options table, 0/1 for checkboxes, or a number for sliders.
+                                                            callback = function()                        -- The callback function for the setting
+                                                            local state_value = mdm.state["example_setting"].value
+                                                            -- Apply the setting to the game state here
+                                                            end,
+                                                            },
+                                                            ]] --
      ["ironman"] = {
           achievement_key = "",
           is_locked = false,
