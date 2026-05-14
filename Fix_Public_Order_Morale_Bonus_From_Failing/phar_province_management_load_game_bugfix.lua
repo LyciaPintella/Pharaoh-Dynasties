@@ -17,4 +17,4 @@ core:add_listener("phar_resources_apply_region_population_and_happiness_effects_
 			end
 		end
 	end
-end, false)
+end, true)
