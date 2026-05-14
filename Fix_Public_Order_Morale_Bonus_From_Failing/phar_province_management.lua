@@ -250,7 +250,8 @@ population_happiness = {
 -- Lycia Bookmark: commenting out:
 --cm:add_first_tick_callback_new(population_happiness.on_new_game)
 cm:add_first_tick_callback(population_happiness.on_start_turn)
-cm:add_first_tick_callback(population_happiness.on_first_tick)
+cm:add_first_tick_callback_sp_each(population_happiness.on_first_tick)
+cm:add_first_tick_callback_mp_each(population_happiness.on_first_tick)
 
 -- OnInitProvinceInfo
 core:add_listener (
