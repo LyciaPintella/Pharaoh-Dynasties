@@ -223,7 +223,7 @@ population_happiness = {
                end
           end
      end,
-
+	add_first_tick_callback_sp_each
      start_listeners = function()
           population_happiness.on_first_tick()
           population_happiness.on_start_turn()
