@@ -153,7 +153,7 @@ population_happiness = {
      end,
 
      on_first_tick = function()
-          core:add_listener("phar_resources_apply_region_population_and_happiness_effects_on_first_tick", "FirstTickAfterWorldCreated", true, function()
+          core:add_listener("phar_resources_apply_region_population_and_happiness_effects_on_first_tick", "FirstTickAfterWorldCreated", true, function(context)
                local faction_list = cm:model():world():faction_list()
                for i = 0, faction_list:num_items() - 1 do
                     local faction = faction_list:item_at(i)
@@ -206,21 +206,19 @@ population_happiness = {
      end,
 
      on_new_game = function()
-          if cm:is_new_game() then
-               local faction_list = cm:model():world():faction_list()
-               for i = 0, faction_list:num_items() - 1 do
-                    local faction = faction_list:item_at(i)
+          local faction_list = cm:model():world():faction_list()
+          for i = 0, faction_list:num_items() - 1 do
+               local faction = faction_list:item_at(i)
 
-                    if not faction:is_dead() then
-                         local faction_regions = faction:region_list()
+               if not faction:is_dead() then
+                    local faction_regions = faction:region_list()
 
-                         for j = 0, faction_regions:num_items() - 1 do
-                              local region = faction_regions:item_at(j)
-                              local faction_key = faction:name()
+                    for j = 0, faction_regions:num_items() - 1 do
+                         local region = faction_regions:item_at(j)
+                         local faction_key = faction:name()
 
-                              population_happiness.apply_region_happiness_effect_bundle(faction_key, region)
-                              population_happiness.apply_region_population_effect_bundle(faction_key, region)
-                         end
+                         population_happiness.apply_region_happiness_effect_bundle(faction_key, region)
+                         population_happiness.apply_region_population_effect_bundle(faction_key, region)
                     end
                end
           end
@@ -230,11 +228,10 @@ population_happiness = {
           population_happiness.on_first_tick()
           population_happiness.on_start_turn()
           population_happiness.on_region_conquered()
-          population_happiness.on_new_game()
+          cm:add_first_tick_callback_new(population_happiness.on_new_game)
      end
 }
-
-cm:add_first_tick_callback(population_happiness.start_listeners)
+population_happiness.start_listeners()
 
 -- OnInitProvinceInfo
 core:add_listener("PharProvinceManagment_OnInitProvinceInfo", "OnInitProvinceInfo", true, function(context)
