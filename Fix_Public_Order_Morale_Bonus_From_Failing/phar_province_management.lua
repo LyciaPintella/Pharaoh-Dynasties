@@ -117,7 +117,7 @@ population_happiness = {
 
           local target_happiness = -1000000
           local target_effect_bundle = nil
-
+          local region_key = region:name()
           local region_happiness = region:public_order()
 
           for happiness, v in pairs(population_happiness.config.happiness_to_effect_bundle) do
@@ -127,13 +127,12 @@ population_happiness = {
                end
           end
 
-          if target_effect_bundle and not region:has_effect_bundle(target_effect_bundle) then
-               local region_key = region:name()
-
-               for _, v in dpairs(population_happiness.config.happiness_to_effect_bundle) do
-                    if target_effect_bundle ~= v.effect_bundle then cm:remove_effect_bundle_from_province(v.effect_bundle, region_key) end
+          if target_effect_bundle then
+               if region:has_effect_bundle(target_effect_bundle) then
+                    for _, v in dpairs(population_happiness.config.happiness_to_effect_bundle) do
+                         cm:remove_effect_bundle_from_province(v.effect_bundle, region_key)
+                    end
                end
-
                cm:apply_effect_bundle_to_province(target_effect_bundle, region_key, 0)
           end
      end,
@@ -154,23 +153,23 @@ population_happiness = {
 
      on_first_tick = function()
           core:add_listener("phar_resources_apply_region_population_and_happiness_effects_on_first_tick", "FirstTickAfterWorldCreated", true, function(context)
-			local faction_list = cm:model():world():faction_list()
-			for i = 0, faction_list:num_items() - 1 do
-				local faction = faction_list:item_at(i)
-	
-				if not faction:is_dead() then
-					local faction_regions = faction:region_list()
-	
-					for j = 0, faction_regions:num_items() - 1 do
-						local region = faction_regions:item_at(j)
-						local faction_key = faction:name()
-	
-						population_happiness.apply_region_happiness_effect_bundle(faction_key, region)
-						population_happiness.apply_region_population_effect_bundle(faction_key, region)
-					end
-				end
-			end
-          end, false)
+               local faction_list = cm:model():world():faction_list()
+               for i = 0, faction_list:num_items() - 1 do
+                    local faction = faction_list:item_at(i)
+
+                    if not faction:is_dead() then
+                         local faction_regions = faction:region_list()
+
+                         for j = 0, faction_regions:num_items() - 1 do
+                              local region = faction_regions:item_at(j)
+                              local faction_key = faction:name()
+
+                              population_happiness.apply_region_happiness_effect_bundle(faction_key, region)
+                              population_happiness.apply_region_population_effect_bundle(faction_key, region)
+                         end
+                    end
+               end
+          end, true)
      end,
 
      on_start_turn = function()
@@ -223,7 +222,7 @@ population_happiness = {
                end
           end
      end,
-	add_first_tick_callback_sp_each
+
      start_listeners = function()
           population_happiness.on_first_tick()
           population_happiness.on_start_turn()
