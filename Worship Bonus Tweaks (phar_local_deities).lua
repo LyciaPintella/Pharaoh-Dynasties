@@ -724,12 +724,12 @@ deities =
 						{
 							bundle = "phar_main_effect_bundle_horus_shrine_t3_effect_04",
 							localised_flavour = "phar_main_al_akhenaten_stolen_effects_province_4_desc",
-							aten_unlockable_random_weight = 7.5,
+							aten_unlockable_random_weight = 10,
 						},
 						{
 							bundle = "phar_main_effect_bundle_horus_shrine_t3_effect_05",
 							localised_flavour = "phar_main_al_akhenaten_stolen_effects_province_4_desc",
-							aten_unlockable_random_weight = 7.5,
+							aten_unlockable_random_weight = 10,
 						},
 
 					},
