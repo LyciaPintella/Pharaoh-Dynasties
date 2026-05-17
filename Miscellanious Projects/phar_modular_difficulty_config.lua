@@ -483,7 +483,7 @@ modular_difficulty_campaign.config = {
           }
      },
 
-     ai_behavior = {friendly_stance = "CAI_STRATEGIC_STANCE_VERY_FRIENDLY", aggressive_stance = "CAI_STRATEGIC_STANCE_VERY_UNFRIENDLY"},
+     ai_behavior = {friendly_stance = "CAI_STRATEGIC_STANCE_VERY_FRIENDLY", aggressive_stance = "CAI_STRATEGIC_STANCE_UNFRIENDLY"},
 
      unbreakable_units = {bundle_key = "phar_main_modular_difficulty_unbreakable_units"},
 
