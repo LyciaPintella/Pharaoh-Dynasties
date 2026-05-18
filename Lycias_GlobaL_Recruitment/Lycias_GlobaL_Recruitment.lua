@@ -9,7 +9,7 @@ lycias_global_recruitment = {
                     -- Can recruit units available in any province of the faction anywhere in its territory
                     cm:faction_override_campaign_feature(current_faction:name(), "factionwide_recruitment", true)
 
-                    -- ! COMMENTED OUT BECAUSE I AM NOT SURE I WANT THIS INCLUDED YET
+				-- ! COMMENTED OUT BECAUSE I AM NOT SURE I WANT THIS INCLUDED YET
                     -- Can recruit units available to allies and vassals
                     -- cm:faction_override_campaign_feature(current_faction, "factionwide_shared_recruitment", true)
 
