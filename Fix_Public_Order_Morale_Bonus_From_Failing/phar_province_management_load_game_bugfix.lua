@@ -19,7 +19,7 @@ core:add_listener("province_bonuses", "FirstTickAfterWorldCreated", true, functi
 	end
     end, true)
 
-    function 	on_first_tick
+    function on_first_tick()
 	local faction_list = cm:model():world():faction_list()
 	for i = 0, faction_list:num_items() - 1 do
 		local faction = faction_list:item_at(i)
@@ -38,4 +38,4 @@ core:add_listener("province_bonuses", "FirstTickAfterWorldCreated", true, functi
 	end
 end
 
-cm:add_first_tick_callback(function() z_native_mercenary() end);
+cm:add_first_tick_callback(function() on_first_tick() end);
