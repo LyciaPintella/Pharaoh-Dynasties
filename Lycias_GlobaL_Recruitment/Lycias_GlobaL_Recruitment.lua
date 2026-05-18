@@ -13,8 +13,8 @@ lycias_global_recruitment = {
                     -- Can recruit units available to allies and vassals
                     -- cm:faction_override_campaign_feature(current_faction, "factionwide_shared_recruitment", true)
 
-                    -- Apply the background global recruitment penalties
-                    cm:apply_effect_bundle("lycias_global_recruitment_penalties", current_faction:name(), -1)
+                    -- Apply the background global recruitment modifiers
+                    cm:apply_effect_bundle("lycias_global_recruitment_modifiers", current_faction:name(), 0)
                else
                     out("Lycia's Global Recruitment Mod: Faction: " .. tostring(current_faction:name()) .. " is Dead!")
                     return
