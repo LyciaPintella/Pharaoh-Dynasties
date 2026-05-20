@@ -8,9 +8,7 @@ local character_traits_expansion = {
      traits = {
           character_traits_expansion_trait_list = {},
           new_character_creation_trait_list = {},
-        coming_of_age = { ChancePerTrait = 5,
-	   trait_list = {}
-	},
+          coming_of_age = {ChancePerTrait = 5, trait_list = {}},
           cultural = {},
           legendary_lord_defeat = {},
           -- Traits allowed to trigger for any character on any given turn
@@ -350,7 +348,9 @@ character_traits_expansion.traits.legendary_lord_defeat = {
 }
 
 -- Traits allowed to trigger for any character on any given turn
-character_traits_expansion.traits.randomly_added = {"character_traits_expansion_trait_degenerate","character_traits_expansion_trait_unlucky", "character_traits_expansion_trait_lucky"}
+character_traits_expansion.traits.randomly_added = {
+     "character_traits_expansion_trait_degenerate", "character_traits_expansion_trait_unlucky", "character_traits_expansion_trait_lucky"
+}
 
 character_traits_expansion.traits.self_perpetuating = {
      "character_traits_expansion_trait_mad", "character_traits_expansion_trait_degenerate", "character_traits_expansion_trait_sober",
@@ -1817,7 +1817,9 @@ character_traits_expansion.modify_phar_campaign_traits = function()
 
           -- Injects my custom traits into the vanilla civilian_traits table so I don't need to worry about giving traits to them.
           if campaign_traits and campaign_traits.config.civilian_traits then
-               for i = 1, #character_traits_expansion.traits.randomly_added do table.insert(campaign_traits.config.civilian_traits, character_traits_expansion.traits.randomly_added[i]) end
+               for i = 1, #character_traits_expansion.traits.randomly_added do
+                    table.insert(campaign_traits.config.civilian_traits, character_traits_expansion.traits.randomly_added[i])
+               end
           end
 
           -- Making changes to the vanilla traits and their triggers. For now, many are left alone, but others are given new listeners and triggers. This may eventually change.
