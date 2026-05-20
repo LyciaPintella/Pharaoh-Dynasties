@@ -2,6 +2,47 @@
 
 
 --[[
+
+---@desc Applies a trait to a character _chance percent of the time.
+---@param character CHARACTER_SCRIPT_INTERFACE #Character object of the target character.
+---@param trait string Trait key to add.
+---@param _points number? #optional, default value=1 Trait points to add. The underlying force_add_trait function is called for each point added.
+---@param _chance number? #optional, default value=100 Percentage chance for the trait to be applied. Value should be between 0 and 100.
+---@param _show_message boolean? #optional, default value=false Show a message when the trait is applied to a general with an army..
+
+
+random_traits_list = {},
+self_perpetuating_traits = {},
+
+character_traits_expansion:character_traits_expansion
+
+---@type { character_traits_expansion: { ancient_legacies: { is_akhenaten_legacy_claimed: boolean } } }
+
+
+
+(field) character_traits_expansion.ancient_legacies: { character_traits_expansion: { ancient_legacies: table } } {
+apply_ancient_legacy_traits: function,
+character_traits_expansion: { ancient_legacies: table },
+is_akhenaten_legacy_claimed: boolean|nil = true,
+}
+character_traits_expansion.building_superchains.gold
+_key = building:superchain()
+
+(upvalue) character_traits_expansion: {
+ancient_legacies: table,
+apply_ancient_legacy_traits: function,
+apply_trait_by_chance: function,
+building_superchains: table,
+modify_phar_campaign_traits: function,
+random_traits_list: table,
+self_perpetuating_traits: table,
+start_trait_listeners: function,
+traits_lists: table,
+}
+
+
+
+
 	if cm:char_is_general_with_army(character) and character:has_region() and character:region():owning_faction():name() == character:faction():name() then
 	end
 
