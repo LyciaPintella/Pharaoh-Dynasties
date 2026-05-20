@@ -2,7 +2,6 @@
 --- @class character_traits_expansion Character Traits Expansion
 --- @set_environment campaign
 --- @alias cte character_traits_expansion
---- @index_pos 1
 local character_traits_expansion = {
      building_superchains = {drinking = {}, food = {}, gold = {}, mines = {}, military_administration = {}, province_management = {}},
      traits = {
@@ -1194,6 +1193,11 @@ character_traits_expansion.start_trait_listeners = function()
           if settlement:has_commander() then
                local character = settlement:commander()
 
+               ----------------------------
+               ---- BUILT ANY BUILDING ----
+               ----------------------------
+               character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_cultured", 20, 5)
+
                --------------------------
                ---- BUILT FARMS ----
                --------------------------
@@ -1215,6 +1219,38 @@ character_traits_expansion.start_trait_listeners = function()
                     out("character_traits_expansion_miner: Building superchain not in character_traits_expansion.building_superchains.mines")
                end
 
+               -------------------------
+               ---- BUILT GOLD MINES ----
+               -------------------------
+               if character_traits_expansion.building_superchains.gold[building_superchain_key] then
+                    character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_materialistic", 20, 25)
+                    out("character_traits_expansion_builder: Applied phar_main_trait_materialistic to " .. character:onscreen_name())
+               end
+
+               -------------------------------------
+               --- BUILT MILITARY ADMINISTRATION ---
+               -------------------------------------
+               if character_traits_expansion.building_superchains.military_administration[building_superchain_key] then
+                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_military_admin_good", 20, 25)
+                    out("character_traits_expansion_builder: Applied character_traits_expansion_trait_admin_good to " .. character:onscreen_name())
+               end
+
+               -------------------------------
+               -- BUILT PROVINCE MANAGEMENT --
+               ------------------------------
+               if character_traits_expansion.building_superchains.province_management[building_superchain_key] then
+                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_good", 20, 20)
+                    out("character_traits_expansion_builder: Applied character_traits_expansion_trait_admin_good to " .. character:onscreen_name())
+               end
+
+               ----------------------
+               ---- BUILT SHRINE ----
+               ----------------------
+               if building_superchain_key == "phar_main_ers_shrine" then
+                    character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_spiritual", 20, 20)
+                    out("character_traits_expansion_builder: character_traits_expansion_character_present_for_construction_of_shrine")
+               end
+
                ------------------------------
                ---- BUILT SMUGGLERS' DEN ----
                ------------------------------
@@ -1227,14 +1263,6 @@ character_traits_expansion.start_trait_listeners = function()
                end
 
                ----------------------
-               ---- BUILT SHRINE ----
-               ----------------------
-               if building_superchain_key == "phar_main_ers_shrine" then
-                    character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_spiritual", 20, 20)
-                    out("character_traits_expansion_builder: character_traits_expansion_character_present_for_construction_of_shrine")
-               end
-
-               ----------------------
                ---- BUILT TEMPLE ----
                ----------------------
                if building_superchain_key == "phar_main_religion_temple" or building_superchain_key == "phar_map_religion_dwelling_all" then
@@ -1242,41 +1270,12 @@ character_traits_expansion.start_trait_listeners = function()
                     out("character_traits_expansion_builder: character_traits_expansion_character_present_for_construction_of_temple")
                end
 
-               --------------------
-               ---- BUILT ADMIN----
-               --------------------
-               if character_traits_expansion.building_superchains.province_management[building_superchain_key] then
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_good", 20, 20)
-                    out("character_traits_expansion_builder: Applied character_traits_expansion_trait_admin_good to " .. character:onscreen_name())
-               end
-
-               ---------------------------------
-               ---- BUILT MILITARY ADMIN----
-               ---------------------------------
-               if character_traits_expansion.building_superchains.military_administration[building_superchain_key] then
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_military_admin_good", 20, 25)
-                    out("character_traits_expansion_builder: Applied character_traits_expansion_trait_admin_good to " .. character:onscreen_name())
-               end
-
-               -------------------------
-               ---- BUILT GOLD MINE ----
-               -------------------------
-               if character_traits_expansion.building_superchains.gold[building_superchain_key] then
-                    character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_materialistic", 20, 25)
-                    out("character_traits_expansion_builder: Applied phar_main_trait_materialistic to " .. character:onscreen_name())
-               end
-
-               ----------------------------
-               ---- BUILT ANY BUILDING ----
-               ----------------------------
-               character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_cultured", 20, 5)
           else
                out("No commander found in settlement")
           end
      end, true)
-     -- :command_queue_index()
-     -- region():owning_faction():command_queue_index() == character:faction():command_queue_index()
-     core:add_listener("character_ends_turn_in_province_with_construction", "CharacterEndTurn", function(context)
+
+     core:add_listener("character_traits_expansion_character_ends_turn_in_province_with_construction", "CharacterEndTurn", function(context)
           local character = context:character()
           if character:has_region() and character:region():owning_faction():command_queue_index() == character:faction():command_queue_index() then
                local province = character:region():province()
@@ -1317,16 +1316,16 @@ character_traits_expansion.start_trait_listeners = function()
      ----------------------------------------------
      ---- MAIN CHARACTER TURN START PROCESSING ----
      ----------------------------------------------
-     core:add_listener("character_traits_expansion_character_turn_start_main", "CharacterTurnStart", true, function(context)
+     core:add_listener("character_traits_expansion_character_turn_start", "CharacterTurnStart", true, function(context)
           local character = context:character()
 
           if character:is_null_interface() then
-               out("character_traits_expansion_character_turn_start_main character is_null_interface!")
+               out("character_traits_expansion_character_turn_start character is_null_interface!")
                return
           end
 
           if not character:character_type("general") or character:character_details():is_civilian() then
-               out("character_traits_expansion_character_turn_start_main character is not a general or is a civilian!")
+               out("character_traits_expansion_character_turn_start character is not a general or is a civilian!")
                return
           end
           -- ! Lycia Bookmark
