@@ -3,6 +3,24 @@
 
 --[[
 
+
+phar_main_effect_bundle_province_management_happiness_affected_by_growth|phar_main_effect_bundle_province_management_growth_affected_by_happiness
+
+[design] <52.0s>     & Applying effect bundle [phar_main_effect_bundle_province_management_growth_affected_by_happiness_6_of_9] to province of region with key [phar_main_per_ramesses_meri_amon_per_ramesses_meri_amon] for [0] turns
+[design] <52.0s>     & Applying effect bundle [phar_main_effect_bundle_province_management_growth_affected_by_happiness_6_of_9] to province of region with key [phar_main_per_ramesses_meri_amon_per_ramesses_meri_amon] for [0] turns
+
+esign] <52.0s>     & Applying effect bundle [phar_main_effect_bundle_province_management_growth_affected_by_happiness_6_of_9] to province of region with key [phar_main_per_ramesses_meri_amon_per_ramesses_meri_amon] for [0] turns
+[design] <52.0s>     & Applying effect bundle [phar_main_effect_bundle_province_management_growth_affected_by_happiness_6_of_9] to province of region with key [phar_main_per_ramesses_meri_amon_per_ramesses_meri_amon] for [0] turns
+[design] <52.0s>     & Removing effect bundle [phar_main_effect_bundle_province_management_happiness_affected_by_growth_0] from region with key [phar_main_per_ramesses_meri_amon_per_ramesses_meri_amon]
+[design] <52.0s>     & Removing effect bundle [phar_main_effect_bundle_province_management_happiness_affected_by_growth_1] from region with key [phar_main_per_ramesses_meri_amon_per_ramesses_meri_amon]
+[design] <52.0s>     & Removing effect bundle [phar_main_effect_bundle_province_management_happiness_affected_by_growth_2] from region with key [phar_main_per_ramesses_meri_amon_per_ramesses_meri_amon]
+[design] <52.0s>     & Removing effect bundle [phar_main_effect_bundle_province_management_happiness_affected_by_growth_3] from region with key [phar_main_per_ramesses_meri_amon_per_ramesses_meri_amon]
+[design] <52.0s>     & Removing effect bundle [phar_main_effect_bundle_province_management_happiness_affected_by_growth_4] from region with key [phar_main_per_ramesses_meri_amon_per_ramesses_meri_amon]
+[design] <52.0s>     & Applying effect bundle [phar_main_effect_bundle_province_management_happiness_affected_by_growth_5] to province of region with key [phar_main_per_ramesses_meri_amon_per_ramesses_meri_amon] for [0] turns
+[design] <52.0s>     & Removing effect bundle [phar_main_effect_bundle_province_management_happiness_affected_by_growth_6] from region with key [phar_main_per_ramesses_meri_amon_per_ramesses_meri_amon]
+[design] <52.0s>     & Removing effect bundle [phar_main_effect_bundle_province_management_happiness_affected_by_growth_7] from region with key [phar_main_per_ramesses_meri_amon_per_ramesses_meri_amon]
+[design] <52.0s>     & Removing effect bundle [phar_main_effect_bundle_province_management_happiness_affected_by_growth_8] from region with key 
+
 ---@desc Applies a trait to a character _chance percent of the time.
 ---@param character CHARACTER_SCRIPT_INTERFACE #Character object of the target character.
 ---@param trait string Trait key to add.

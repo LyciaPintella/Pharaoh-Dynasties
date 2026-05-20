@@ -111,12 +111,13 @@ population_happiness = {
                -- [100] = "positive_population_bundle_greater",
           }
      },
+
      apply_region_happiness_effect_bundle = function(faction_key, region)
           if faction_key == "rebels" then return end
 
           local target_happiness = -1000000
           local target_effect_bundle = nil
-
+          local region_key = region:name()
           local region_happiness = region:public_order()
 
           for happiness, v in pairs(population_happiness.config.happiness_to_effect_bundle) do
@@ -126,13 +127,12 @@ population_happiness = {
                end
           end
 
-          if target_effect_bundle and not region:has_effect_bundle(target_effect_bundle) then
-               local region_key = region:name()
-
-               for _, v in dpairs(population_happiness.config.happiness_to_effect_bundle) do
-                    if target_effect_bundle ~= v.effect_bundle then cm:remove_effect_bundle_from_province(v.effect_bundle, region_key) end
+          if target_effect_bundle then
+               if region:has_effect_bundle(target_effect_bundle) then
+                    for _, v in dpairs(population_happiness.config.happiness_to_effect_bundle) do
+                         cm:remove_effect_bundle_from_province(v.effect_bundle, region_key)
+                    end
                end
-
                cm:apply_effect_bundle_to_province(target_effect_bundle, region_key, 0)
           end
      end,
@@ -149,11 +149,81 @@ population_happiness = {
                     if v and v.effect_bundle then cm:remove_effect_bundle_from_province(v.effect_bundle, region_key) end
                end
           end
-     end
-}
-population_happiness.listeners = {}
-function population_happiness.listeners:on_first_tick()
-     core:add_listener("phar_resources_apply_region_population_and_happiness_effects_on_first_tick", "FirstTickAfterWorldCreated", true, function(context)
+     end,
+
+     on_first_tick = function()
+          core:add_listener("phar_resources_apply_region_population_and_happiness_effects_on_first_tick", "FirstTickAfterWorldCreated", true, function(context)
+               local faction_list = cm:model():world():faction_list()
+               for i = 0, faction_list:num_items() - 1 do
+                    local faction = faction_list:item_at(i)
+
+                    if not faction:is_dead() then
+                         local faction_regions = faction:region_list()
+
+                         for j = 0, faction_regions:num_items() - 1 do
+                              local region = faction_regions:item_at(j)
+                              local faction_key = faction:name()
+
+                              population_happiness.apply_region_happiness_effect_bundle(faction_key, region)
+                              population_happiness.apply_region_population_effect_bundle(faction_key, region)
+                         end
+                    end
+               end
+          end, true)
+     end,
+
+		on_new_game_2 = function()
+			local faction_list = cm:model():world():faction_list()
+			for i = 0, faction_list:num_items() - 1 do
+				local faction = faction_list:item_at(i)
+
+				if not faction:is_dead() then
+					local faction_regions = faction:region_list()
+
+					for j = 0, faction_regions:num_items() - 1 do
+						local region = faction_regions:item_at(j)
+						local faction_key = faction:name()
+
+						population_happiness.apply_region_happiness_effect_bundle(faction_key, region)
+						population_happiness.apply_region_population_effect_bundle(faction_key, region)
+					end
+				end
+			end
+		end,
+
+     on_start_turn = function()
+          core:add_listener("phar_resources_apply_region_population_and_happiness_effects_on_start_turn", "FactionTurnStart", true, function(context)
+               local faction = context:faction()
+               local num_regions = faction:num_regions()
+
+               if num_regions == 0 then return end
+
+               local regions = faction:region_list()
+               local faction_key = faction:name()
+
+               for i = 0, num_regions - 1 do
+                    local region = regions:item_at(i)
+                    population_happiness.apply_region_happiness_effect_bundle(faction_key, region)
+                    population_happiness.apply_region_population_effect_bundle(faction_key, region)
+               end
+          end, true)
+     end,
+
+     on_region_conquered = function()
+          core:add_listener("phar_resources_apply_region_population_and_happiness_effects_on_region_conquered", "RegionFactionChangeEvent", true, function(context)
+               local region = context:region()
+               local faction_key = region:owning_faction():name()
+
+               -- If the owning faction is "rebels" then the region is not owned by anyone.
+               if faction_key == "rebels" then return end
+
+               -- Apply new ones
+               population_happiness.apply_region_happiness_effect_bundle(faction_key, region)
+               population_happiness.apply_region_population_effect_bundle(faction_key, region)
+          end, true)
+     end,
+
+     on_new_game = function()
           local faction_list = cm:model():world():faction_list()
           for i = 0, faction_list:num_items() - 1 do
                local faction = faction_list:item_at(i)
@@ -170,109 +240,56 @@ function population_happiness.listeners:on_first_tick()
                     end
                end
           end
-     end, true)
-end
+     end,
 
-function population_happiness.listeners:on_turn_start()
-     core:add_listener("phar_resources_apply_region_population_and_happiness_effects_on_start_turn", "FactionTurnStart", true, function(context)
-          local faction = context:faction()
-          local num_regions = faction:num_regions()
+     start_listeners = function()
+          population_happiness.on_first_tick()
+          population_happiness.on_start_turn()
+          population_happiness.on_region_conquered()
+          cm:add_first_tick_callback_new(population_happiness.on_new_game)
+     end
+}
+population_happiness.start_listeners()
 
-          if num_regions == 0 then return end
+-- OnInitProvinceInfo
+core:add_listener("PharProvinceManagment_OnInitProvinceInfo", "OnInitProvinceInfo", true, function(context)
 
-          local regions = faction:region_list()
-          local faction_key = faction:name()
+     local province_information = UIComponent(context.component)
 
-          for i = 0, num_regions - 1 do
-               local region = regions:item_at(i)
-               population_happiness.apply_region_happiness_effect_bundle(faction_key, region)
-               population_happiness.apply_region_population_effect_bundle(faction_key, region)
+     local province = context:province()
+     local faction_key = context:faction_key()
+
+     -- Effect bundles for public order (a.k.a. happines)
+     local target_happiness = -1000000
+     local ui_state = "invalid"
+     local province_public_order = province:public_order(faction_key)
+     for happiness, happiness_value in pairs(population_happiness.config.happiness_to_effect_bundle) do
+          if happiness > target_happiness and happiness <= province_public_order then
+               target_happiness = happiness
+               ui_state = happiness_value.ui_state
           end
-     end, true)
-end
 
-function population_happiness.listeners:on_new_game()
-     local faction_list = cm:model():world():faction_list()
-     for i = 0, faction_list:num_items() - 1 do
-          local faction = faction_list:item_at(i)
-
-          if not faction:is_dead() then
-               local faction_regions = faction:region_list()
-
-               for j = 0, faction_regions:num_items() - 1 do
-                    local region = faction_regions:item_at(j)
-                    local faction_key = faction:name()
-
-                    population_happiness.apply_region_happiness_effect_bundle(faction_key, region)
-                    population_happiness.apply_region_population_effect_bundle(faction_key, region)
-               end
+          if happiness_value.tt_ui_component and happiness_value.effect_bundle then
+               local icon = province_information:SequentialFind(unpack(happiness_value.tt_ui_component))
+               if icon then icon:SetContextObject(cco("CcoEffectBundle", happiness_value.effect_bundle)) end
           end
      end
-end
+     if ui_state then
+          local happiness_uic = province_information:SequentialFind(unpack(population_happiness.config.current_happiness_ui_component))
+          if happiness_uic then happiness_uic:SetState(ui_state) end
+     end
 
-function population_happiness.listeners:on_region_change()
-     core:add_listener("phar_resources_apply_region_population_and_happiness_effects_on_region_conquered", "RegionFactionChangeEvent", true, function(context)
-          local region = context:region()
-          local faction_key = region:owning_faction():name()
-
-          -- If the owning faction is "rebels" then the region is not owned by anyone.
-          if faction_key == "rebels" then return end
-
-          -- Apply new ones
-          population_happiness.apply_region_happiness_effect_bundle(faction_key, region)
-          population_happiness.apply_region_population_effect_bundle(faction_key, region)
-     end, true)
-end
-
-function population_happiness.listeners:on_province_info_init()
-     -- OnInitProvinceInfo
-     core:add_listener("PharProvinceManagment_OnInitProvinceInfo", "OnInitProvinceInfo", true, function(context)
-
-          local province_information = UIComponent(context.component)
-
-          local province = context:province()
-          local faction_key = context:faction_key()
-
-          -- Effect bundles for public order (a.k.a. happines)
-          local target_happiness = -1000000
-          local ui_state = "invalid"
-          local province_public_order = province:public_order(faction_key)
-          for happiness, happiness_value in pairs(population_happiness.config.happiness_to_effect_bundle) do
-               if happiness > target_happiness and happiness <= province_public_order then
-                    target_happiness = happiness
-                    ui_state = happiness_value.ui_state
-               end
-
-               if happiness_value.tt_ui_component and happiness_value.effect_bundle then
-                    local icon = province_information:SequentialFind(unpack(happiness_value.tt_ui_component))
-                    if icon then icon:SetContextObject(cco("CcoEffectBundle", happiness_value.effect_bundle)) end
-               end
-          end
-          if ui_state then
-               local happiness_uic = province_information:SequentialFind(unpack(population_happiness.config.current_happiness_ui_component))
-               if happiness_uic then happiness_uic:SetState(ui_state) end
+     -- Effect bundles for pupulation
+     local province_dev_points = province:development_points_for_faction(faction_key)
+     for dev_points, population_value in pairs(population_happiness.config.population_to_effect_bundle) do
+          if dev_points == province_dev_points and v and population_value.ui_state then
+               local arrow_uic = province_information:SequentialFind(unpack(population_happiness.config.current_population_arrow_ui_component))
+               if arrow_uic then arrow_uic:SetState(population_value.ui_state) end
           end
 
-          -- Effect bundles for pupulation
-          local province_dev_points = province:development_points_for_faction(faction_key)
-          for dev_points, population_value in pairs(population_happiness.config.population_to_effect_bundle) do
-               if dev_points == province_dev_points and v and population_value.ui_state then
-                    local arrow_uic = province_information:SequentialFind(unpack(population_happiness.config.current_population_arrow_ui_component))
-                    if arrow_uic then arrow_uic:SetState(population_value.ui_state) end
-               end
-
-               if population_value.tt_ui_component and population_value.effect_bundle then
-                    local icon = province_information:SequentialFind(unpack(population_value.tt_ui_component))
-                    if icon then icon:SetContextObject(cco("CcoEffectBundle", population_value.effect_bundle)) end
-               end
+          if population_value.tt_ui_component and population_value.effect_bundle then
+               local icon = province_information:SequentialFind(unpack(population_value.tt_ui_component))
+               if icon then icon:SetContextObject(cco("CcoEffectBundle", population_value.effect_bundle)) end
           end
-     end, true)
-end
-function population_happiness.listeners:start_listeners()
-     population_happiness.listeners:on_new_game()
-     population_happiness.listeners:on_first_tick()
-     population_happiness.listeners:on_turn_start()
-     population_happiness.listeners:on_region_change()
-     population_happiness.listeners:on_province_info_init()
-end
-cm:add_first_tick_callback(population_happiness.listeners.start_listeners)
+     end
+end, true) -- OnInitHordeForceInfo
