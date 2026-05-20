@@ -1,7 +1,5 @@
--- Begin Pharaoh Dynasties Character Traits Expansion.military_admin_bu
 local character_traits_expansion = {
-     buildings = {chains = {drinking = {}, military_administration = {}}, superchains = {food = {}, gold = {}, mines = {}, province_management = {}}},
-
+     building_superchains = {drinking = {}, food = {}, gold = {}, mines = {}, military_administration = {}, province_management = {}},
      traits_lists = {mod_expansion = {}, new_character_creation = {}, coming_of_age = {}, cultural = {}, legendary_lord_defeat = {}, randomly_added = {}},
 
      -- Traits allowed to trigger for any character on any given turn
@@ -14,9 +12,9 @@ local character_traits_expansion = {
      modify_phar_campaign_traits = function() end
 }
 
-character_traits_expansion.buildings.chains.drinking = {["phar_main_happiness_type_b"] = true, ["phar_map_bab_province_management_happiness_growth_type_a"] = true}
+character_traits_expansion.building_superchains.drinking = {["phar_main_happiness_type_b"] = true, ["phar_map_bab_province_management_happiness_growth_type_a"] = true}
 
-character_traits_expansion.buildings.chains.military_administration = {
+character_traits_expansion.building_superchains.military_administration = {
      ["phar_main_all_military_administration_cost_mod"] = true,
      ["phar_main_military_administration_unit_training_type_a"] = true,
      ["phar_main_military_administration_unit_training_type_b"] = true,
@@ -41,7 +39,7 @@ character_traits_expansion.buildings.chains.military_administration = {
      ["phar_sea_sherden_military_administration_charge_melee_attack_native"] = true
 }
 
-character_traits_expansion.buildings.superchains.food = {
+character_traits_expansion.building_superchains.food = {
      ["phar_main_farm_type_a_hattusa_derivative"] = true,
      ["phar_main_farm_type_a_canaan"] = true,
      ["phar_main_farm_type_a_canaan_derivative"] = true,
@@ -76,7 +74,7 @@ character_traits_expansion.buildings.superchains.food = {
      ["phar_map_food_cattle_aegean"] = true
 }
 
-character_traits_expansion.buildings.superchains.gold = {
+character_traits_expansion.building_superchains.gold = {
      ["phar_main_all_resource_production_gold_mine_nile"] = true,
      ["phar_main_amenmesse_resource_production_gold_mine"] = true,
      ["phar_main_gold_mine"] = true,
@@ -86,7 +84,7 @@ character_traits_expansion.buildings.superchains.gold = {
      ["phar_map_myc_resource_production_gold_mine_minor"] = true
 }
 
-character_traits_expansion.buildings.superchains.mines = {
+character_traits_expansion.building_superchains.mines = {
      ["phar_main_all_resource_production_bronze_mine_nile"] = true,
      ["phar_main_all_resource_production_gold_mine_nile"] = true,
      ["phar_main_all_resource_production_stone_mine_nile"] = true,
@@ -107,7 +105,7 @@ character_traits_expansion.buildings.superchains.mines = {
      ["phar_map_myc_resource_production_stone_mine_minor"] = true
 }
 
-character_traits_expansion.buildings.superchains.province_management = {
+character_traits_expansion.building_superchains.province_management = {
      ["phar_main_all_province_management_influence_type_b"] = true,
      ["phar_main_amenmesse_province_management_main_building_production_boost_growth"] = true,
      ["phar_main_bay_province_management_happiness"] = true,
@@ -461,8 +459,6 @@ character_traits_expansion.ancient_legacies.apply_ancient_legacy_traits = functi
 end
 
 character_traits_expansion.start_trait_listeners = function()
-     character_traits_expansion.ancient_legacies.apply_ancient_legacy_traits()
-
      -----------------------------------------------
      ---- FACTION LEADER DECLARES WAR AND PEACE ----
      -----------------------------------------------
@@ -636,10 +632,10 @@ character_traits_expansion.start_trait_listeners = function()
           local unique_id = context:unique_id()
 
           if string.find(unique_id, "phar_ers_interaction_shrine_pray") then
-               character_traits_expansion.apply_trait_by_chance(context:character(), "phar_main_trait_spiritual", 20, 15)
+               character_traits_expansion.apply_trait_by_chance(context:character(), "phar_main_trait_spiritual", 20, 20)
                out("hcp prayed at shrine")
           elseif string.find(unique_id, "phar_ers_interaction") then
-               character_traits_expansion.apply_trait_by_chance(context:character(), "phar_main_trait_materialistic", 20, 15)
+               character_traits_expansion.apply_trait_by_chance(context:character(), "phar_main_trait_materialistic", 20, 20)
                out("hcp prayed at non-shrine")
           end
      end, true)
@@ -765,15 +761,17 @@ character_traits_expansion.start_trait_listeners = function()
           ---- HIGH ARMY CASUALTIES ----
           ------------------------------
           local losses = character:percentage_of_own_alliance_killed()
-		if losses >= 0.75 then
-			character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_bloody", 20, 30)
-               character_traits_expansion.apply_trait_by_chance(character, "phar_main_trait_reckless", 20, 35)
-            elseif losses >= 0.6 then
-			character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_bloody", 20, 25)
-               character_traits_expansion.apply_trait_by_chance(character, "phar_main_trait_reckless", 20, 27.5)
+          if losses >= 0.75 then
+               character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_bloody", 20, 25)
+               character_traits_expansion.apply_trait_by_chance(character, "phar_main_trait_reckless", 20, 30)
+               out("character_traits_expansion_CHARACTER_COMPLETED_BATTLE_BLOODY")
+          elseif losses >= 0.6 then
+               character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_bloody", 20, 20)
+               character_traits_expansion.apply_trait_by_chance(character, "phar_main_trait_reckless", 20, 22.5)
+               out("character_traits_expansion_CHARACTER_COMPLETED_BATTLE_BLOODY")
           elseif losses >= 0.45 then
-			character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_bloody", 20, 20)
-               character_traits_expansion.apply_trait_by_chance(character, "phar_main_trait_reckless", 20, 20)
+               character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_bloody", 20, 15)
+               character_traits_expansion.apply_trait_by_chance(character, "phar_main_trait_reckless", 20, 15)
                out("character_traits_expansion_CHARACTER_COMPLETED_BATTLE_BLOODY")
           end
 
@@ -820,15 +818,14 @@ character_traits_expansion.start_trait_listeners = function()
 
           -- Check if the cultures are different before applying the traits
           if enemy_culture ~= character_faction:culture() then
-               if cultures_trait_list[enemy_culture] ~= nil then
+               if character_traits_expansion.traits_lists.cultural[enemy_culture] ~= nil then
                     if character:won_battle() then
-                         character_traits_expansion.apply_trait_by_chance(character,
-                                                                          "character_traits_expansion_trait_wins_against_" .. cultures_trait_list[enemy_culture], 20, 10)
+                         character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_wins_against_" ..
+                                                                               character_traits_expansion.traits_lists.cultural[enemy_culture], 20, 10)
                          out("character_traits_expansion_BATTLE_WINS_AGAINST_" .. tostring(enemy_culture))
                     else
-                         character_traits_expansion.apply_trait_by_chance(character,
-                                                                          "character_traits_expansion_trait_defeats_against_" .. cultures_trait_list[enemy_culture], 20,
-                                                                          50)
+                         character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_defeats_against_" ..
+                                                                               character_traits_expansion.traits_lists.cultural[enemy_culture], 20, 50)
                          out("character_traits_expansion_BATTLE_DEFEATS_AGAINST_" .. tostring(enemy_culture))
                     end
                end
@@ -914,7 +911,6 @@ character_traits_expansion.start_trait_listeners = function()
                end
           end
 
-          -- ! Lycia Bookmark
           ------------------------------
           ---- GENERAL BATTLE OUTCOME ----
           ------------------------------
@@ -1174,7 +1170,7 @@ character_traits_expansion.start_trait_listeners = function()
      end, true)
 
      -----------------------------
-     ---- BUILDINGS COMPLETED ----
+     ---- BUILDING COMPLETED ----
      -----------------------------
      core:add_listener("character_traits_expansion_building_completed", "BuildingCompleted", true, function(context)
           local building = context:building()
@@ -1187,29 +1183,29 @@ character_traits_expansion.start_trait_listeners = function()
                --------------------------
                ---- BUILT FARMS ----
                --------------------------
-               if character_traits_expansion.buildings.superchains.food[superchain_key] then
-                    hcp_main_give_trait(character, "character_traits_expansion_trait_farmer_good", 20, 25)
-                    out("character_traits_expansion_farmer: Applied hcp_trait_farmer_good to " .. character:onscreen_name())
+               if character_traits_expansion.building_superchains.food[superchain_key] then
+                    character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_farmer_good", 20, 25)
+                    out("character_traits_expansion_farmer: Applied character_traits_expansion_trait_farmer_good to " .. character:onscreen_name())
                else
-                    hcp_main_give_trait(character, "character_traits_expansion_trait_farmer_bad", 20, 7.5)
-                    out("character_traits_expansion_farmer: Building superchain not in character_traits_expansion.buildings.superchains.food")
+                    character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_farmer_bad", 20, 7.5)
+                    out("character_traits_expansion_farmer: Building superchain not in character_traits_expansion.building_superchains.food")
                end
 
                --------------------------
                ---- BUILT MINES ----
                --------------------------
-               if character_traits_expansion.buildings.superchains.mines[superchain_key] then
-                    hcp_main_give_trait(character, "character_traits_expansion_trait_miner", 20, 35)
-                    out("character_traits_expansion_miner: Applied hcp_trait_miner to " .. character:onscreen_name())
+               if character_traits_expansion.building_superchains.mines[superchain_key] then
+                    character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_miner", 20, 35)
+                    out("character_traits_expansion_miner: Applied character_traits_expansion_trait_miner to " .. character:onscreen_name())
                else
-                    out("character_traits_expansion_miner: Building superchain not in character_traits_expansion.buildings.superchains.mines")
+                    out("character_traits_expansion_miner: Building superchain not in character_traits_expansion.building_superchains.mines")
                end
 
                ------------------------------
                ---- BUILT SMUGGLERS' DEN ----
                ------------------------------
                if superchain_key == "phar_main_port_coast_derivative_type_a" or superchain_key == "phar_main_irsu_resource_production_port_coast_derivative_type_a" then
-                    hcp_main_give_trait(character, "character_traits_expansion_trait_criminal", 20, 35)
+                    character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_criminal", 20, 35)
                     out("character_traits_expansion_smuggler: built smugglers' den and applying trait to " .. character:onscreen_name())
                else
                     out("character_traits_expansion_smuggler: smugglers' den not found")
@@ -1219,46 +1215,46 @@ character_traits_expansion.start_trait_listeners = function()
                ---- BUILT SHRINE ----
                ----------------------
                if superchain_key == "phar_main_ers_shrine" then
-                    hcp_main_give_trait(character, "phar_main_trait_spiritual", 20, 20)
-                    out("character_traits_expansion_builder: hcp_character_present_for_construction_of_shrine")
+                    character_traits_expansion.apply_trait_by_chance(character, "phar_main_trait_spiritual", 20, 20)
+                    out("character_traits_expansion_builder: character_traits_expansion_character_present_for_construction_of_shrine")
                end
 
                ----------------------
                ---- BUILT TEMPLE ----
                ----------------------
                if superchain_key == "phar_main_religion_temple" or superchain_key == "phar_map_religion_dwelling_all" then
-                    hcp_main_give_trait(character, "phar_main_trait_spiritual", 20, 20)
-                    out("character_traits_expansion_builder: hcp_character_present_for_construction_of_temple")
+                    character_traits_expansion.apply_trait_by_chance(character, "phar_main_trait_spiritual", 20, 20)
+                    out("character_traits_expansion_builder: character_traits_expansion_character_present_for_construction_of_temple")
                end
 
                --------------------
                ---- BUILT ADMIN----
                --------------------
-               if character_traits_expansion.buildings.superchains.province_management[superchain_key] then
-                    hcp_main_give_trait(character, "character_traits_expansion_trait_admin_good", 20, 20)
-                    out("character_traits_expansion_builder: Applied hcp_trait_admin_good to " .. character:onscreen_name())
+               if character_traits_expansion.building_superchains.province_management[superchain_key] then
+                    character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_admin_good", 20, 20)
+                    out("character_traits_expansion_builder: Applied character_traits_expansion_trait_admin_good to " .. character:onscreen_name())
                end
 
                ---------------------------------
                ---- BUILT MILITARY ADMIN----
                ---------------------------------
-               if character_traits_expansion.military_admin_buildings_set[superchain_key] then
-                    hcp_main_give_trait(character, "character_traits_expansion_trait_military_admin_good", 20, 25)
-                    out("character_traits_expansion_builder: Applied hcp_trait_admin_good to " .. character:onscreen_name())
+               if character_traits_expansion.building_superchains.military_administration[superchain_key] then
+                    character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_military_admin_good", 20, 25)
+                    out("character_traits_expansion_builder: Applied character_traits_expansion_trait_admin_good to " .. character:onscreen_name())
                end
 
                -------------------------
                ---- BUILT GOLD MINE ----
                -------------------------
-               if character_traits_expansion.gold_superchain_set[superchain_key] then
-                    hcp_main_give_trait(character, "phar_main_trait_materialistic", 20, 25)
+               if character_traits_expansion.building_superchains.gold[superchain_key] then
+                    character_traits_expansion.apply_trait_by_chance(character, "phar_main_trait_materialistic", 20, 25)
                     out("character_traits_expansion_builder: Applied phar_main_trait_materialistic to " .. character:onscreen_name())
                end
 
                ----------------------------
                ---- BUILT ANY BUILDING ----
                ----------------------------
-               hcp_main_give_trait(character, "phar_main_trait_cultured", 20, 5)
+               character_traits_expansion.apply_trait_by_chance(character, "phar_main_trait_cultured", 20, 5)
           else
                out("No commander found in settlement")
           end
@@ -1266,8 +1262,7 @@ character_traits_expansion.start_trait_listeners = function()
 
      core:add_listener("character_ends_turn_in_province_with_construction", "CharacterEndTurn", function(context)
           local character = context:character()
-          if character:has_region() then
-
+          if character:has_region() and character:region():owning_faction():name() == character:faction():name() then
                local province = character:region():province()
                for i = 0, province:region_list():num_items() - 1 do
                     for i = 0, region:slot_list():num_items() - 1 do
@@ -1278,11 +1273,8 @@ character_traits_expansion.start_trait_listeners = function()
           end
           return false
      end, function(context)
-
           character_traits_expansion.apply_trait_by_chance(character, "phar_main_trait_cultured", 20, 3)
-
           if slot:building_chain_key() == "phar_main_ers_shrine" then return true end
-
      end, true)
 
      core:add_listener("character_traits_expansion_character_rank_up", "CharacterRankUp", true, function(context)
@@ -1321,25 +1313,24 @@ character_traits_expansion.start_trait_listeners = function()
                out("character_traits_expansion_character_turn_start_main character is not a general or is a civilian!")
                return
           end
-
+          -- ! Lycia Bookmark
           -------------------------------------------------------------
           ---- LOW/HIGH INFLUENCE REGION FOR RESPECTFUL/IRREVERENT ----
           -------------------------------------------------------------
           local character = context:character()
-          local influence_threshold = 0.6
+          local influence_threshold_high = 0.75
+          local influence_threshold_low = 0.35
           local religion = character:faction():state_religion()
 
           if cm:char_is_general_with_army(character) and not character:region():is_null_interface() and character:has_region() then
                local region_influence = character:region():religion_proportion(religion)
 
-               -- low influence check
-               if region_influence < influence_threshold then
-                    character_traits_expansion.apply_trait_by_chance(character, "phar_main_trait_respectful", 20, 5)
-                    out("character_traits_expansion_CHAR_IN_LOW_INFLUENCE_REGION!")
-                    -- high influence check
-               elseif region_influence > influence_threshold then
+               if region_influence > influence_threshold_high then
                     character_traits_expansion.apply_trait_by_chance(character, "phar_main_trait_irreverent", 20, 3)
                     out("character_traits_expansion_CHAR_IN_HIGH_INFLUENCE_REGION!")
+               elseif region_influence < influence_threshold_low then
+                    character_traits_expansion.apply_trait_by_chance(character, "phar_main_trait_respectful", 20, 5)
+                    out("character_traits_expansion_CHAR_IN_LOW_INFLUENCE_REGION!")
                end
           end
 
@@ -1378,7 +1369,7 @@ character_traits_expansion.start_trait_listeners = function()
                     local trait_key = disaster_traits[i][2]
 
                     if province:has_effect_bundle(effect_bundle_key, faction_key) then
-                         character_traits_expansion.apply_trait_by_chance(character, trait_key, 20, 5)
+                         character_traits_expansion.apply_trait_by_chance(character, trait_key, 20, 20)
                          out("Applied " .. trait_key .. " due to effect bundle " .. effect_bundle_key)
                     end
                end
@@ -1414,12 +1405,12 @@ character_traits_expansion.start_trait_listeners = function()
           local is_in_settlement = character:in_settlement() == true
 
           if cm:char_is_general_with_army(character) and character:has_region() and is_in_settlement then
-               if not character:turns_in_own_regions() < 4 and character:military_force():active_stance() ~= "MILITARY_FORCE_ACTIVE_STANCE_TYPE_MUSTER" then
-                    if public_order >= 60 and faction_name == character:faction():name() then
+               if not character:turns_in_own_regions() < 3 and character:military_force():active_stance() ~= "MILITARY_FORCE_ACTIVE_STANCE_TYPE_MUSTER" then
+                    if public_order >= 70 and faction_name == character:faction():name() then
                          character_traits_expansion.apply_trait_by_chance(character, "phar_main_trait_content", 20, 7.5)
                          character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 3)
                          out("character_traits_expansion_character_is_garrisoned_in_settlement_with_high_public_order!")
-                    elseif public_order <= -75 and faction_name == character:faction():name() then
+                    elseif public_order <= -70 and faction_name == character:faction():name() then
                          character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 10)
                          character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_admin_bad", 20, 5)
                          out("character_traits_expansion_character_is_garrisoned_in_settlement_with_low_public_order!")
@@ -1451,7 +1442,6 @@ character_traits_expansion.start_trait_listeners = function()
 
           local faction = character:faction()
           local region = character:region()
-          -- ! Lycia Bookmark
           if faction:is_allowed_to_capture_territory() and cm:char_is_general_with_army(character) and character:has_region() and not region:is_abandoned() then
                -- Check if the character is in a settlement and applies hesitant
                if character:in_settlement() then
@@ -1530,12 +1520,12 @@ character_traits_expansion.start_trait_listeners = function()
                               local building_superchain = slot_list:item_at(i):building():superchain()
                               out("Checking building with superchain: " .. building_superchain)
 
-                              if character_traits_expansion.military_admin_buildings_set[building_superchain] then
+                              if character_traits_expansion.building_superchains.military_administration[building_superchain] then
                                    sober_chance = sober_chance + 4
                                    out("character_traits_expansion_give_lazy_traits_found_military_admin_building_so_sober_chance_is " .. sober_chance)
                               end
 
-                              if character_traits_expansion.drink_buildings_set[building_superchain] then
+                              if character_traits_expansion.building_superchains.drinking[building_superchain] then
                                    drink_chance = drink_chance + 4
                                    out("character_traits_expansion_give_lazy_traits_found_drink_building_so_drink_chance_is " .. drink_chance)
                               end
@@ -1569,20 +1559,13 @@ character_traits_expansion.start_trait_listeners = function()
 
           -- ! Lycia Bookmark
           -------------------------------
-          ---- CORRUPT IN SETTLEMENT ----
+          --- TEMPTED BY CORRUPTION
           -------------------------------
-          if cm:char_is_general_with_army(character) and character:in_settlement() then
+          if cm:char_is_general_with_army(character) and character:has_region() and character:region():owning_faction():name() == character:faction():name() then
                local building_list = region:settlement():building_list()
+               local building_list = character:region():settlement():building_list()
                out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " IS IN REGION: " .. region:name() ..
                         " CHECKING FOR TREASURY, PALACE OF PLEASURE AND GOLD MINE")
-
-               -- check faction treasury
-               -- local faction = character:faction()
-               -- if (faction:is_human() and faction:treasury() >= 50000)
-               --     or (not faction:is_human() and faction:treasury() >= 250000) then
-               --     character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_corrupt", 20, 3)
-               --     out("character_traits_expansion_CORRUPT treasury is high! Treasury_is_" .. tostring(faction:treasury()))
-               -- end
 
                -- check for palace of pleasures
                for i = 0, building_list:num_items() - 1 do
@@ -1598,7 +1581,7 @@ character_traits_expansion.start_trait_listeners = function()
 
                          -- check for gold mine
                          if character_traits_expansion.gold_superchain_set[superchain] then
-                              character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_corrupt", 20, 1)
+                              character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_corrupt", 20, 5)
                               out("character_traits_expansion_CORRUPT gold mine found!")
                               break
                          end
@@ -1607,7 +1590,7 @@ character_traits_expansion.start_trait_listeners = function()
           end
 
           if character:is_null_interface() then return out("character_traits_expansion_CHARACTER_RANKED_UP_BUT_IS_NULL_INTERFACE!") end
-          -- ! Lycia Bookmark
+
           ------------------------------------
           ---- POPULAR/UNPOPULAR GOVERNOR ----
           ------------------------------------
@@ -1642,7 +1625,7 @@ character_traits_expansion.start_trait_listeners = function()
           end
 
           -------------------------------
-          ---- SPENT TURN IN STANCES ----
+          ---- SPENT TURN IN STANCES
           -------------------------------
           local character = context:character();
 
@@ -1709,9 +1692,9 @@ character_traits_expansion.start_trait_listeners = function()
 
           -- ! Lycia Bookmark
           ---------------------------------------
-          ---- SETTLEMENT HAS SMUGGLERS' DEN ----
+          ---- REGION HAS SMUGGLERS' DEN ----
           ---------------------------------------
-          if cm:char_is_general_with_army(character) and character:has_region() and character:in_settlement() then
+          if cm:char_is_general_with_army(character) and character:has_region() and character:region():owning_faction():name() == character:faction():name() then
                local building_list = region:settlement():building_list()
                out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " IS IN REGION: " .. region:name() .. " CHECKING FOR SMUGGLERS' DEN")
 
@@ -1721,7 +1704,7 @@ character_traits_expansion.start_trait_listeners = function()
                     if not building:is_null_interface() then
                          local superchain = building:superchain()
                          if superchain == "phar_main_port_coast_derivative_type_a" or superchain == "phar_main_irsu_resource_production_port_coast_derivative_type_a" then
-                              character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_criminal", 20, 7.5)
+                              character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_criminal", 20, 12.5)
                               out("character_traits_expansion_SMUGGLERS' DEN found!")
                               break
                          end
@@ -1732,7 +1715,7 @@ character_traits_expansion.start_trait_listeners = function()
           ------------------------------------------------
           ---- SETTLEMENT HAS MILITARY ADMIN BUILDING ----
           ------------------------------------------------
-          if cm:char_is_general_with_army(character) and character:has_region() and character:in_settlement() then
+          if cm:char_is_general_with_army(character) and character:has_region() and character:region():owning_faction():name() == character:faction():name() then
                local region = character:region()
                local building_list = region:settlement():building_list()
 
@@ -1751,7 +1734,7 @@ character_traits_expansion.start_trait_listeners = function()
           ---------------------------------------
           ---- SETTLEMENT HAS ADMIN BUILDING ----
           ---------------------------------------
-          if cm:char_is_general_with_army(character) and character:has_region() and character:in_settlement() then
+          if cm:char_is_general_with_army(character) and character:has_region() and character:region():owning_faction():name() == character:faction():name() then
                local region = character:region()
                local building_list = region:settlement():building_list()
 
@@ -1759,7 +1742,7 @@ character_traits_expansion.start_trait_listeners = function()
                for i = 0, building_list:num_items() - 1 do
                     if building_list:item_at(i):is_null_interface() == false then
                          local building_superchain = building_list:item_at(i):superchain()
-                         if character_traits_expansion.buildings.superchains.province_management[building_superchain] then
+                         if character_traits_expansion.building_superchains.province_management[building_superchain] then
                               character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_admin_good", 20, 7.5)
                               out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " FOUND MANAGEMENT BUILDING: " .. building_superchain)
                          end
@@ -1789,7 +1772,7 @@ character_traits_expansion.start_trait_listeners = function()
           ----------------------------------
           for i = 1, #self_perpetuating_traits do
                if character:has_trait(self_perpetuating_traits[i]) then
-                    character_traits_expansion.apply_trait_by_chance(character, self_perpetuating_traits[i], 20, 3)
+                    character_traits_expansion.apply_trait_by_chance(character, self_perpetuating_traits[i], 20, 3.5)
                     out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " HAS SELF PERPETUATING TRAIT: " .. self_perpetuating_traits[i])
                end
           end
@@ -2473,6 +2456,7 @@ end
 
 character_traits_expansion.modify_phar_campaign_traits()
 character_traits_expansion.start_trait_listeners()
+character_traits_expansion.ancient_legacies.apply_ancient_legacy_traits()
 
 cm:add_saving_game_callback(function(context)
      cm:save_named_value("is_akhenaten_legacy_claimed", character_traits_expansion.ancient_legacies.is_akhenaten_legacy_claimed, context);

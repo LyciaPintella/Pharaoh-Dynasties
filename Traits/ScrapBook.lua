@@ -2,7 +2,8 @@
 
 
 --[[
-
+	if cm:char_is_general_with_army(character) and character:has_region() and character:region():owning_faction():name() == character:faction():name() then
+	end
 
 core:add_listener("hcp_character_rank_up_listener", "CharacterRankUp", true, function(context)
 local character = context:character()
