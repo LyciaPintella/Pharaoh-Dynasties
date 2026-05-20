@@ -48,8 +48,8 @@ campaign_traits.config.modifiable_event_params = {
 	character_bodyguard_unit_set = "phar_main_bodyguards",
 	character_spent_turn_in_region_with_high_influence = 0.6,
 	character_spent_turn_in_region_with_low_influence = 0.6,
-	character_bodyguard_suffered_casualties_high = 30,
-	character_bodyguard_suffered_casualties_low = 30,
+	character_bodyguard_suffered_casualties_high = 25,
+	character_bodyguard_suffered_casualties_low = 25,
 	character_shrine_occupation_allowed_options = {"occupation_decision_ers_raze_without_occupy", "occupation_decision_ers_sack"},
 	character_raze_port_decision_key = {"occupation_decision_raze_without_occupy", "occupation_decision_raze_and_exterminate"}
 }
@@ -4096,35 +4096,6 @@ campaign_traits.config.trait_event_data = {
 		end,
 	},
 }
-
-
-
-
-
-campaign_traits.setup_phar_traits_listeners = function()
-	for idx, event_data in ipairs(campaign_traits.config.trait_event_data) do
-		if not is_string(event_data.event) or not is_function(event_data.listener) or not is_string(event_data.id) then
-			script_error("ERROR: setup_phar_traits_listeners() called but provided ".. event_name .." as event name is not a string or its callback is not a function.")
-			return
-		end
-		out.traits("Adding trait listener for " .. event_data.id)
-		core:add_listener(
-			"phar_personality_traits_" .. event_data.id,
-			event_data.event,
-			function(context)
-				if event_data.filter and is_function(event_data.filter) then
-					return event_data.filter(context)
-				end
-				return true
-			end,
-			event_data.listener,
-			true
-		)
-	end
-end
-
-
-
 
 -- this table is autofilled by the script. it contains all the personality traits as a list.
 campaign_traits.config.personality_trait_list = {
