@@ -18,6 +18,22 @@ character_traits_expansion:character_traits_expansion
 
 ---@type { character_traits_expansion: { ancient_legacies: { is_akhenaten_legacy_claimed: boolean } } }
 
+morale_mod_mult	character_traits_expansion_morale_mod_mult_battle_context_fighting_battle_type_night	fighting_battle_type_night
+melee_defence_mod_mult	character_traits_expansion_melee_defence_mod_mult_battle_context_fighting_battle_type_night	fighting_battle_type_night
+
+
+morale_mod_mult	phar_main_morale_mod_mult_battle_context_defending	fighting_force_status_yours_defending
+
+
+
+--- @type table
+
+     --- @class ancient_legacy_traits Ancient Legacy Traits
+
+
+for i = 1, #random_traits_list do table.insert(campaign_traits.config.civilian_traits, random_traits_list[i]) end
+
+character_traits_expansion.trait_lists.randomly_added
 
 
 (field) character_traits_expansion.ancient_legacies: { character_traits_expansion: { ancient_legacies: table } } {
