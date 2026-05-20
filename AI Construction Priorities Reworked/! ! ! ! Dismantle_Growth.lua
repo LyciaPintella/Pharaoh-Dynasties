@@ -1,30 +1,37 @@
 local function out(t) ModLog("AI CPR: " .. tostring(t) .. ".") end
 
 local pharaoh_growth_buildings = {
-     ["phar_main_all_landmark_growth_happiness_ashkelon_1"] = true,
+     ["phar_main_all_landmark_growth_happiness_ashkelon_1"] = false,
      ["phar_main_all_province_management_growth_type_a_1"] = true,
      ["phar_main_all_province_management_growth_type_a_2"] = true,
      ["phar_main_all_province_management_growth_type_a_3"] = true,
      ["phar_main_all_province_management_growth_type_b_1"] = true,
      ["phar_main_all_province_management_growth_type_b_2"] = true,
-     ["phar_main_amenmesse_province_management_main_building_production_boost_growth_1"] = true,
-     ["phar_main_amenmesse_province_management_main_building_production_boost_growth_2"] = true,
-     ["phar_main_amenmesse_province_management_main_building_production_boost_growth_3"] = true,
-     ["phar_main_suppi_province_management_growth_1"] = true,
-     ["phar_main_suppi_province_management_growth_2"] = true,
-     ["phar_map_bab_province_management_happiness_growth_type_a_1"] = true,
-     ["phar_map_bab_province_management_happiness_growth_type_a_2"] = true,
-     ["phar_map_bab_province_management_happiness_growth_type_a_3"] = true,
-     ["phar_sea_sherden_province_management_growth_production_adjacent_1"] = true,
-     ["phar_sea_sherden_province_management_growth_production_adjacent_2"] = true,
-     ["phar_sea_sherden_province_management_growth_production_adjacent_3"] = true
+	--Amenmesse's unique growth building provides +15% resource production province-wide and +5 diplomatic relations with all non-Egyptian factions.
+     ["phar_main_amenmesse_province_management_main_building_production_boost_growth_1"] = false,
+     ["phar_main_amenmesse_province_management_main_building_production_boost_growth_2"] = false,
+     ["phar_main_amenmesse_province_management_main_building_production_boost_growth_3"] = false,
+	--This building is useful for food production but its bonuses are only regionwide. Make a synergy rule to keep the AI from building it unless a region has a farm
+     ["phar_main_suppi_province_management_growth_1"] = false,
+     ["phar_main_suppi_province_management_growth_2"] = false,
+	--This one provides +6 happiness and province-wide army replenishment. I'll let it stay for now.
+     ["phar_map_bab_province_management_happiness_growth_type_a_1"] = false,
+     ["phar_map_bab_province_management_happiness_growth_type_a_2"] = false,
+     ["phar_map_bab_province_management_happiness_growth_type_a_3"] = false,
+	--This building boosts adjacent provinces and provides faction-wide labor growth to horde armies.
+     ["phar_sea_sherden_province_management_growth_production_adjacent_1"] = false,
+     ["phar_sea_sherden_province_management_growth_production_adjacent_2"] = false,
+     ["phar_sea_sherden_province_management_growth_production_adjacent_3"] = false
 }
 
 local function is_growth_building(building_name) return pharaoh_growth_buildings[building_name] or false end
-
+--- @function Dismantle_Growth
+--- @desc Dismantles growth buildings in a specified region. This function is intended to be called when a province capital reaches tier 5 as the AI will no longer need growth.
+---@param region_key string The region_key from which to remove the barracks.
 local function Dismantle_Growth(region_key)
      out("Dismantle_Growth: start error checks.")
      out("Dismantle_Growth: for region " .. region_key)
+     ---@diagnostic disable-next-line: redundant-parameter
      local region = cm:get_region(region_key)
      if not region then
           out("Error - Region not found for key " .. region_key)
@@ -76,7 +83,6 @@ local function Growth_Listener()
           return context:building():slot():type() == "primary" and context:building():building_level() == 5
      end, function(context)
           local region = context:building():region()
-          local region_key = context:building():region():name()
           local region_owner = region:owning_faction()
           local province = region:province()
           if not province then
@@ -84,7 +90,7 @@ local function Growth_Listener()
                return
           end
 
-          out("DismantleGrowthListener T5 settlement reached in " .. (province:key() or "unknown province") .. " for " .. (region_owner:name() or "unknown owner") ..
+          out("DismantleGrowthListener: T5 settlement reached in " .. (province:key() or "unknown province") .. " for " .. (region_owner:name() or "unknown owner") ..
                    " region_owner:is_human() - " .. tostring(region_owner:is_human()))
 
           if not region_owner:is_human() then

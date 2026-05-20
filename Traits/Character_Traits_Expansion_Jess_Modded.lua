@@ -353,8 +353,8 @@ character_traits_expansion.self_perpetuating_traits = {
 
 --- @function apply_trait_by_chance
 --- @desc Applies a trait to a character with a percentage chance of success.The trait is applied using the function campaign_manager:force_add_trait . The number of points to add _points parameter (default value=1). The function also includes checks to ensure that the target character is valid and can receive traits, and it can optionally show a message when a trait is applied to a general with an army.
----@param character CHARACTER_SCRIPT_INTERFACE  #Character object of the target character.
----@param trait string  Trait key to add.
+---@param character CHARACTER_SCRIPT_INTERFACE #Character object of the target character.
+---@param trait string Trait key to add.
 ---@param _points number? #optional, default value=1 Trait points to add. The underlying force_add_trait function is called for each point added.
 ---@param _chance number? #optional, default value=100 Percentage chance for the trait to be applied. Value should be between 0 and 100.
 ---@param _show_message boolean? #optional, default value=false Show message.
@@ -1259,10 +1259,11 @@ character_traits_expansion.start_trait_listeners = function()
                out("No commander found in settlement")
           end
      end, true)
-
+    --:command_queue_index()
+--region():owning_faction():command_queue_index() == character:faction():command_queue_index()
      core:add_listener("character_ends_turn_in_province_with_construction", "CharacterEndTurn", function(context)
           local character = context:character()
-          if character:has_region() and character:region():owning_faction():name() == character:faction():name() then
+          if character:has_region() and character:region():owning_faction():command_queue_index() == character:faction():command_queue_index() then
                local province = character:region():province()
                for i = 0, province:region_list():num_items() - 1 do
                     for i = 0, region:slot_list():num_items() - 1 do
@@ -1561,7 +1562,7 @@ character_traits_expansion.start_trait_listeners = function()
           -------------------------------
           --- TEMPTED BY CORRUPTION
           -------------------------------
-          if cm:char_is_general_with_army(character) and character:has_region() and character:region():owning_faction():name() == character:faction():name() then
+          if cm:char_is_general_with_army(character) and character:has_region() and character:region():owning_faction():command_queue_index() == character:faction():command_queue_index() then
                local building_list = region:settlement():building_list()
                local building_list = character:region():settlement():building_list()
                out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " IS IN REGION: " .. region:name() ..
@@ -1598,30 +1599,33 @@ character_traits_expansion.start_trait_listeners = function()
                local region = character:region()
                out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " IS GOVERNOR OF REGION: " .. region:name())
                if region:public_order() == 100 then
-                    character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 25)
+                    character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 30)
                     out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " RANKED UP IN SETTLEMENT WITH HIGH PUBLIC ORDER. GIVING POPULAR.")
-               elseif region:public_order() >= 75 then
-                    character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 15)
+               elseif region:public_order() >= 80 then
+                    character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 17.5)
                     out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " RANKED UP IN SETTLEMENT WITH HIGH PUBLIC ORDER. GIVING POPULAR.")
-               elseif region:public_order() >= 55 then
+               elseif region:public_order() >= 65 then
                     character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 7.5)
                     out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " RANKED UP IN SETTLEMENT WITH HIGH PUBLIC ORDER. GIVING POPULAR.")
-               elseif region:public_order() >= 40 then
+               elseif region:public_order() >= 50 then
                     character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 2.5)
                     out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " RANKED UP IN SETTLEMENT WITH HIGH PUBLIC ORDER. GIVING POPULAR.")
                elseif region:public_order() <= -25 then
-                    character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 5)
+                    character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, )
                     out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " RANKED UP IN SETTLEMENT WITH LOW PUBLIC ORDER. GIVING UNPOPULAR.")
                elseif region:public_order() <= -40 then
                     character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 10)
                     out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " RANKED UP IN SETTLEMENT WITH LOW PUBLIC ORDER. GIVING UNPOPULAR.")
                elseif region:public_order() <= -60 then
-                    character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 17.5)
+                    character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 15)
                     out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " RANKED UP IN SETTLEMENT WITH LOW PUBLIC ORDER. GIVING UNPOPULAR.")
-               elseif region:public_order() <= -85 then
+               elseif region:public_order() <= -80 then
                     character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 25)
                     out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " RANKED UP IN SETTLEMENT WITH LOW PUBLIC ORDER. GIVING UNPOPULAR.")
-               end
+			elseif region:public_order() == -100 then
+                    character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 35)
+                    out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " RANKED UP IN SETTLEMENT WITH LOW PUBLIC ORDER. GIVING UNPOPULAR.")
+			end
           end
 
           -------------------------------
@@ -1694,7 +1698,7 @@ character_traits_expansion.start_trait_listeners = function()
           ---------------------------------------
           ---- REGION HAS SMUGGLERS' DEN ----
           ---------------------------------------
-          if cm:char_is_general_with_army(character) and character:has_region() and character:region():owning_faction():name() == character:faction():name() then
+          if cm:char_is_general_with_army(character) and character:has_region() and character:region():owning_faction():command_queue_index() == character:faction():command_queue_index() then
                local building_list = region:settlement():building_list()
                out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " IS IN REGION: " .. region:name() .. " CHECKING FOR SMUGGLERS' DEN")
 
@@ -1715,7 +1719,7 @@ character_traits_expansion.start_trait_listeners = function()
           ------------------------------------------------
           ---- SETTLEMENT HAS MILITARY ADMIN BUILDING ----
           ------------------------------------------------
-          if cm:char_is_general_with_army(character) and character:has_region() and character:region():owning_faction():name() == character:faction():name() then
+          if cm:char_is_general_with_army(character) and character:has_region() and character:region():owning_faction():command_queue_index() == character:faction():command_queue_index() then
                local region = character:region()
                local building_list = region:settlement():building_list()
 
@@ -1734,7 +1738,7 @@ character_traits_expansion.start_trait_listeners = function()
           ---------------------------------------
           ---- SETTLEMENT HAS ADMIN BUILDING ----
           ---------------------------------------
-          if cm:char_is_general_with_army(character) and character:has_region() and character:region():owning_faction():name() == character:faction():name() then
+          if cm:char_is_general_with_army(character) and character:has_region() and character:region():owning_faction():command_queue_index() == character:faction():command_queue_index() then
                local region = character:region()
                local building_list = region:settlement():building_list()
 

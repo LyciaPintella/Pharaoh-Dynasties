@@ -5,8 +5,12 @@ local regions = {
 local function out(t) ModLog("Replace Starting Bretonnian Barracks With Stables: " .. tostring(t) .. ".") end
 local function add_building(slot) cm:callback(function() cm:region_slot_instantly_upgrade_building(slot, "wh_main_brt_stables_1") end, 0.3) end
 
+--- @function remove_barracks
+--- @desc Removes a barracks building from the specified region. This function is intended to be called at the start of the game.
+---@param region_key string The region_key from which to remove the barracks.
 local function remove_barracks(region_key)
      out("Calling function remove_barracks " .. "")
+     ---@diagnostic disable-next-line: redundant-parameter
      local region = cm:get_region(region_key)
      local slot_list = region:settlement():slot_list()
      if cm:is_new_game() then
@@ -23,8 +27,12 @@ local function remove_barracks(region_key)
      end
 end
 
+--- @function remove_barracks_add_stables
+--- @desc Removes a barracks building from the specified region and replace it with a stables building. This function is intended to be called at the start of the game.
+---@param region_key string The region_key from which to remove the barracks.
 local function remove_barracks_add_stables(region_key)
      out("Calling function remove_barracks_add_stables " .. "")
+     ---@diagnostic disable-next-line: redundant-parameter
      local region = cm:get_region(region_key)
      local slot_list = region:settlement():slot_list()
      if cm:is_new_game() then
