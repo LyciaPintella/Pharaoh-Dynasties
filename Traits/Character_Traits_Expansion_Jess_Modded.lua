@@ -1,28 +1,213 @@
 ---  Character Traits Expansion
---- @class character_traits_expansion Character Traits Expansion
 --- @set_environment campaign
---- @alias cte character_traits_expansion
+--- @class character_trait_manager : table
 local character_traits_expansion = {
-     building_superchains = {drinking = {}, food = {}, gold = {}, mines = {}, military_administration = {}, province_management = {}},
-     traits = {
-          character_traits_expansion_trait_list = {},
-          new_character_creation_trait_list = {},
-          coming_of_age = {ChancePerTrait = 5, trait_list = {}},
-          cultural = {},
-          legendary_lord_defeat = {},
-          -- Traits allowed to trigger for any character on any given turn
-          randomly_added = {}
-     },
+     --- @class ancient_legacy_manager : table
      ancient_legacies = {
           ---@type boolean
-          is_akhenaten_legacy_claimed = false
+          is_akhenaten_legacy_claimed = false,
+          apply_traits = function() end
      }
-};
--- set character_traits_expansion to be of custom type TYPE_TRAIT_MANAGER
+}
+-- set trait_manager to be of custom type TYPE_trait_managers
 set_class_custom_type_and_tostring(character_traits_expansion, TYPE_CHARACTER_TRAIT_MANAGER);
 
+--- @class character_trait_list : table
+character_traits_expansion.self_perpetuating = {
+     "character_traits_expansion_trait_mad", "character_traits_expansion_trait_degenerate", "character_traits_expansion_trait_sober", "character_traits_expansion_trait_drink", "character_traits_expansion_trait_girls", "character_traits_expansion_trait_arse", "character_traits_expansion_trait_gambler", "character_traits_expansion_trait_feck",
+     "character_traits_expansion_trait_corrupt", "character_traits_expansion_trait_blighted", "character_traits_expansion_trait_cuckold", "character_traits_expansion_trait_slothful", "character_traits_expansion_trait_boring", "character_traits_expansion_trait_trusting", "character_traits_expansion_trait_paranoia",
+     "character_traits_expansion_trait_superstitious", "character_traits_expansion_trait_prophetic", "character_traits_expansion_trait_anger", "phar_main_trait_respectful", "phar_main_trait_irreverent", "character_traits_expansion_trait_fertile",
+     "character_traits_expansion_trait_barren", "character_traits_expansion_trait_blind", "character_traits_expansion_trait_heretic"
+}
+
+local base_chance = character_traits_expansion.coming_of_age.base_chance
+-- Traits allowed to trigger when character comes of age
+--- @class character_trait_pairs : table
+character_traits_expansion.coming_of_age.traits = {
+     ["phar_main_trait_ambitious"] = base_chance,
+     ["phar_main_trait_barbaric"] = base_chance,
+     ["phar_main_trait_blunt"] = base_chance,
+     ["phar_main_trait_brave"] = base_chance,
+     ["phar_main_trait_cautious"] = base_chance,
+     ["phar_main_trait_content"] = base_chance,
+     ["phar_main_trait_cooperative"] = base_chance,
+     ["phar_main_trait_cowardly"] = base_chance,
+     ["phar_main_trait_cruel"] = base_chance,
+     ["phar_main_trait_cultured"] = base_chance,
+     ["phar_main_trait_hesitant"] = base_chance,
+     ["phar_main_trait_individualistic"] = base_chance,
+     ["phar_main_trait_irreverent"] = base_chance,
+     ["phar_main_trait_materialistic"] = base_chance,
+     ["phar_main_trait_merciful"] = base_chance,
+     ["phar_main_trait_reckless"] = base_chance,
+     ["phar_main_trait_respectful"] = base_chance,
+     ["phar_main_trait_spiritual"] = base_chance,
+     ["phar_main_trait_underhanded"] = base_chance,
+     ["character_traits_expansion_trait_degenerate"] = base_chance,
+     ["character_traits_expansion_trait_scout"] = base_chance,
+     ["character_traits_expansion_trait_attacking_victory"] = base_chance,
+     ["character_traits_expansion_trait_attacking_defeat"] = base_chance,
+     ["character_traits_expansion_trait_defending_defeat"] = base_chance,
+     ["character_traits_expansion_trait_defending_victory"] = base_chance,
+     ["character_traits_expansion_trait_siege_victory"] = base_chance,
+     ["character_traits_expansion_trait_siege_defeat"] = base_chance,
+     ["character_traits_expansion_trait_siege_defense_victory"] = base_chance,
+     ["character_traits_expansion_trait_sober"] = base_chance,
+     ["character_traits_expansion_trait_drink"] = base_chance,
+     ["character_traits_expansion_trait_girls"] = base_chance,
+     ["character_traits_expansion_trait_arse"] = base_chance,
+     ["character_traits_expansion_trait_gambler"] = base_chance,
+     ["character_traits_expansion_trait_bloody"] = base_chance,
+     ["character_traits_expansion_trait_inbred"] = base_chance,
+     ["character_traits_expansion_trait_popular"] = base_chance,
+     ["character_traits_expansion_trait_unpopular"] = base_chance,
+     ["character_traits_expansion_trait_lucky"] = base_chance,
+     ["character_traits_expansion_trait_unlucky"] = base_chance,
+     ["character_traits_expansion_trait_farmer_good"] = base_chance,
+     ["character_traits_expansion_trait_farmer_bad"] = base_chance,
+     ["character_traits_expansion_trait_mad"] = base_chance,
+     ["character_traits_expansion_trait_healthy"] = base_chance,
+     ["character_traits_expansion_trait_blighted"] = base_chance,
+     ["character_traits_expansion_trait_sea_legs"] = base_chance,
+     ["character_traits_expansion_trait_feck"] = base_chance,
+     ["character_traits_expansion_trait_survivor"] = base_chance,
+     ["character_traits_expansion_trait_admin_good"] = base_chance,
+     ["character_traits_expansion_trait_admin_bad"] = base_chance,
+     ["character_traits_expansion_trait_miner"] = base_chance,
+     ["character_traits_expansion_trait_military_admin_good"] = base_chance,
+     ["character_traits_expansion_trait_military_admin_bad"] = base_chance,
+     ["character_traits_expansion_trait_warmonger"] = base_chance,
+     ["character_traits_expansion_trait_pacifist"] = base_chance,
+     ["character_traits_expansion_trait_corrupt"] = base_chance,
+     ["character_traits_expansion_trait_noctophilia"] = base_chance,
+     ["character_traits_expansion_trait_noctophobia"] = base_chance,
+     ["character_traits_expansion_trait_slothful"] = base_chance,
+     ["character_traits_expansion_trait_energetic"] = base_chance,
+     ["character_traits_expansion_trait_charismatic"] = base_chance,
+     ["character_traits_expansion_trait_boring"] = base_chance,
+     ["character_traits_expansion_trait_trusting"] = base_chance,
+     ["character_traits_expansion_trait_paranoia"] = base_chance,
+     ["character_traits_expansion_trait_pragmatic"] = base_chance,
+     ["character_traits_expansion_trait_superstitious"] = base_chance,
+     ["character_traits_expansion_trait_anger"] = base_chance,
+     ["character_traits_expansion_trait_attractive"] = base_chance,
+     ["character_traits_expansion_trait_ugly"] = base_chance,
+     ["character_traits_expansion_trait_prophetic"] = base_chance,
+     ["character_traits_expansion_trait_authoritarian"] = base_chance,
+     ["character_traits_expansion_trait_liberal"] = base_chance,
+     ["character_traits_expansion_trait_fertile"] = base_chance,
+     ["character_traits_expansion_trait_barren"] = base_chance,
+     ["character_traits_expansion_trait_scarred"] = base_chance,
+     ["character_traits_expansion_trait_criminal"] = base_chance,
+     ["character_traits_expansion_trait_blind"] = base_chance,
+     ["character_traits_expansion_trait_wins_against_canaan"] = 0,
+     ["character_traits_expansion_trait_wins_against_danaans"] = 0,
+     ["character_traits_expansion_trait_wins_against_egypt"] = 0,
+     ["character_traits_expansion_trait_wins_against_hatti"] = 0,
+     ["character_traits_expansion_trait_wins_against_mesopotamian"] = 0,
+     ["character_traits_expansion_trait_wins_against_sea_peoples"] = 0,
+     ["character_traits_expansion_trait_wins_against_trojans"] = 0,
+     ["character_traits_expansion_trait_defeats_against_canaan"] = 0,
+     ["character_traits_expansion_trait_defeats_against_danaans"] = 0,
+     ["character_traits_expansion_trait_defeats_against_egypt"] = 0,
+     ["character_traits_expansion_trait_defeats_against_hatti"] = 0,
+     ["character_traits_expansion_trait_defeats_against_mesopotamian"] = 0,
+     ["character_traits_expansion_trait_defeats_against_sea_peoples"] = 0,
+     ["character_traits_expansion_trait_defeats_against_trojans"] = 0
+}
+
+character_traits_expansion.coming_of_age = {}
+character_traits_expansion.coming_of_age.traits = {}
+character_traits_expansion.coming_of_age.base_chance = 5
+
+
+character_traits_expansion.factions_to_culture_pairs = {
+     ["phar_main_clt_canaan"] = "canaan",
+     ["phar_main_clt_hatti"] = "hatti",
+     ["phar_main_clt_kemet"] = "egypt",
+     ["phar_main_clt_sea_peoples"] = "sea_peoples",
+     ["phar_map_clt_mesopotamian"] = "mesopotamian",
+     ["troy_main_clt_danaans"] = "danaans",
+     ["troy_main_clt_trojans"] = "trojans"
+}
+
+---@type character_trait_pairs
+character_traits_expansion.legendary_lords_defeated = {
+     ["phar_hero_can_bay_bay"] = "character_traits_expansion_trait_defeated_bay",
+     ["phar_hero_can_irs_irsu"] = "character_traits_expansion_trait_defeated_irsu",
+     ["phar_hero_egy_ame_amenmesse"] = "character_traits_expansion_trait_defeated_amenmesse",
+     ["phar_hero_egy_mer_merneptah"] = "character_traits_expansion_trait_defeated_merneptah",
+     ["phar_hero_egy_ram_ramesses"] = "character_traits_expansion_trait_defeated_ramesses",
+     ["phar_hero_egy_set_seti"] = "character_traits_expansion_trait_defeated_seti",
+     ["phar_hero_egy_setn_setnakhte"] = "character_traits_expansion_trait_defeated_setnakhte",
+     ["phar_hero_egy_tau_tausret"] = "character_traits_expansion_trait_defeated_tausret",
+     ["phar_hero_hit_hat_suppiluliuma"] = "character_traits_expansion_trait_defeated_suppiluliuma",
+     ["phar_hero_hit_tarh_kurunta"] = "character_traits_expansion_trait_defeated_kurunta",
+     ["phar_map_hero_ach_achilles"] = "character_traits_expansion_trait_defeated_achilles",
+     ["phar_map_hero_ach_agamemnon"] = "character_traits_expansion_trait_defeated_agamemnon",
+     ["phar_map_hero_ach_ajax"] = "character_traits_expansion_trait_defeated_ajax",
+     ["phar_map_hero_ach_diomedes"] = "character_traits_expansion_trait_defeated_diomedes",
+     ["phar_map_hero_ach_menelaus"] = "character_traits_expansion_trait_defeated_menelaus",
+     ["phar_map_hero_ach_odysseus"] = "character_traits_expansion_trait_defeated_odysseus",
+     ["phar_map_hero_ash_ninurta"] = "character_traits_expansion_trait_defeated_ninurta",
+     ["phar_map_hero_bab_adad"] = "character_traits_expansion_trait_defeated_adad",
+     ["phar_map_hero_egy_memnon"] = "character_traits_expansion_trait_defeated_memnon",
+     ["phar_map_hero_thr_rhesus"] = "character_traits_expansion_trait_defeated_rhesus",
+     ["phar_map_hero_tro_aeneas"] = "character_traits_expansion_trait_defeated_aeneas",
+     ["phar_map_hero_tro_hector"] = "character_traits_expansion_trait_defeated_hector",
+     ["phar_map_hero_tro_paris"] = "character_traits_expansion_trait_defeated_paris",
+     ["phar_map_hero_tro_priam"] = "character_traits_expansion_trait_defeated_priam",
+     ["phar_map_hero_tro_sarpedon"] = "character_traits_expansion_trait_defeated_sarpedon",
+     ["phar_sea_hero_iol_iolaos"] = "character_traits_expansion_trait_defeated_iolaos",
+     ["phar_sea_hero_wal_walwetes"] = "character_traits_expansion_trait_defeated_walwetes"
+}
+
+character_traits_expansion.character_creation_traits = {
+     "phar_main_trait_ambitious", "phar_main_trait_barbaric", "phar_main_trait_blunt", "phar_main_trait_brave", "phar_main_trait_cautious", "phar_main_trait_confident",
+     "phar_main_trait_content", "phar_main_trait_cooperative", "phar_main_trait_cowardly", "phar_main_trait_cruel", "phar_main_trait_cultured",
+     "phar_main_trait_hesitant", "phar_main_trait_individualistic", "phar_main_trait_irreverent", "phar_main_trait_materialistic", "phar_main_trait_merciful",
+     "phar_main_trait_reckless", "phar_main_trait_respectful", "phar_main_trait_spiritual", "phar_main_trait_underhanded", "character_traits_expansion_trait_degenerate", "character_traits_expansion_trait_scout",
+     "character_traits_expansion_trait_attacking_victory", "character_traits_expansion_trait_attacking_defeat", "character_traits_expansion_trait_defending_defeat", "character_traits_expansion_trait_defending_victory", "character_traits_expansion_trait_siege_victory",
+     "character_traits_expansion_trait_siege_defeat", "character_traits_expansion_trait_siege_defense_victory", "character_traits_expansion_trait_sober", "character_traits_expansion_trait_drink", "character_traits_expansion_trait_girls", "character_traits_expansion_trait_arse", "character_traits_expansion_trait_gambler",
+     "character_traits_expansion_trait_bloody", "character_traits_expansion_trait_inbred", "character_traits_expansion_trait_popular", "character_traits_expansion_trait_unpopular", "character_traits_expansion_trait_lucky", "character_traits_expansion_trait_unlucky", "character_traits_expansion_trait_farmer_good",
+     "character_traits_expansion_trait_farmer_bad", "character_traits_expansion_trait_bereaved", "character_traits_expansion_trait_mad", "character_traits_expansion_trait_healthy", "character_traits_expansion_trait_blighted", "character_traits_expansion_trait_sea_legs", "character_traits_expansion_trait_feck",
+     "character_traits_expansion_trait_survivor", "character_traits_expansion_trait_admin_good", "character_traits_expansion_trait_admin_bad", "character_traits_expansion_trait_miner", "character_traits_expansion_trait_military_admin_good", "character_traits_expansion_trait_military_admin_bad",
+     "character_traits_expansion_trait_warmonger", "character_traits_expansion_trait_pacifist", "character_traits_expansion_trait_corrupt", "character_traits_expansion_trait_noctophilia", "character_traits_expansion_trait_noctophobia", "character_traits_expansion_trait_slothful", "character_traits_expansion_trait_energetic",
+     "character_traits_expansion_trait_charismatic", "character_traits_expansion_trait_boring", "character_traits_expansion_trait_trusting", "character_traits_expansion_trait_paranoia", "character_traits_expansion_trait_pragmatic", "character_traits_expansion_trait_superstitious", "character_traits_expansion_trait_anger",
+     "character_traits_expansion_trait_attractive", "character_traits_expansion_trait_ugly", "character_traits_expansion_trait_prophetic", "character_traits_expansion_trait_authoritarian", "character_traits_expansion_trait_liberal", "character_traits_expansion_trait_fertile", "character_traits_expansion_trait_barren",
+     "character_traits_expansion_trait_scarred", "character_traits_expansion_trait_criminal", "character_traits_expansion_trait_blind"
+
+}
+
+-- Traits allowed to trigger for any character on any given turn
+---@type character_trait_pairs
+character_traits_expansion.emergent_traits = {"character_traits_expansion_trait_degenerate", "character_traits_expansion_trait_unlucky", "character_traits_expansion_trait_lucky"}
+
+-- UNUSED IN CODE! This is for db naming consistency only. Can safely be deleted/commented out once mod is finished.
+---@type character_trait_list
+character_traits_expansion.character_traits_expansion_new_traits = {
+     "character_traits_expansion_trait_degenerate", "character_traits_expansion_trait_scout", "character_traits_expansion_trait_attacking_victory", "character_traits_expansion_trait_attacking_defeat", "character_traits_expansion_trait_defending_defeat", "character_traits_expansion_trait_defending_victory",
+     "character_traits_expansion_trait_siege_victory", "character_traits_expansion_trait_siege_defeat", "character_traits_expansion_trait_siege_defense_victory", "character_traits_expansion_trait_wins_against_canaan", "character_traits_expansion_trait_wins_against_hatti",
+     "character_traits_expansion_trait_wins_against_egypt", "character_traits_expansion_trait_wins_against_sea_peoples", "character_traits_expansion_trait_wins_against_mesopotamian", "character_traits_expansion_trait_wins_against_danaans",
+     "character_traits_expansion_trait_wins_against_trojans", "character_traits_expansion_trait_defeats_against_canaan", "character_traits_expansion_trait_defeats_against_hatti", "character_traits_expansion_trait_defeats_against_egypt",
+     "character_traits_expansion_trait_defeats_against_sea_peoples", "character_traits_expansion_trait_defeats_against_mesopotamian", "character_traits_expansion_trait_defeats_against_danaans", "character_traits_expansion_trait_defeats_against_trojans",
+     "character_traits_expansion_trait_disciplinarian", "character_traits_expansion_trait_bad_disciplinarian", "character_traits_expansion_trait_sober", "character_traits_expansion_trait_drink", "character_traits_expansion_trait_girls", "character_traits_expansion_trait_arse", "character_traits_expansion_trait_gambler",
+     "character_traits_expansion_trait_bloody", "character_traits_expansion_trait_inbred", "character_traits_expansion_trait_popular", "character_traits_expansion_trait_unpopular", "character_traits_expansion_trait_lucky", "character_traits_expansion_trait_unlucky", "character_traits_expansion_trait_farmer_good",
+     "character_traits_expansion_trait_farmer_bad", "character_traits_expansion_trait_bereaved", "character_traits_expansion_trait_mad", "character_traits_expansion_trait_healthy", "character_traits_expansion_trait_blighted", "character_traits_expansion_trait_sea_legs", "character_traits_expansion_trait_feck",
+     "character_traits_expansion_trait_survivor", "character_traits_expansion_trait_admin_good", "character_traits_expansion_trait_admin_bad", "character_traits_expansion_trait_miner", "character_traits_expansion_trait_military_admin_good", "character_traits_expansion_trait_military_admin_bad",
+     "character_traits_expansion_trait_warmonger", "character_traits_expansion_trait_pacifist", "character_traits_expansion_trait_cuckold", "character_traits_expansion_trait_corrupt", "character_traits_expansion_trait_factionkiller", "character_traits_expansion_trait_noctophilia", "character_traits_expansion_trait_noctophobia",
+     "character_traits_expansion_trait_slothful", "character_traits_expansion_trait_energetic", "character_traits_expansion_trait_charismatic", "character_traits_expansion_trait_boring", "character_traits_expansion_trait_trusting", "character_traits_expansion_trait_paranoia", "character_traits_expansion_trait_pragmatic",
+     "character_traits_expansion_trait_superstitious", "character_traits_expansion_trait_anger", "character_traits_expansion_trait_attractive", "character_traits_expansion_trait_ugly", "character_traits_expansion_trait_prophetic", "character_traits_expansion_trait_authoritarian", "character_traits_expansion_trait_liberal",
+     "character_traits_expansion_trait_fertile", "character_traits_expansion_trait_barren", "character_traits_expansion_trait_scarred", "character_traits_expansion_trait_criminal", "character_traits_expansion_trait_blind", "character_traits_expansion_trait_heretic"
+}
+
+--- @class building_superchains_lists : table
+character_traits_expansion.building_superchains = {}
+
+---@type building_superchains_lists
 character_traits_expansion.building_superchains.drinking = {["phar_main_happiness_type_b"] = true, ["phar_map_bab_province_management_happiness_growth_type_a"] = true}
 
+---@type building_superchains_lists
 character_traits_expansion.building_superchains.military_administration = {
      ["phar_main_all_military_administration_cost_mod"] = true,
      ["phar_main_military_administration_unit_training_type_a"] = true,
@@ -48,6 +233,7 @@ character_traits_expansion.building_superchains.military_administration = {
      ["phar_sea_sherden_military_administration_charge_melee_attack_native"] = true
 }
 
+---@type building_superchains_lists
 character_traits_expansion.building_superchains.food = {
      ["phar_main_farm_type_a_hattusa_derivative"] = true,
      ["phar_main_farm_type_a_canaan"] = true,
@@ -83,6 +269,7 @@ character_traits_expansion.building_superchains.food = {
      ["phar_map_food_cattle_aegean"] = true
 }
 
+---@type building_superchains_lists
 character_traits_expansion.building_superchains.gold = {
      ["phar_main_all_resource_production_gold_mine_nile"] = true,
      ["phar_main_amenmesse_resource_production_gold_mine"] = true,
@@ -93,6 +280,7 @@ character_traits_expansion.building_superchains.gold = {
      ["phar_map_myc_resource_production_gold_mine_minor"] = true
 }
 
+---@type building_superchains_lists
 character_traits_expansion.building_superchains.mines = {
      ["phar_main_all_resource_production_bronze_mine_nile"] = true,
      ["phar_main_all_resource_production_gold_mine_nile"] = true,
@@ -114,6 +302,7 @@ character_traits_expansion.building_superchains.mines = {
      ["phar_map_myc_resource_production_stone_mine_minor"] = true
 }
 
+---@type building_superchains_lists
 character_traits_expansion.building_superchains.province_management = {
      ["phar_main_all_province_management_influence_type_b"] = true,
      ["phar_main_amenmesse_province_management_main_building_production_boost_growth"] = true,
@@ -152,216 +341,6 @@ character_traits_expansion.building_superchains.province_management = {
      ["phar_map_wil_major_main_building_happiness_boost"] = true
 }
 
--- UNUSED IN CODE! This is for db naming consistency only. Can safely be deleted/commented out once mod is finished.
-character_traits_expansion.traits.character_traits_expansion_trait_list = {
-     "character_traits_expansion_trait_degenerate", "character_traits_expansion_trait_scout", "character_traits_expansion_trait_attacking_victory",
-     "character_traits_expansion_trait_attacking_defeat", "character_traits_expansion_trait_defending_defeat", "character_traits_expansion_trait_defending_victory",
-     "character_traits_expansion_trait_siege_victory", "character_traits_expansion_trait_siege_defeat", "character_traits_expansion_trait_siege_defense_victory",
-     "character_traits_expansion_trait_wins_against_canaan", "character_traits_expansion_trait_wins_against_hatti", "character_traits_expansion_trait_wins_against_egypt",
-     "character_traits_expansion_trait_wins_against_sea_peoples", "character_traits_expansion_trait_wins_against_mesopotamian",
-     "character_traits_expansion_trait_wins_against_danaans", "character_traits_expansion_trait_wins_against_trojans",
-     "character_traits_expansion_trait_defeats_against_canaan", "character_traits_expansion_trait_defeats_against_hatti",
-     "character_traits_expansion_trait_defeats_against_egypt", "character_traits_expansion_trait_defeats_against_sea_peoples",
-     "character_traits_expansion_trait_defeats_against_mesopotamian", "character_traits_expansion_trait_defeats_against_danaans",
-     "character_traits_expansion_trait_defeats_against_trojans", "character_traits_expansion_trait_disciplinarian", "character_traits_expansion_trait_bad_disciplinarian",
-     "character_traits_expansion_trait_sober", "character_traits_expansion_trait_drink", "character_traits_expansion_trait_girls",
-     "character_traits_expansion_trait_arse", "character_traits_expansion_trait_gambler", "character_traits_expansion_trait_bloody",
-     "character_traits_expansion_trait_inbred", "character_traits_expansion_trait_popular", "character_traits_expansion_trait_unpopular",
-     "character_traits_expansion_trait_lucky", "character_traits_expansion_trait_unlucky", "character_traits_expansion_trait_farmer_good",
-     "character_traits_expansion_trait_farmer_bad", "character_traits_expansion_trait_bereaved", "character_traits_expansion_trait_mad",
-     "character_traits_expansion_trait_healthy", "character_traits_expansion_trait_blighted", "character_traits_expansion_trait_sea_legs",
-     "character_traits_expansion_trait_feck", "character_traits_expansion_trait_survivor", "character_traits_expansion_trait_admin_good",
-     "character_traits_expansion_trait_admin_bad", "character_traits_expansion_trait_miner", "character_traits_expansion_trait_military_admin_good",
-     "character_traits_expansion_trait_military_admin_bad", "character_traits_expansion_trait_warmonger", "character_traits_expansion_trait_pacifist",
-     "character_traits_expansion_trait_cuckold", "character_traits_expansion_trait_corrupt", "character_traits_expansion_trait_factionkiller",
-     "character_traits_expansion_trait_noctophilia", "character_traits_expansion_trait_noctophobia", "character_traits_expansion_trait_slothful",
-     "character_traits_expansion_trait_energetic", "character_traits_expansion_trait_charismatic", "character_traits_expansion_trait_boring",
-     "character_traits_expansion_trait_trusting", "character_traits_expansion_trait_paranoia", "character_traits_expansion_trait_pragmatic",
-     "character_traits_expansion_trait_superstitious", "character_traits_expansion_trait_anger", "character_traits_expansion_trait_attractive",
-     "character_traits_expansion_trait_ugly", "character_traits_expansion_trait_prophetic", "character_traits_expansion_trait_authoritarian",
-     "character_traits_expansion_trait_liberal", "character_traits_expansion_trait_fertile", "character_traits_expansion_trait_barren",
-     "character_traits_expansion_trait_scarred", "character_traits_expansion_trait_criminal", "character_traits_expansion_trait_blind",
-     "character_traits_expansion_trait_heretic"
-}
-
-character_traits_expansion.traits.new_character_creation_trait_list = {
-     "phar_main_trait_ambitious", "phar_main_trait_barbaric", "phar_main_trait_blunt", "phar_main_trait_brave", "phar_main_trait_cautious", "phar_main_trait_confident",
-     "phar_main_trait_content", "phar_main_trait_cooperative", "phar_main_trait_cowardly", "phar_main_trait_cruel", "phar_main_trait_cultured",
-     "phar_main_trait_hesitant", "phar_main_trait_individualistic", "phar_main_trait_irreverent", "phar_main_trait_materialistic", "phar_main_trait_merciful",
-     "phar_main_trait_reckless", "phar_main_trait_respectful", "phar_main_trait_spiritual", "phar_main_trait_underhanded", "character_traits_expansion_trait_degenerate",
-     "character_traits_expansion_trait_scout", "character_traits_expansion_trait_attacking_victory", "character_traits_expansion_trait_attacking_defeat",
-     "character_traits_expansion_trait_defending_defeat", "character_traits_expansion_trait_defending_victory", "character_traits_expansion_trait_siege_victory",
-     "character_traits_expansion_trait_siege_defeat", "character_traits_expansion_trait_siege_defense_victory", "character_traits_expansion_trait_sober",
-     "character_traits_expansion_trait_drink", "character_traits_expansion_trait_girls", "character_traits_expansion_trait_arse",
-     "character_traits_expansion_trait_gambler", "character_traits_expansion_trait_bloody", "character_traits_expansion_trait_inbred",
-     "character_traits_expansion_trait_popular", "character_traits_expansion_trait_unpopular", "character_traits_expansion_trait_lucky",
-     "character_traits_expansion_trait_unlucky", "character_traits_expansion_trait_farmer_good", "character_traits_expansion_trait_farmer_bad",
-     "character_traits_expansion_trait_bereaved", "character_traits_expansion_trait_mad", "character_traits_expansion_trait_healthy",
-     "character_traits_expansion_trait_blighted", "character_traits_expansion_trait_sea_legs", "character_traits_expansion_trait_feck",
-     "character_traits_expansion_trait_survivor", "character_traits_expansion_trait_admin_good", "character_traits_expansion_trait_admin_bad",
-     "character_traits_expansion_trait_miner", "character_traits_expansion_trait_military_admin_good", "character_traits_expansion_trait_military_admin_bad",
-     "character_traits_expansion_trait_warmonger", "character_traits_expansion_trait_pacifist", "character_traits_expansion_trait_corrupt",
-     "character_traits_expansion_trait_noctophilia", "character_traits_expansion_trait_noctophobia", "character_traits_expansion_trait_slothful",
-     "character_traits_expansion_trait_energetic", "character_traits_expansion_trait_charismatic", "character_traits_expansion_trait_boring",
-     "character_traits_expansion_trait_trusting", "character_traits_expansion_trait_paranoia", "character_traits_expansion_trait_pragmatic",
-     "character_traits_expansion_trait_superstitious", "character_traits_expansion_trait_anger", "character_traits_expansion_trait_attractive",
-     "character_traits_expansion_trait_ugly", "character_traits_expansion_trait_prophetic", "character_traits_expansion_trait_authoritarian",
-     "character_traits_expansion_trait_liberal", "character_traits_expansion_trait_fertile", "character_traits_expansion_trait_barren",
-     "character_traits_expansion_trait_scarred", "character_traits_expansion_trait_criminal", "character_traits_expansion_trait_blind"
-}
-
-local ChancePerTrait = character_traits_expansion.traits.coming_of_age.ChancePerTrait
--- Traits allowed to trigger when character comes of age
-character_traits_expansion.traits.coming_of_age.trait_list = {
-     ["phar_main_trait_ambitious"] = ChancePerTrait,
-     ["phar_main_trait_barbaric"] = ChancePerTrait,
-     ["phar_main_trait_blunt"] = ChancePerTrait,
-     ["phar_main_trait_brave"] = ChancePerTrait,
-     ["phar_main_trait_cautious"] = ChancePerTrait,
-     ["phar_main_trait_confident"] = ChancePerTrait,
-     ["phar_main_trait_content"] = ChancePerTrait,
-     ["phar_main_trait_cooperative"] = ChancePerTrait,
-     ["phar_main_trait_cowardly"] = ChancePerTrait,
-     ["phar_main_trait_cruel"] = ChancePerTrait,
-     ["phar_main_trait_cultured"] = ChancePerTrait,
-     ["phar_main_trait_hesitant"] = ChancePerTrait,
-     ["phar_main_trait_individualistic"] = ChancePerTrait,
-     ["phar_main_trait_irreverent"] = ChancePerTrait,
-     ["phar_main_trait_materialistic"] = ChancePerTrait,
-     ["phar_main_trait_merciful"] = ChancePerTrait,
-     ["phar_main_trait_reckless"] = ChancePerTrait,
-     ["phar_main_trait_respectful"] = ChancePerTrait,
-     ["phar_main_trait_spiritual"] = ChancePerTrait,
-     ["phar_main_trait_underhanded"] = ChancePerTrait,
-     ["character_traits_expansion_trait_degenerate"] = ChancePerTrait,
-     ["character_traits_expansion_trait_scout"] = ChancePerTrait,
-     ["character_traits_expansion_trait_attacking_victory"] = ChancePerTrait,
-     ["character_traits_expansion_trait_attacking_defeat"] = ChancePerTrait,
-     ["character_traits_expansion_trait_defending_defeat"] = ChancePerTrait,
-     ["character_traits_expansion_trait_defending_victory"] = ChancePerTrait,
-     ["character_traits_expansion_trait_siege_victory"] = ChancePerTrait,
-     ["character_traits_expansion_trait_siege_defeat"] = ChancePerTrait,
-     ["character_traits_expansion_trait_siege_defense_victory"] = ChancePerTrait,
-     ["character_traits_expansion_trait_sober"] = ChancePerTrait,
-     ["character_traits_expansion_trait_drink"] = ChancePerTrait,
-     ["character_traits_expansion_trait_girls"] = ChancePerTrait,
-     ["character_traits_expansion_trait_arse"] = ChancePerTrait,
-     ["character_traits_expansion_trait_gambler"] = ChancePerTrait,
-     ["character_traits_expansion_trait_bloody"] = ChancePerTrait,
-     ["character_traits_expansion_trait_inbred"] = ChancePerTrait,
-     ["character_traits_expansion_trait_popular"] = ChancePerTrait,
-     ["character_traits_expansion_trait_unpopular"] = ChancePerTrait,
-     ["character_traits_expansion_trait_lucky"] = ChancePerTrait,
-     ["character_traits_expansion_trait_unlucky"] = ChancePerTrait,
-     ["character_traits_expansion_trait_farmer_good"] = ChancePerTrait,
-     ["character_traits_expansion_trait_farmer_bad"] = ChancePerTrait,
-     ["character_traits_expansion_trait_mad"] = ChancePerTrait,
-     ["character_traits_expansion_trait_healthy"] = ChancePerTrait,
-     ["character_traits_expansion_trait_blighted"] = ChancePerTrait,
-     ["character_traits_expansion_trait_sea_legs"] = ChancePerTrait,
-     ["character_traits_expansion_trait_feck"] = ChancePerTrait,
-     ["character_traits_expansion_trait_survivor"] = ChancePerTrait,
-     ["character_traits_expansion_trait_admin_good"] = ChancePerTrait,
-     ["character_traits_expansion_trait_admin_bad"] = ChancePerTrait,
-     ["character_traits_expansion_trait_miner"] = ChancePerTrait,
-     ["character_traits_expansion_trait_military_admin_good"] = ChancePerTrait,
-     ["character_traits_expansion_trait_military_admin_bad"] = ChancePerTrait,
-     ["character_traits_expansion_trait_warmonger"] = ChancePerTrait,
-     ["character_traits_expansion_trait_pacifist"] = ChancePerTrait,
-     ["character_traits_expansion_trait_corrupt"] = ChancePerTrait,
-     ["character_traits_expansion_trait_noctophilia"] = ChancePerTrait,
-     ["character_traits_expansion_trait_noctophobia"] = ChancePerTrait,
-     ["character_traits_expansion_trait_slothful"] = ChancePerTrait,
-     ["character_traits_expansion_trait_energetic"] = ChancePerTrait,
-     ["character_traits_expansion_trait_charismatic"] = ChancePerTrait,
-     ["character_traits_expansion_trait_boring"] = ChancePerTrait,
-     ["character_traits_expansion_trait_trusting"] = ChancePerTrait,
-     ["character_traits_expansion_trait_paranoia"] = ChancePerTrait,
-     ["character_traits_expansion_trait_pragmatic"] = ChancePerTrait,
-     ["character_traits_expansion_trait_superstitious"] = ChancePerTrait,
-     ["character_traits_expansion_trait_anger"] = ChancePerTrait,
-     ["character_traits_expansion_trait_attractive"] = ChancePerTrait,
-     ["character_traits_expansion_trait_ugly"] = ChancePerTrait,
-     ["character_traits_expansion_trait_prophetic"] = ChancePerTrait,
-     ["character_traits_expansion_trait_authoritarian"] = ChancePerTrait,
-     ["character_traits_expansion_trait_liberal"] = ChancePerTrait,
-     ["character_traits_expansion_trait_fertile"] = ChancePerTrait,
-     ["character_traits_expansion_trait_barren"] = ChancePerTrait,
-     ["character_traits_expansion_trait_scarred"] = ChancePerTrait,
-     ["character_traits_expansion_trait_criminal"] = ChancePerTrait,
-     ["character_traits_expansion_trait_blind"] = ChancePerTrait,
-     ["character_traits_expansion_trait_wins_against_canaan"] = 0,
-     ["character_traits_expansion_trait_wins_against_danaans"] = 0,
-     ["character_traits_expansion_trait_wins_against_egypt"] = 0,
-     ["character_traits_expansion_trait_wins_against_hatti"] = 0,
-     ["character_traits_expansion_trait_wins_against_mesopotamian"] = 0,
-     ["character_traits_expansion_trait_wins_against_sea_peoples"] = 0,
-     ["character_traits_expansion_trait_wins_against_trojans"] = 0,
-     ["character_traits_expansion_trait_defeats_against_canaan"] = 0,
-     ["character_traits_expansion_trait_defeats_against_danaans"] = 0,
-     ["character_traits_expansion_trait_defeats_against_egypt"] = 0,
-     ["character_traits_expansion_trait_defeats_against_hatti"] = 0,
-     ["character_traits_expansion_trait_defeats_against_mesopotamian"] = 0,
-     ["character_traits_expansion_trait_defeats_against_sea_peoples"] = 0,
-     ["character_traits_expansion_trait_defeats_against_trojans"] = 0
-}
-
-character_traits_expansion.traits.cultural = {
-     ["phar_main_clt_canaan"] = "canaan",
-     ["phar_main_clt_hatti"] = "hatti",
-     ["phar_main_clt_kemet"] = "egypt",
-     ["phar_main_clt_sea_peoples"] = "sea_peoples",
-     ["phar_map_clt_mesopotamian"] = "mesopotamian",
-     ["troy_main_clt_danaans"] = "danaans",
-     ["troy_main_clt_trojans"] = "trojans"
-}
-
-character_traits_expansion.traits.legendary_lord_defeat = {
-     ["phar_hero_can_bay_bay"] = "character_traits_expansion_trait_defeated_bay",
-     ["phar_hero_can_irs_irsu"] = "character_traits_expansion_trait_defeated_irsu",
-     ["phar_hero_egy_ame_amenmesse"] = "character_traits_expansion_trait_defeated_amenmesse",
-     ["phar_hero_egy_mer_merneptah"] = "character_traits_expansion_trait_defeated_merneptah",
-     ["phar_hero_egy_ram_ramesses"] = "character_traits_expansion_trait_defeated_ramesses",
-     ["phar_hero_egy_set_seti"] = "character_traits_expansion_trait_defeated_seti",
-     ["phar_hero_egy_setn_setnakhte"] = "character_traits_expansion_trait_defeated_setnakhte",
-     ["phar_hero_egy_tau_tausret"] = "character_traits_expansion_trait_defeated_tausret",
-     ["phar_hero_hit_hat_suppiluliuma"] = "character_traits_expansion_trait_defeated_suppiluliuma",
-     ["phar_hero_hit_tarh_kurunta"] = "character_traits_expansion_trait_defeated_kurunta",
-     ["phar_map_hero_ach_achilles"] = "character_traits_expansion_trait_defeated_achilles",
-     ["phar_map_hero_ach_agamemnon"] = "character_traits_expansion_trait_defeated_agamemnon",
-     ["phar_map_hero_ach_ajax"] = "character_traits_expansion_trait_defeated_ajax",
-     ["phar_map_hero_ach_diomedes"] = "character_traits_expansion_trait_defeated_diomedes",
-     ["phar_map_hero_ach_menelaus"] = "character_traits_expansion_trait_defeated_menelaus",
-     ["phar_map_hero_ach_odysseus"] = "character_traits_expansion_trait_defeated_odysseus",
-     ["phar_map_hero_ash_ninurta"] = "character_traits_expansion_trait_defeated_ninurta",
-     ["phar_map_hero_bab_adad"] = "character_traits_expansion_trait_defeated_adad",
-     ["phar_map_hero_egy_memnon"] = "character_traits_expansion_trait_defeated_memnon",
-     ["phar_map_hero_thr_rhesus"] = "character_traits_expansion_trait_defeated_rhesus",
-     ["phar_map_hero_tro_aeneas"] = "character_traits_expansion_trait_defeated_aeneas",
-     ["phar_map_hero_tro_hector"] = "character_traits_expansion_trait_defeated_hector",
-     ["phar_map_hero_tro_paris"] = "character_traits_expansion_trait_defeated_paris",
-     ["phar_map_hero_tro_priam"] = "character_traits_expansion_trait_defeated_priam",
-     ["phar_map_hero_tro_sarpedon"] = "character_traits_expansion_trait_defeated_sarpedon",
-     ["phar_sea_hero_iol_iolaos"] = "character_traits_expansion_trait_defeated_iolaos",
-     ["phar_sea_hero_wal_walwetes"] = "character_traits_expansion_trait_defeated_walwetes"
-}
-
--- Traits allowed to trigger for any character on any given turn
-character_traits_expansion.traits.randomly_added = {
-     "character_traits_expansion_trait_degenerate", "character_traits_expansion_trait_unlucky", "character_traits_expansion_trait_lucky"
-}
-
-character_traits_expansion.traits.self_perpetuating = {
-     "character_traits_expansion_trait_mad", "character_traits_expansion_trait_degenerate", "character_traits_expansion_trait_sober",
-     "character_traits_expansion_trait_drink", "character_traits_expansion_trait_girls", "character_traits_expansion_trait_arse",
-     "character_traits_expansion_trait_gambler", "character_traits_expansion_trait_feck", "character_traits_expansion_trait_corrupt",
-     "character_traits_expansion_trait_blighted", "character_traits_expansion_trait_cuckold", "character_traits_expansion_trait_slothful",
-     "character_traits_expansion_trait_boring", "character_traits_expansion_trait_trusting", "character_traits_expansion_trait_paranoia",
-     "character_traits_expansion_trait_superstitious", "character_traits_expansion_trait_prophetic", "character_traits_expansion_trait_anger",
-     "phar_main_trait_respectful", "phar_main_trait_irreverent", "character_traits_expansion_trait_fertile", "character_traits_expansion_trait_barren",
-     "character_traits_expansion_trait_blind", "character_traits_expansion_trait_heretic"
-}
-
 ----------------------------------------------
 --- Apply a trait to a character with a percent chance of success.
 ----------------------------------------------
@@ -371,24 +350,24 @@ character_traits_expansion.traits.self_perpetuating = {
 --- @param _points number? #optional, default value=1 Trait points to add. The underlying force_add_trait function is called for each point added.
 --- @param _chance number? #optional, default value=100 Percentage chance for the trait to be applied. Value should be between 0 and 100.
 --- @param _show_message boolean? #optional, default value=false Show a message when the trait is applied to a general with an army..
-function character_traits_expansion:apply_trait_by_chance(character, trait, _points, _chance, _show_message)
+function trait_manager:apply_trait_by_chance(character, trait, _points, _chance, _show_message)
      local points = _points or 1
      local chance = _chance or 100
      local show_message = _show_message or false
      local char_str = cm:char_lookup_str(character:command_queue_index())
 
      if character == nil then
-          out("character_traits_expansion_TRAIT ERROR: Tried to give trait to a character that was not specified!")
+          out("character_traits_expansion_trait ERROR: Tried to give trait to a character that was not specified!")
           return false
      end
 
      if character:is_null_interface() then
-          out("character_traits_expansion_TRAIT ERROR: Tried to give trait to a character that was a null interface!")
+          out("character_traits_expansion_trait ERROR: Tried to give trait to a character that was a null interface!")
           return false
      end
 
      if character:character_type("colonel") then
-          out("character_traits_expansion_TRAIT ERROR: Tried to give trait to a character who is a colonel!")
+          out("character_traits_expansion_trait ERROR: Tried to give trait to a character who is a colonel!")
           return false
      end
 
@@ -398,15 +377,15 @@ function character_traits_expansion:apply_trait_by_chance(character, trait, _poi
 
      --- @diagnostic disable-next-line: redundant-parameter
      cm:force_add_trait(char_str, trait, show_message, points)
-     out("character_traits_expansion_MAIN_TRAIT_FUNCTION_APPLYING_" .. tostring(trait) .. "_to_" .. character:onscreen_name())
+     out("trait_manager_MAIN_TRAIT_FUNCTION_APPLYING_" .. tostring(trait) .. "_to_" .. character:onscreen_name())
      return true
 end
 
-----------------------------------------------
+-------------------------------
 --- Apply Ancient Legacy Traits
-----------------------------------------------
+-------------------------------
 --- Checks if a player has embraced Akhenaten's ancient legacy and applies the heretic trait to their faction leader if they have.
-function character_traits_expansion.ancient_legacies:apply_legacy_traits()
+function character_traits_expansion.ancient_legacies:apply_traits()
      if not character_traits_expansion.ancient_legacies.is_akhenaten_legacy_claimed then
           local all_legacies = {
                "phar_ancient_legacy_khufu", "phar_ancient_legacy_akhenaten", "phar_ancient_legacy_hatshepsut", "phar_ancient_legacy_thutmose",
@@ -418,20 +397,20 @@ function character_traits_expansion.ancient_legacies:apply_legacy_traits()
 
           for i = 1, #human_factions do
                local faction_name = human_factions[i]
-               out("character_traits_expansion_ANCIENT_LEGACY_LISTENER_ADDED_FOR_" .. faction_name)
+               out("trait_manager_ANCIENT_LEGACY_LISTENER_ADDED_FOR_" .. faction_name)
 
-               cm:add_faction_turn_start_listener_by_name("character_traits_expansion_ancient_legacy", faction_name, function(context)
+               cm:add_faction_turn_start_listener_by_name("trait_manager_ancient_legacy", faction_name, function(context)
                     local faction = context:faction()
 
                     -- Apply Heretic trait if Akhenaten legacy is claimed
                     if ancient_legacy_common:faction_has_claimed_legacy(faction:name(), "phar_ancient_legacy_akhenaten") then
-                         out("character_traits_expansion_ANCIENT_LEGACY_AKHENATEN_CLAIMED")
+                         out("trait_manager_ANCIENT_LEGACY_AKHENATEN_CLAIMED")
 
-                         character_traits_expansion:apply_trait_by_chance(faction:faction_leader(), "character_traits_expansion_trait_heretic", 20)
+                         trait_manager:apply_trait_by_chance(faction:faction_leader(), "character_traits_expansion_trait_heretic", 20)
 
                          -- add Heretic to the list of self-perpetuating traits
                          self_perpetuating_traits[#self_perpetuating_traits + 1] = "character_traits_expansion_trait_heretic"
-                         cm:remove_faction_turn_start_listener_by_name("character_traits_expansion_ancient_legacy")
+                         cm:remove_faction_turn_start_listener_by_name("trait_manager_ancient_legacy")
 
                          character_traits_expansion.ancient_legacies.is_akhenaten_legacy_claimed = true
                          return
@@ -440,24 +419,24 @@ function character_traits_expansion.ancient_legacies:apply_legacy_traits()
                     -- Check if any legacy is claimed, and remove the listener
                     for j = 1, #all_legacies do
                          if ancient_legacy_common:faction_has_claimed_legacy(faction:name(), all_legacies[j]) then
-                              out("character_traits_expansion_ANCIENT_LEGACY_CLAIMED_FOR_" .. faction_name .. "_REMOVING")
-                              cm:remove_faction_turn_start_listener_by_name("character_traits_expansion_ancient_legacy")
+                              out("trait_manager_ANCIENT_LEGACY_CLAIMED_FOR_" .. faction_name .. "_REMOVING")
+                              cm:remove_faction_turn_start_listener_by_name("trait_manager_ancient_legacy")
                               character_traits_expansion.ancient_legacies.is_akhenaten_legacy_claimed = true
                               return
                          end
                     end
-                    out("character_traits_expansion_ANCIENT_NO_LEGACY_CLAIMED_THIS_TURN")
+                    out("trait_manager_ANCIENT_NO_LEGACY_CLAIMED_THIS_TURN")
                end, true)
           end
      else
-          out("character_traits_expansion_ANCIENT_LEGACY_CLAIMED_IS_" .. character_traits_expansion.ancient_legacies.is_akhenaten_legacy_claimed)
+          out("trait_manager_ANCIENT_LEGACY_CLAIMED_IS_" .. character_traits_expansion.ancient_legacies.is_akhenaten_legacy_claimed)
      end
 
      -- Gives heretic to new faction leaders of factions following akhenaten's legacy.
      --------------------------------------------------
      --- AKHENATEN ANCIENT LEGACY TRAIT (HERETIC)
      --------------------------------------------------
-     core:add_listener("character_traits_expansion_apply_heretic_to_new_faction_leader", "CharacterBecomesFactionLeader", function(context)
+     core:add_listener("trait_manager_apply_heretic_to_new_faction_leader", "CharacterBecomesFactionLeader", function(context)
           context:character():faction():is_human()
           return true
      end, function(context)
@@ -465,8 +444,8 @@ function character_traits_expansion.ancient_legacies:apply_legacy_traits()
 
           if ancient_legacy_common:faction_has_claimed_legacy(character:faction():name(), "phar_ancient_legacy_akhenaten") then
                -- local random_index = math.random(3)
-               -- out("character_traits_expansion_RANDOM_NUMBER_IS_" .. random_index)
-               character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_heretic", 20)
+               -- out("trait_manager_RANDOM_NUMBER_IS_" .. random_index)
+               trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_heretic", 20)
           end
      end, true)
 end
@@ -476,35 +455,35 @@ character_traits_expansion.start_trait_listeners = function()
      ---- FACTION LEADER DECLARES WAR AND PEACE ----
      -----------------------------------------------
      ---NOTE TO SELF: for whatever reason, you cannot call proposer():faction_leader() or recipient():faction_leader() or character():name(). So don't bother trying.
-     core:add_listener("character_traits_expansion_faction_leader_declares_war", "NegativeDiplomaticEvent", true, function(context)
+     core:add_listener("trait_manager_faction_leader_declares_war", "NegativeDiplomaticEvent", true, function(context)
           if context:is_war() == true then
-               out("character_traits_expansion_WAR_DECLARATION Event Triggered")
+               out("trait_manager_WAR_DECLARATION Event Triggered")
 
                local proposer = context:proposer();
                local recipient = context:recipient();
                local character = context:character()
 
                if character:faction():name() == proposer:name() then
-                    out("character_traits_expansion_WAR_DECLARED! AGGRESSOR FACTION IS " .. tostring(character:faction():name()))
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_warmonger", 20, 20)
+                    out("trait_manager_WAR_DECLARED! AGGRESSOR FACTION IS " .. tostring(character:faction():name()))
+                    trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_warmonger", 20, 20)
                end
           end
      end, true)
 
-     core:add_listener("character_traits_expansion_faction_leader_signs_peace_treaty", "PositiveDiplomaticEvent", true, function(context)
+     core:add_listener("trait_manager_faction_leader_signs_peace_treaty", "PositiveDiplomaticEvent", true, function(context)
           if context:is_peace_treaty() == true then
-               out("character_traits_expansion_PEACE_DECLARATION_EVENT")
+               out("trait_manager_PEACE_DECLARATION_EVENT")
 
                local proposer = context:proposer();
                local recipient = context:recipient();
                local character = context:character()
 
                if character:faction():name() == proposer:name() then
-                    out("character_traits_expansion_PEACE_TREATY_SIGNED! PROPOSER FACTION IS " .. tostring(character:faction():name()))
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_pacifist", 20, 20)
+                    out("trait_manager_PEACE_TREATY_SIGNED! PROPOSER FACTION IS " .. tostring(character:faction():name()))
+                    trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_pacifist", 20, 20)
                elseif character:faction():name() == recipient:name() then
-                    out("character_traits_expansion_PEACE_TREATY_SIGNED! RECIPIENT FACTION IS " .. tostring(character:faction():name()))
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_pacifist", 20, 20)
+                    out("trait_manager_PEACE_TREATY_SIGNED! RECIPIENT FACTION IS " .. tostring(character:faction():name()))
+                    trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_pacifist", 20, 20)
                end
           end
      end, true)
@@ -512,42 +491,42 @@ character_traits_expansion.start_trait_listeners = function()
      ------------------------------
      ---- DIRECT RELATIVE DIED ----
      ------------------------------
-     core:add_listener("character_traits_expansion_character_relative_killed", "FactionCharacterDiedOrWounded", function(context) return context:faction():is_human() end,
+     core:add_listener("trait_manager_character_relative_killed", "FactionCharacterDiedOrWounded", function(context) return context:faction():is_human() end,
                        function(context)
           local family_member = context:family_member()
 
           if not family_member or family_member:is_null_interface() then
-               out("character_traits_expansion_character_family_member_died_no_valid_family_member")
+               out("trait_manager_character_family_member_died_no_valid_family_member")
                return
           end
 
           local dead_family_member = family_member:character():command_queue_index()
-          out("character_traits_expansion_character_family_member_died " .. dead_family_member)
+          out("trait_manager_character_family_member_died " .. dead_family_member)
 
           if family_member:is_in_faction_leaders_family() then
-               out("character_traits_expansion_character_family_member_died_is_in_faction_leader_family")
+               out("trait_manager_character_family_member_died_is_in_faction_leader_family")
 
                if family_member:has_father() then
                     local father = family_member:father():character()
                     if not father:is_null_interface() then
-                         out("character_traits_expansion_character_family_member_died_has_father_" .. father:command_queue_index())
-                         character_traits_expansion:apply_trait_by_chance(father, "character_traits_expansion_trait_bereaved", 20, 10)
+                         out("trait_manager_character_family_member_died_has_father_" .. father:command_queue_index())
+                         trait_manager:apply_trait_by_chance(father, "character_traits_expansion_trait_bereaved", 20, 10)
                     end
                end
 
                if family_member:has_mother() then
                     local mother = family_member:mother():character()
                     if not mother:is_null_interface() then
-                         out("character_traits_expansion_character_family_member_died_has_mother_" .. mother:command_queue_index())
-                         character_traits_expansion:apply_trait_by_chance(mother, "character_traits_expansion_trait_bereaved", 20, 10)
+                         out("trait_manager_character_family_member_died_has_mother_" .. mother:command_queue_index())
+                         trait_manager:apply_trait_by_chance(mother, "character_traits_expansion_trait_bereaved", 20, 10)
                     end
                end
 
                if family_member:has_spouse() then
                     local spouse = family_member:spouse():character()
                     if not spouse:is_null_interface() then
-                         out("character_traits_expansion_character_family_member_died_has_spouse_" .. spouse:command_queue_index())
-                         character_traits_expansion:apply_trait_by_chance(spouse, "character_traits_expansion_trait_bereaved", 20, 10)
+                         out("trait_manager_character_family_member_died_has_spouse_" .. spouse:command_queue_index())
+                         trait_manager:apply_trait_by_chance(spouse, "character_traits_expansion_trait_bereaved", 20, 10)
                     end
                end
 
@@ -555,8 +534,8 @@ character_traits_expansion.start_trait_listeners = function()
                     local child = family_member:all_children_in_marriage():item_at(i):character()
 
                     if not child:is_null_interface() and child:age() >= 16 then
-                         out("character_traits_expansion_character_family_member_died_has_adult_child_" .. child:command_queue_index())
-                         character_traits_expansion:apply_trait_by_chance(child, "character_traits_expansion_trait_bereaved", 20, 10)
+                         out("trait_manager_character_family_member_died_has_adult_child_" .. child:command_queue_index())
+                         trait_manager:apply_trait_by_chance(child, "character_traits_expansion_trait_bereaved", 20, 10)
                     end
                end
           end
@@ -565,90 +544,89 @@ character_traits_expansion.start_trait_listeners = function()
      ----------------------
      ---- RAZED SHRINE ----
      ----------------------
-     core:add_listener("character_traits_expansion_character_razed_shrine", "CharacterPerformsRegionSlotOccupationDecisionBeforeOutcomeApplication", true,
-                       function(context)
+     core:add_listener("trait_manager_character_razed_shrine", "CharacterPerformsRegionSlotOccupationDecisionBeforeOutcomeApplication", true, function(context)
           if context:region_slot():building():is_null_interface() then
-               out("character_traits_expansion_character_razed_shrine_is_null_interface!")
+               out("trait_manager_character_razed_shrine_is_null_interface!")
                return
           end
 
           if (context:occupation_decision_option() == "occupation_decision_ers_raze_without_occupy" or context:occupation_decision_option() ==
-               "occupation_decision_ers_sack") and campaign_traits.check_if_region_slot_has_shrine(context:region_slot():building():chain()) then
-               character_traits_expansion:apply_trait_by_chance(context:character(), "phar_main_trait_barbaric", 20, 25)
-               character_traits_expansion:apply_trait_by_chance(context:character(), "phar_main_trait_underhanded", 20, 25)
-               out("character_traits_expansion_character_razed_shrine")
+               "occupation_decision_ers_sack") and campaign_check_if_region_slot_has_shrine(context:region_slot():building():chain()) then
+               trait_manager:apply_trait_by_chance(context:character(), "phar_main_trait_barbaric", 20, 25)
+               trait_manager:apply_trait_by_chance(context:character(), "phar_main_trait_underhanded", 20, 25)
+               out("trait_manager_character_razed_shrine")
           end
      end, true)
 
      ------------------------------------------
      -- POST BATTLE RANSOM/ENSLAVE/EXECUTE ----
      ------------------------------------------
-     core:add_listener("character_traits_expansion_character_post_battle_release_generic", "CharacterPostBattleRelease", true, function(context)
-          character_traits_expansion:apply_trait_by_chance(context:character(), "phar_main_trait_merciful", 20, 20)
-          out("character_traits_expansion_post_battle_release")
+     core:add_listener("trait_manager_character_post_battle_release_generic", "CharacterPostBattleRelease", true, function(context)
+          trait_manager:apply_trait_by_chance(context:character(), "phar_main_trait_merciful", 20, 20)
+          out("trait_manager_post_battle_release")
      end, true)
 
-     core:add_listener("character_traits_expansion_character_post_battle_enslave_generic", "CharacterPostBattleEnslave", true, function(context)
-          character_traits_expansion:apply_trait_by_chance(context:character(), "phar_main_trait_materialistic", 20, 20)
-          out("character_traits_expansion_post_battle_enslave")
+     core:add_listener("trait_manager_character_post_battle_enslave_generic", "CharacterPostBattleEnslave", true, function(context)
+          trait_manager:apply_trait_by_chance(context:character(), "phar_main_trait_materialistic", 20, 20)
+          out("trait_manager_post_battle_enslave")
      end, true)
 
-     core:add_listener("character_traits_expansion_character_executed_captives", "CharacterPostBattleSlaughter", true, function(context)
+     core:add_listener("trait_manager_character_executed_captives", "CharacterPostBattleSlaughter", true, function(context)
           if context:character():in_settlement() then
-               out("character_traits_expansion_post_battle_slaughter_character_in_settlement")
+               out("trait_manager_post_battle_slaughter_character_in_settlement")
                return
           else
-               character_traits_expansion:apply_trait_by_chance(context:character(), "phar_main_trait_cruel", 20, 25)
-               out("character_traits_expansion_post_battle_slaughter")
+               trait_manager:apply_trait_by_chance(context:character(), "phar_main_trait_cruel", 20, 25)
+               out("trait_manager_post_battle_slaughter")
           end
      end, true)
 
      -----------------------------
      ---- CAPTURED SETTLEMENT ----
      -----------------------------
-     core:add_listener("character_traits_expansion_character_looted_settlement", "CharacterLootedSettlement", true, function(context)
+     core:add_listener("trait_manager_character_looted_settlement", "CharacterLootedSettlement", true, function(context)
           if cm:char_is_general_with_army(context:character()) then
-               character_traits_expansion:apply_trait_by_chance(context:character(), "phar_main_trait_materialistic", 20, 35);
-               character_traits_expansion:apply_trait_by_chance(context:character(), "character_traits_expansion_trait_authoritarian", 20, 35);
-               out("character_traits_expansion_character_looted_settlement")
+               trait_manager:apply_trait_by_chance(context:character(), "phar_main_trait_materialistic", 20, 35);
+               trait_manager:apply_trait_by_chance(context:character(), "character_traits_expansion_trait_authoritarian", 20, 35);
+               out("trait_manager_character_looted_settlement")
           end
      end, true)
 
-     core:add_listener("character_traits_expansion_character_sacked_settlement", "CharacterSackedSettlement", true, function(context)
+     core:add_listener("trait_manager_character_sacked_settlement", "CharacterSackedSettlement", true, function(context)
           if cm:char_is_general_with_army(context:character()) then
-               character_traits_expansion:apply_trait_by_chance(context:character(), "phar_main_trait_barbaric", 20, 35);
-               out("character_traits_expansion_character_sacked_settlement")
+               trait_manager:apply_trait_by_chance(context:character(), "phar_main_trait_barbaric", 20, 35);
+               out("trait_manager_character_sacked_settlement")
           end
      end, true)
 
-     core:add_listener("character_traits_expansion_character_razed_settlement", "CharacterRazedSettlement", true, function(context)
+     core:add_listener("trait_manager_character_razed_settlement", "CharacterRazedSettlement", true, function(context)
           if cm:char_is_general_with_army(context:character()) then
-               character_traits_expansion:apply_trait_by_chance(context:character(), "phar_main_trait_barbaric", 20, 50);
-               character_traits_expansion:apply_trait_by_chance(context:character(), "character_traits_expansion_trait_authoritarian", 20, 3);
-               out("character_traits_expansion_character_razed_settlement")
+               trait_manager:apply_trait_by_chance(context:character(), "phar_main_trait_barbaric", 20, 50);
+               trait_manager:apply_trait_by_chance(context:character(), "character_traits_expansion_trait_authoritarian", 20, 3);
+               out("trait_manager_character_razed_settlement")
           end
      end, true)
 
-     core:add_listener("character_traits_expansion_character_occupied_settlement", "CharacterPerformsSettlementOccupationDecision", true, function(context)
+     core:add_listener("trait_manager_character_occupied_settlement", "CharacterPerformsSettlementOccupationDecision", true, function(context)
           local post_battle_option = context:occupation_decision_option()
 
           if post_battle_option == "occupation_decision_occupy" then
-               character_traits_expansion:apply_trait_by_chance(context:character(), "character_traits_expansion_trait_liberal", 20, 20);
-               out("character_traits_expansion_character_occupied_settlement")
+               trait_manager:apply_trait_by_chance(context:character(), "character_traits_expansion_trait_liberal", 20, 20);
+               out("trait_manager_character_occupied_settlement")
           end
      end, true)
 
      ----------------------------------------
      ---- PRAYED AT SHRINE OR NON-SHRINE ----
      ----------------------------------------
-     core:add_listener("character_traits_expansion_character_prayed_at_shrine", "CharacterPerformedSuccessfulAgentAction", true, function(context)
+     core:add_listener("trait_manager_character_prayed_at_shrine", "CharacterPerformedSuccessfulAgentAction", true, function(context)
           local unique_id = context:unique_id()
 
           if string.find(unique_id, "phar_ers_interaction_shrine_pray") then
-               character_traits_expansion:apply_trait_by_chance(context:character(), "phar_main_trait_spiritual", 20, 20)
+               trait_manager:apply_trait_by_chance(context:character(), "phar_main_trait_spiritual", 20, 20)
                out("hcp prayed at shrine")
           elseif string.find(unique_id, "phar_ers_interaction") then
-               character_traits_expansion:apply_trait_by_chance(context:character(), "phar_main_trait_materialistic", 20, 20)
+               trait_manager:apply_trait_by_chance(context:character(), "phar_main_trait_materialistic", 20, 20)
                out("hcp prayed at non-shrine")
           end
      end, true)
@@ -656,59 +634,59 @@ character_traits_expansion.start_trait_listeners = function()
      ---------------------------------------------------
      ---- RANDOM TRAITS WHEN CHARACTER COMES OF AGE ----
      ---------------------------------------------------
-     core:add_listener("character_traits_expansion_character_comes_of_age", "CharacterComesOfAge", true, function(context)
+     core:add_listener("trait_manager_character_comes_of_age", "CharacterComesOfAge", true, function(context)
           local character = context:character()
           local father = character:has_father() and character:father() or nil
           local mother = character:has_mother() and character:mother() or nil
 
           if father then
-               out("character_traits_expansion_character_comes_of_age_FATHER_IS_" .. tostring(father))
+               out("trait_manager_character_comes_of_age_FATHER_IS_" .. tostring(father))
           else
-               out("character_traits_expansion_character_comes_of_age_NO_FATHER_FOUND!")
+               out("trait_manager_character_comes_of_age_NO_FATHER_FOUND!")
           end
 
           if mother then
-               out("character_traits_expansion_character_comes_of_age_MOTHER_IS_" .. tostring(mother))
+               out("trait_manager_character_comes_of_age_MOTHER_IS_" .. tostring(mother))
           else
-               out("character_traits_expansion_character_comes_of_age_NO_MOTHER_FOUND!")
+               out("trait_manager_character_comes_of_age_NO_MOTHER_FOUND!")
           end
 
           -- Create a temporary table to hold the adjusted chances for this specific character
           local trait_chances = {}
 
           -- Initialize the temporary table with the default trait chances
-          for trait, base_chance in pairs(character_traits_expansion.traits.coming_of_age) do trait_chances[trait] = base_chance end
+          for trait, base_chance in pairs(character_traits_expansion.coming_of_age.traits) do trait_chances[trait] = base_chance end
 
           -- Adjust trait chances based on parent's traits
           for trait in pairs(coming_of_age_traits) do
                if father and father:has_trait(trait) then
-                    trait_chances[trait] = 40
-                    out("character_traits_expansion_character_comes_of_age_FATHER_HAS_TRAIT_" .. trait .. "_INCREASED_CHANCE_TO_" .. tostring(40))
+                    trait_chances[trait] = trait_chances[trait] + 20
+                    out("trait_manager_character_comes_of_age_FATHER_HAS_TRAIT_" .. trait .. "_INCREASED_CHANCE_TO_" .. tostring(20))
                end
                if mother and mother:has_trait(trait) then
-                    trait_chances[trait] = 40
-                    out("character_traits_expansion_character_comes_of_age_MOTHER_HAS_TRAIT_" .. trait .. "_INCREASED_CHANCE_TO_" .. tostring(40))
+                    trait_chances[trait] = trait_chances[trait] + 20
+                    out("trait_manager_character_comes_of_age_MOTHER_HAS_TRAIT_" .. trait .. "_INCREASED_CHANCE_TO_" .. tostring(20))
                end
           end
 
           -- Apply the traits with their respective chances for this character
           for trait, chance in pairs(trait_chances) do
-               character_traits_expansion:apply_trait_by_chance(character, trait, 20, chance)
-               out("character_traits_expansion_character_comes_of_age_APPLIED_TRAIT_" .. trait .. "_WITH_CHANCE_" .. tostring(chance))
+               trait_manager:apply_trait_by_chance(character, trait, 20, chance)
+               out("trait_manager_character_comes_of_age_APPLIED_TRAIT_" .. trait .. "_WITH_CHANCE_" .. tostring(chance))
           end
      end, true)
 
      --------------------------------------------------
      ---- RANDOM TRAITS WHEN CHARACTER IS CREATED ----
      --------------------------------------------------
-     core:add_listener("character_traits_expansion_character_created", "CharacterCreated", true, function(context)
+     core:add_listener("trait_manager_character_created", "CharacterCreated", true, function(context)
           local character = context:character()
-          out("character_traits_expansion_character_created")
+          out("trait_manager_character_created")
 
           if character:age() >= 16 and cm:char_is_general_with_army(character) and not character:character_type("colonel") then
-               for i = 1, #character_created_traits do
-                    character_traits_expansion:apply_trait_by_chance(character, character_created_traits[i], 20, 1)
-                    out("character_traits_expansion_character_created_IS_APPLYING_" .. tostring(character_created_traits[i]))
+               for i = 1, #character_traits_expansion.character_creation_traits do
+                    trait_manager:apply_trait_by_chance(character, character_traits_expansion.character_creation_traits[i], 20, 1)
+                    out("trait_manager_character_created_IS_APPLYING_" .. tostring(character_traits_expansion.character_creation_traits[i]))
                end
           end
      end, true)
@@ -716,25 +694,25 @@ character_traits_expansion.start_trait_listeners = function()
      -----------------------------------------
      ---- MAIN CHARACTER COMPLETED BATTLE ----
      -----------------------------------------
-     core:add_listener("character_traits_expansion_character_completed_battle_main", "CharacterCompletedBattle", true, function(context)
-          out("character_traits_expansion_CHARACTER_COMPLETED_BATTLE")
+     core:add_listener("trait_manager_character_completed_battle_main", "CharacterCompletedBattle", true, function(context)
+          out("trait_manager_CHARACTER_COMPLETED_BATTLE")
           local character = context:character()
           local battle = context:pending_battle()
           local attacker = battle:attacker()
           local defender = battle:defender()
 
           if attacker:is_null_interface() then
-               out("character_traits_expansion_attacker_is_null_interface!")
+               out("trait_manager_attacker_is_null_interface!")
                return
           end
 
           if defender:is_null_interface() then
-               out("character_traits_expansion_defender_is_null_interface!")
+               out("trait_manager_defender_is_null_interface!")
                return
           end
 
           if character:character_type("colonel") then
-               out("character_traits_expansion_character_is_colonel!")
+               out("trait_manager_character_is_colonel!")
                return
           end
 
@@ -742,32 +720,32 @@ character_traits_expansion.start_trait_listeners = function()
           ---- COWARDLY TRAIT ----
           -------------------------------
           if character:routed_in_battle() then
-               character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_cowardly", 20, 25)
-               out("character_traits_expansion_CHARACTER_COMPLETED_BATTLE_COWARD_ROUTED")
+               trait_manager:apply_trait_by_chance(character, "phar_main_trait_cowardly", 20, 25)
+               out("trait_manager_CHARACTER_COMPLETED_BATTLE_COWARD_ROUTED")
           end
 
           if character:fought_in_battle() == false then
-               character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_cowardly", 20, 5)
-               out("character_traits_expansion_CHARACTER_COMPLETED_BATTLE_COWARD_DID_NOT_FIGHT")
+               trait_manager:apply_trait_by_chance(character, "phar_main_trait_cowardly", 20, 5)
+               out("trait_manager_CHARACTER_COMPLETED_BATTLE_COWARD_DID_NOT_FIGHT")
           end
 
           -------------------------
           ---- ENERGETIC TRAIT ----
           -------------------------
           if character:fought_in_battle() then
-               character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_energetic", 20, 15)
-               out("character_traits_expansion_CHARACTER_COMPLETED_BATTLE_ENERGETIC")
+               trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_energetic", 20, 15)
+               out("trait_manager_CHARACTER_COMPLETED_BATTLE_ENERGETIC")
           end
 
           -------------------------------
           ---- POPULAR/UNPOPULAR TRAIT ----
           -------------------------------
           if character:won_battle() then
-               character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 5)
-               out("character_traits_expansion_CHARACTER_COMPLETED_BATTLE_POPULAR")
+               trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 5)
+               out("trait_manager_CHARACTER_COMPLETED_BATTLE_POPULAR")
           else
-               character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 5)
-               out("character_traits_expansion_CHARACTER_COMPLETED_BATTLE_UNPOPULAR")
+               trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 5)
+               out("trait_manager_CHARACTER_COMPLETED_BATTLE_UNPOPULAR")
           end
 
           ------------------------------
@@ -775,17 +753,17 @@ character_traits_expansion.start_trait_listeners = function()
           ------------------------------
           local losses = character:percentage_of_own_alliance_killed()
           if losses >= 0.75 then
-               character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_bloody", 20, 25)
-               character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_reckless", 20, 30)
-               out("character_traits_expansion_CHARACTER_COMPLETED_BATTLE_BLOODY")
+               trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_bloody", 20, 25)
+               trait_manager:apply_trait_by_chance(character, "phar_main_trait_reckless", 20, 30)
+               out("trait_manager_CHARACTER_COMPLETED_BATTLE_BLOODY")
           elseif losses >= 0.6 then
-               character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_bloody", 20, 20)
-               character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_reckless", 20, 22.5)
-               out("character_traits_expansion_CHARACTER_COMPLETED_BATTLE_BLOODY")
+               trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_bloody", 20, 20)
+               trait_manager:apply_trait_by_chance(character, "phar_main_trait_reckless", 20, 22.5)
+               out("trait_manager_CHARACTER_COMPLETED_BATTLE_BLOODY")
           elseif losses >= 0.45 then
-               character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_bloody", 20, 15)
-               character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_reckless", 20, 15)
-               out("character_traits_expansion_CHARACTER_COMPLETED_BATTLE_BLOODY")
+               trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_bloody", 20, 15)
+               trait_manager:apply_trait_by_chance(character, "phar_main_trait_reckless", 20, 15)
+               out("trait_manager_CHARACTER_COMPLETED_BATTLE_BLOODY")
           end
 
           ------------------------------
@@ -800,13 +778,13 @@ character_traits_expansion.start_trait_listeners = function()
                          local percent_loss_trigger_high = 25
                          local percent_loss_trigger_low = 25
                          if character:fought_in_battle() and casualties_percent > percent_loss_trigger_high then
-                              character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_brave", 20, 20)
-                              character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_scarred", 20, 30)
-                              out("character_traits_expansion_high_bodyguard_casualties_applying_brave_and_scarred")
+                              trait_manager:apply_trait_by_chance(character, "phar_main_trait_brave", 20, 20)
+                              trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_scarred", 20, 30)
+                              out("trait_manager_high_bodyguard_casualties_applying_brave_and_scarred")
                          end
                          if casualties_percent < percent_loss_trigger_low then
-                              character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_cautious", 20, 5)
-                              out("character_traits_expansion_low_bodyguard_casualties")
+                              trait_manager:apply_trait_by_chance(character, "phar_main_trait_cautious", 20, 5)
+                              out("trait_manager_low_bodyguard_casualties")
                          end
                     end
                end
@@ -815,7 +793,7 @@ character_traits_expansion.start_trait_listeners = function()
           -------------------------------
           ---- BATTLES AGAINST CULTURES ----
           -------------------------------
-          out("character_traits_expansion_battle_fought_against_culture_FIRED")
+          out("trait_manager_battle_fought_against_culture_FIRED")
           local battle = context:pending_battle()
           local character_faction = character:faction()
           local enemy_culture = ""
@@ -827,48 +805,49 @@ character_traits_expansion.start_trait_listeners = function()
                enemy_culture = battle:attacker():faction():culture()
           end
 
-          out("character_traits_expansion_ENEMY_CULTURE_IDENTIFIED_AS_" .. tostring(enemy_culture))
+          out("trait_manager_ENEMY_CULTURE_IDENTIFIED_AS_" .. tostring(enemy_culture))
 
           -- Check if the cultures are different before applying the traits
           if enemy_culture ~= character_faction:culture() then
-               if character_traits_expansion.traits.cultural[enemy_culture] ~= nil then
+               if character_traits_expansion.factions_to_culture_pairs[enemy_culture] ~= nil then
                     if character:won_battle() then
-                         character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_wins_against_" ..
-                                                                               character_traits_expansion.traits.cultural[enemy_culture], 20, 10)
-                         out("character_traits_expansion_BATTLE_WINS_AGAINST_" .. tostring(enemy_culture))
+                         trait_manager:apply_trait_by_chance(character,
+                                                             "character_traits_expansion_trait_wins_against_" .. character_traits_expansion.factions_to_culture_pairs[enemy_culture], 20, 20)
+                         out("trait_manager_BATTLE_WINS_AGAINST_" .. tostring(enemy_culture))
                     else
-                         character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_defeats_against_" ..
-                                                                               character_traits_expansion.traits.cultural[enemy_culture], 20, 50)
-                         out("character_traits_expansion_BATTLE_DEFEATS_AGAINST_" .. tostring(enemy_culture))
+                         trait_manager:apply_trait_by_chance(character,
+                                                             "character_traits_expansion_trait_defeats_against_" .. character_traits_expansion.factions_to_culture_pairs[enemy_culture], 20,
+                                                             35)
+                         out("trait_manager_BATTLE_DEFEATS_AGAINST_" .. tostring(enemy_culture))
                     end
                end
           else
-               out("character_traits_expansion_BATTLE_AGAINST_SAME_CULTURE_" .. tostring(enemy_culture) .. "_NO_TRAIT_APPLIED")
+               out("trait_manager_BATTLE_AGAINST_SAME_CULTURE_" .. tostring(enemy_culture) .. "_NO_TRAIT_APPLIED")
           end
      end, true)
 
      ------------------------------
      ---- ATTACKING/DEFENDING ----
      ------------------------------
-     core:add_listener("character_traits_expansion_attacker_win_lose_traits", "BattleConflictFinished", true, function(context)
+     core:add_listener("trait_manager_attacker_win_lose_traits", "BattleConflictFinished", true, function(context)
           local battle = context:pending_battle()
           local attacker = battle:attacker()
           local defender = battle:defender()
 
-          out("character_traits_expansion_BattleConflictFinished_triggered")
+          out("trait_manager_BattleConflictFinished_triggered")
 
           if attacker:is_null_interface() then
-               out("character_traits_expansion_attacker_is_null_interface!")
+               out("trait_manager_attacker_is_null_interface!")
                return
           end
 
           if defender:is_null_interface() then
-               out("character_traits_expansion_defender_is_null_interface!")
+               out("trait_manager_defender_is_null_interface!")
                return
           end
 
           if attacker:character_type("colonel") or defender:character_type("colonel") then
-               out("character_traits_expansion_character_is_colonel!")
+               out("trait_manager_character_is_colonel!")
                return
           end
 
@@ -876,12 +855,12 @@ character_traits_expansion.start_trait_listeners = function()
           ---- SIEGE BATTLE ----
           ------------------------------
           if battle:siege_battle() then
-               out("character_traits_expansion_Siege_Battle_Detected")
+               out("trait_manager_Siege_Battle_Detected")
                if attacker:won_battle() then
-                    character_traits_expansion:apply_trait_by_chance(attacker, "character_traits_expansion_trait_siege_victory", 20, 20)
+                    trait_manager:apply_trait_by_chance(attacker, "character_traits_expansion_trait_siege_victory", 20, 20)
                else
-                    character_traits_expansion:apply_trait_by_chance(attacker, "character_traits_expansion_trait_siege_defeat", 20, 50)
-                    character_traits_expansion:apply_trait_by_chance(defender, "character_traits_expansion_trait_siege_defense_victory", 20, 50)
+                    trait_manager:apply_trait_by_chance(attacker, "character_traits_expansion_trait_siege_defeat", 20, 50)
+                    trait_manager:apply_trait_by_chance(defender, "character_traits_expansion_trait_siege_defense_victory", 20, 50)
                end
                return
           end
@@ -891,20 +870,20 @@ character_traits_expansion.start_trait_listeners = function()
           ------------------------------
           if battle:ambush_battle() then
                if attacker:won_battle() then
-                    character_traits_expansion:apply_trait_by_chance(attacker, "character_traits_expansion_trait_lucky", 20, 20)
-                    character_traits_expansion:apply_trait_by_chance(attacker, "phar_main_trait_underhanded", 20, 20)
-                    character_traits_expansion:apply_trait_by_chance(defender, "character_traits_expansion_trait_unlucky", 20, 20)
-                    character_traits_expansion:apply_trait_by_chance(defender, "character_traits_expansion_trait_survivor", 20, 20)
-                    character_traits_expansion:apply_trait_by_chance(defender, "character_traits_expansion_trait_military_admin_bad", 20, 10)
-                    character_traits_expansion:apply_trait_by_chance(defender, "character_traits_expansion_trait_paranoia", 20, 5)
-                    out("character_traits_expansion_AMBUSH_BATTLE_DETECTED_ATTACKER_WON")
+                    trait_manager:apply_trait_by_chance(attacker, "character_traits_expansion_trait_lucky", 20, 20)
+                    trait_manager:apply_trait_by_chance(attacker, "phar_main_trait_underhanded", 20, 20)
+                    trait_manager:apply_trait_by_chance(defender, "character_traits_expansion_trait_unlucky", 20, 20)
+                    trait_manager:apply_trait_by_chance(defender, "character_traits_expansion_trait_survivor", 20, 20)
+                    trait_manager:apply_trait_by_chance(defender, "character_traits_expansion_trait_military_admin_bad", 20, 10)
+                    trait_manager:apply_trait_by_chance(defender, "character_traits_expansion_trait_paranoia", 20, 5)
+                    out("trait_manager_AMBUSH_BATTLE_DETECTED_ATTACKER_WON")
                else
-                    character_traits_expansion:apply_trait_by_chance(attacker, "character_traits_expansion_trait_unlucky", 20, 50)
-                    character_traits_expansion:apply_trait_by_chance(defender, "character_traits_expansion_trait_lucky", 20, 50)
-                    character_traits_expansion:apply_trait_by_chance(defender, "character_traits_expansion_trait_survivor", 20, 20)
-                    character_traits_expansion:apply_trait_by_chance(defender, "character_traits_expansion_trait_military_admin_bad", 20, 50)
-                    character_traits_expansion:apply_trait_by_chance(defender, "character_traits_expansion_trait_paranoia", 20, 5)
-                    out("character_traits_expansion_AMBUSH_BATTLE_DETECTED_ATTACKER_LOST")
+                    trait_manager:apply_trait_by_chance(attacker, "character_traits_expansion_trait_unlucky", 20, 50)
+                    trait_manager:apply_trait_by_chance(defender, "character_traits_expansion_trait_lucky", 20, 50)
+                    trait_manager:apply_trait_by_chance(defender, "character_traits_expansion_trait_survivor", 20, 20)
+                    trait_manager:apply_trait_by_chance(defender, "character_traits_expansion_trait_military_admin_bad", 20, 50)
+                    trait_manager:apply_trait_by_chance(defender, "character_traits_expansion_trait_paranoia", 20, 5)
+                    out("trait_manager_AMBUSH_BATTLE_DETECTED_ATTACKER_LOST")
                end
           end
 
@@ -913,14 +892,14 @@ character_traits_expansion.start_trait_listeners = function()
           ------------------------------
           if battle:failed_ambush_battle() then
                if attacker:won_battle() then
-                    character_traits_expansion:apply_trait_by_chance(attacker, "phar_main_trait_blunt", 20, 20)
-                    character_traits_expansion:apply_trait_by_chance(attacker, "character_traits_expansion_trait_unlucky", 20, 20)
-                    out("character_traits_expansion_FAILED_AMBUSH_BATTLE_DETECTED_ATTACKER_WON")
+                    trait_manager:apply_trait_by_chance(attacker, "phar_main_trait_blunt", 20, 20)
+                    trait_manager:apply_trait_by_chance(attacker, "character_traits_expansion_trait_unlucky", 20, 20)
+                    out("trait_manager_FAILED_AMBUSH_BATTLE_DETECTED_ATTACKER_WON")
                else
-                    character_traits_expansion:apply_trait_by_chance(attacker, "phar_main_trait_blunt", 20, 20)
-                    character_traits_expansion:apply_trait_by_chance(attacker, "character_traits_expansion_trait_unlucky", 20, 20)
-                    character_traits_expansion:apply_trait_by_chance(defender, "character_traits_expansion_trait_lucky", 20, 20)
-                    out("character_traits_expansion_FAILED_AMBUSH_BATTLE_DETECTED_ATTACKER_LOST")
+                    trait_manager:apply_trait_by_chance(attacker, "phar_main_trait_blunt", 20, 20)
+                    trait_manager:apply_trait_by_chance(attacker, "character_traits_expansion_trait_unlucky", 20, 20)
+                    trait_manager:apply_trait_by_chance(defender, "character_traits_expansion_trait_lucky", 20, 20)
+                    out("trait_manager_FAILED_AMBUSH_BATTLE_DETECTED_ATTACKER_LOST")
                end
           end
 
@@ -929,14 +908,14 @@ character_traits_expansion.start_trait_listeners = function()
           ------------------------------
           if not battle:siege_battle() then
                if attacker:won_battle() then
-                    character_traits_expansion:apply_trait_by_chance(attacker, "character_traits_expansion_trait_attacking_victory", 20, 17)
-                    character_traits_expansion:apply_trait_by_chance(defender, "character_traits_expansion_trait_defending_defeat", 20, 50)
-                    character_traits_expansion:apply_trait_by_chance(defender, "character_traits_expansion_trait_military_admin_bad", 20, 15)
+                    trait_manager:apply_trait_by_chance(attacker, "character_traits_expansion_trait_attacking_victory", 20, 17)
+                    trait_manager:apply_trait_by_chance(defender, "character_traits_expansion_trait_defending_defeat", 20, 50)
+                    trait_manager:apply_trait_by_chance(defender, "character_traits_expansion_trait_military_admin_bad", 20, 15)
                     out("hcp attacker won battle applying traits")
                else
-                    character_traits_expansion:apply_trait_by_chance(attacker, "character_traits_expansion_trait_attacking_defeat", 20, 50)
-                    character_traits_expansion:apply_trait_by_chance(defender, "character_traits_expansion_trait_defending_victory", 20, 25)
-                    character_traits_expansion:apply_trait_by_chance(attacker, "character_traits_expansion_trait_military_admin_bad", 20, 10)
+                    trait_manager:apply_trait_by_chance(attacker, "character_traits_expansion_trait_attacking_defeat", 20, 50)
+                    trait_manager:apply_trait_by_chance(defender, "character_traits_expansion_trait_defending_victory", 20, 25)
+                    trait_manager:apply_trait_by_chance(attacker, "character_traits_expansion_trait_military_admin_bad", 20, 10)
                     out("hcp attacker lost battle applying traits")
                end
           end
@@ -945,11 +924,11 @@ character_traits_expansion.start_trait_listeners = function()
           ---- PYRRHIC VICTORY ----
           ------------------------------
           if battle:attacker_battle_result() == "pyrrhic_victory" then
-               character_traits_expansion:apply_trait_by_chance(attacker, "phar_main_trait_blunt", 20, 15)
+               trait_manager:apply_trait_by_chance(attacker, "phar_main_trait_blunt", 20, 15)
                out("hcp attacker won battle with a pyrrhic victory so applying traits")
           end
           if battle:defender_battle_result() == "pyrrhic_victory" then
-               character_traits_expansion:apply_trait_by_chance(defender, "phar_main_trait_blunt", 20, 15)
+               trait_manager:apply_trait_by_chance(defender, "phar_main_trait_blunt", 20, 15)
                out("hcp defender won battle with a pyrrhic victory so applying traits")
           end
 
@@ -957,11 +936,11 @@ character_traits_expansion.start_trait_listeners = function()
           ---- VALIANT DEFEAT ----
           ------------------------------
           if battle:attacker_battle_result() == "valiant_defeat" then
-               character_traits_expansion:apply_trait_by_chance(attacker, "character_traits_expansion_trait_survivor", 20, 15)
+               trait_manager:apply_trait_by_chance(attacker, "character_traits_expansion_trait_survivor", 20, 15)
                out("hcp attacker lost battle with a valiant defeat so applying traits")
           end
           if battle:defender_battle_result() == "valiant_defeat" then
-               character_traits_expansion:apply_trait_by_chance(defender, "character_traits_expansion_trait_survivor", 20, 15)
+               trait_manager:apply_trait_by_chance(defender, "character_traits_expansion_trait_survivor", 20, 15)
                out("hcp defender lost battle with a valiant defeat so applying traits")
           end
 
@@ -969,11 +948,11 @@ character_traits_expansion.start_trait_listeners = function()
           ---- CLOSE VICTORY ----
           ------------------------------
           if battle:attacker_battle_result() == "close_victory" then
-               character_traits_expansion:apply_trait_by_chance(attacker, "character_traits_expansion_trait_disciplinarian", 20, 15)
+               trait_manager:apply_trait_by_chance(attacker, "character_traits_expansion_trait_disciplinarian", 20, 15)
                out("hcp attacker won battle with a close victory so applying traits")
           end
           if battle:defender_battle_result() == "close_victory" then
-               character_traits_expansion:apply_trait_by_chance(defender, "character_traits_expansion_trait_disciplinarian", 20, 15)
+               trait_manager:apply_trait_by_chance(defender, "character_traits_expansion_trait_disciplinarian", 20, 15)
                out("hcp defender won battle with a close victory so applying traits")
           end
 
@@ -981,11 +960,11 @@ character_traits_expansion.start_trait_listeners = function()
           ---- CLOSE DEFEAT ----
           ----------------------
           if battle:attacker_battle_result() == "close_defeat" then
-               character_traits_expansion:apply_trait_by_chance(attacker, "character_traits_expansion_trait_bad_disciplinarian", 20, 10)
+               trait_manager:apply_trait_by_chance(attacker, "character_traits_expansion_trait_bad_disciplinarian", 20, 10)
                out("hcp attacker lost battle with a close defeat so applying traits")
           end
           if battle:defender_battle_result() == "close_defeat" then
-               character_traits_expansion:apply_trait_by_chance(defender, "character_traits_expansion_trait_bad_disciplinarian", 20, 10)
+               trait_manager:apply_trait_by_chance(defender, "character_traits_expansion_trait_bad_disciplinarian", 20, 10)
                out("hcp defender lost battle with a close defeat so applying traits")
           end
 
@@ -997,11 +976,11 @@ character_traits_expansion.start_trait_listeners = function()
           local defender = battle:defender()
 
           if attacker:faction():is_rebel() and attacker:won_battle() == false then
-               character_traits_expansion:apply_trait_by_chance(defender, "character_traits_expansion_trait_authoritarian", 20, 20)
-               out("character_traits_expansion_battle_against_rebels_defender_gains_authoritarian_trait")
+               trait_manager:apply_trait_by_chance(defender, "character_traits_expansion_trait_authoritarian", 20, 20)
+               out("trait_manager_battle_against_rebels_defender_gains_authoritarian_trait")
           elseif defender:faction():is_rebel() and defender:won_battle() == false then
-               character_traits_expansion:apply_trait_by_chance(attacker, "character_traits_expansion_trait_authoritarian", 20, 20)
-               out("character_traits_expansion_battle_against_rebels_attacker_gains_authoritarian_trait")
+               trait_manager:apply_trait_by_chance(attacker, "character_traits_expansion_trait_authoritarian", 20, 20)
+               out("trait_manager_battle_against_rebels_attacker_gains_authoritarian_trait")
           end
 
           ----------------------------------------
@@ -1013,7 +992,7 @@ character_traits_expansion.start_trait_listeners = function()
                     local distance = 1750
                     if distance and distance_squared(attacker:logical_position_x(), attacker:logical_position_y(), home:logical_position_x(), home:logical_position_y()) >=
                          distance * distance then
-                         character_traits_expansion:apply_trait_by_chance(attacker, "phar_main_trait_individualistic", 20, 30)
+                         trait_manager:apply_trait_by_chance(attacker, "phar_main_trait_individualistic", 20, 30)
                          out("hcp battle fought far from capital")
                     end
                end
@@ -1025,7 +1004,7 @@ character_traits_expansion.start_trait_listeners = function()
                     local distance = 2000
                     if distance and distance_squared(defender:logical_position_x(), defender:logical_position_y(), home:logical_position_x(), home:logical_position_y()) >=
                          distance * distance then
-                         character_traits_expansion:apply_trait_by_chance(defender, "phar_main_trait_individualistic", 20, 30)
+                         trait_manager:apply_trait_by_chance(defender, "phar_main_trait_individualistic", 20, 30)
                          out("hcp battle fought far from capital")
                     end
                end
@@ -1038,14 +1017,14 @@ character_traits_expansion.start_trait_listeners = function()
           -- secodnary attackers
           local secondary_attackers = battle:secondary_attackers()
           if secondary_attackers:is_empty() then
-               character_traits_expansion:apply_trait_by_chance(attacker, "phar_main_trait_individualistic", 20, 20)
+               trait_manager:apply_trait_by_chance(attacker, "phar_main_trait_individualistic", 20, 20)
                out("hcp battle fought alone")
           end
 
           -- secondary defenders
           local secondary_defenders = battle:secondary_defenders()
           if secondary_defenders:is_empty() then
-               character_traits_expansion:apply_trait_by_chance(defender, "phar_main_trait_individualistic", 20, 20)
+               trait_manager:apply_trait_by_chance(defender, "phar_main_trait_individualistic", 20, 20)
                out("hcp battle fought alone")
           end
 
@@ -1058,7 +1037,7 @@ character_traits_expansion.start_trait_listeners = function()
           if not secondary_attackers:is_empty() then
                for i = 0, secondary_attackers:num_items() - 1 do
                     local character = secondary_attackers:item_at(i)
-                    character_traits_expansion:apply_trait_by_chance(attacker, "phar_main_trait_cooperative", 20, 20)
+                    trait_manager:apply_trait_by_chance(attacker, "phar_main_trait_cooperative", 20, 20)
                     out("hcp battle reinforced other army")
                end
           end
@@ -1067,7 +1046,7 @@ character_traits_expansion.start_trait_listeners = function()
           if not secondary_defenders:is_empty() then
                for i = 0, secondary_defenders:num_items() - 1 do
                     local character = secondary_defenders:item_at(i)
-                    character_traits_expansion:apply_trait_by_chance(defender, "phar_main_trait_cooperative", 20, 20)
+                    trait_manager:apply_trait_by_chance(defender, "phar_main_trait_cooperative", 20, 20)
                     out("hcp battle reinforced other army")
                end
           end
@@ -1079,15 +1058,15 @@ character_traits_expansion.start_trait_listeners = function()
           -- secondary attackers
           local secondary_attackers = battle:secondary_attackers()
           if not secondary_attackers:is_empty() and not battle:attacker():is_null_interface() then
-               character_traits_expansion:apply_trait_by_chance(attacker, "phar_main_trait_cooperative", 20, 20)
-               character_traits_expansion:apply_trait_by_chance(attacker, "character_traits_expansion_trait_trusting", 20, 5)
+               trait_manager:apply_trait_by_chance(attacker, "phar_main_trait_cooperative", 20, 20)
+               trait_manager:apply_trait_by_chance(attacker, "character_traits_expansion_trait_trusting", 20, 5)
                out("hcp battle reinforced by other army")
           end
           -- secondary defenders
           local secondary_defenders = battle:secondary_defenders()
           if not secondary_defenders:is_empty() and not battle:defender():is_null_interface() then
-               character_traits_expansion:apply_trait_by_chance(defender, "phar_main_trait_cooperative", 20, 20)
-               character_traits_expansion:apply_trait_by_chance(defender, "character_traits_expansion_trait_trusting", 20, 5)
+               trait_manager:apply_trait_by_chance(defender, "phar_main_trait_cooperative", 20, 20)
+               trait_manager:apply_trait_by_chance(defender, "character_traits_expansion_trait_trusting", 20, 5)
                out("hcp battle reinforced by other army")
           end
 
@@ -1107,9 +1086,9 @@ character_traits_expansion.start_trait_listeners = function()
           -- end
 
           -- -- If a defeated legendary lord is found, apply the corresponding trait
-          -- if defeated_character and LEGENDARY_LORD_DEFEAT_TRAIT[defeated_character:character_subtype()] then
-          --     local trait = LEGENDARY_LORD_DEFEAT_TRAIT[defeated_character:character_subtype()]
-          --     character_traits_expansion:apply_trait_by_chance(winner_character, trait, 20)
+          -- if defeated_character and legendary_lords_defeated_TRAIT[defeated_character:character_subtype()] then
+          --     local trait = legendary_lords_defeated_TRAIT[defeated_character:character_subtype()]
+          --     trait_manager:apply_trait_by_chance(winner_character, trait, 20)
           --     out("character_traits_expansion_trait_applied_for_defeating_legendary_lord: " .. defeated_character:character_subtype())
           -- end
      end, true)
@@ -1120,7 +1099,7 @@ character_traits_expansion.start_trait_listeners = function()
      -- Table to store potential faction killers
      local potential_faction_killers = {}
 
-     core:add_listener("character_traits_expansion_character_might_destroy_faction", "BattleConflictFinished", true, function(context)
+     core:add_listener("trait_manager_character_might_destroy_faction", "BattleConflictFinished", true, function(context)
           local battle = context:pending_battle()
           local attacker = battle:attacker()
           local defender = battle:defender()
@@ -1130,7 +1109,7 @@ character_traits_expansion.start_trait_listeners = function()
                local defender_faction = defender:faction()
                if defender_faction:num_regions() <= 1 then
                     potential_faction_killers[defender_faction:name()] = attacker
-                    out("character_traits_expansion_PotentialFactionKiller: Attacker " .. attacker:onscreen_name() .. " might destroy faction " .. defender_faction:name())
+                    out("trait_manager_PotentialFactionKiller: Attacker " .. attacker:onscreen_name() .. " might destroy faction " .. defender_faction:name())
                end
           end
 
@@ -1139,7 +1118,7 @@ character_traits_expansion.start_trait_listeners = function()
                local attacker_faction = attacker:faction()
                if attacker_faction:num_regions() <= 1 then
                     potential_faction_killers[attacker_faction:name()] = defender
-                    out("character_traits_expansion_PotentialFactionKiller: Defender " .. defender:onscreen_name() .. " might destroy faction " .. attacker_faction:name())
+                    out("trait_manager_PotentialFactionKiller: Defender " .. defender:onscreen_name() .. " might destroy faction " .. attacker_faction:name())
                end
           end
      end, true)
@@ -1147,15 +1126,15 @@ character_traits_expansion.start_trait_listeners = function()
      ----------------------------------
      -- FACTION DESTROYED CHECK ----
      ----------------------------------
-     core:add_listener("character_traits_expansion_faction_destroyed", "FactionDestroyed", true, function(context)
+     core:add_listener("trait_manager_faction_destroyed", "FactionDestroyed", true, function(context)
           local faction = context:faction()
 
           -- Check if the faction is dead
           if faction:is_dead() then
                local killer = potential_faction_killers[faction:name()]
                if killer then
-                    character_traits_expansion:apply_trait_by_chance(killer, "character_traits_expansion_trait_factionkiller", 20)
-                    out("character_traits_expansion_FactionKillerTraitApplied: " .. killer:onscreen_name() .. " destroyed faction " .. faction:name())
+                    trait_manager:apply_trait_by_chance(killer, "character_traits_expansion_trait_factionkiller", 20)
+                    out("trait_manager_FactionKillerTraitApplied: " .. killer:onscreen_name() .. " destroyed faction " .. faction:name())
                     potential_faction_killers[faction:name()] = nil -- Clear the entry after trait assignment
                end
           end
@@ -1164,19 +1143,18 @@ character_traits_expansion.start_trait_listeners = function()
      --------------------
      ---- REBELLIONS ----
      --------------------
-     core:add_listener("character_traits_expansion_region_rebelled", "RegionRebels", true, function(context)
+     core:add_listener("trait_manager_region_rebelled", "RegionRebels", true, function(context)
           local province = context():region():province()
 
           for i = 0, province:region_list():num_items() - 1 do
                local region = province:region_list():item_at(i)
                if region:has_settlement() and region:settlement():has_commander() then
                     local character = region():settlement():commander()
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 20)
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_authoritarian", 20, 15)
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_bad", 20, 12.5)
+                    trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 20)
+                    trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_authoritarian", 20, 15)
+                    trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_bad", 20, 12.5)
 
-                    out("character_traits_expansion_REGION_IN_PROVINCE_REBELLED_AND_ATTEMPTED_TO_GIVE_TRAIT_TO_" ..
-                             tostring(cm:char_lookup_str(character:command_queue_index())))
+                    out("trait_manager_REGION_IN_PROVINCE_REBELLED_AND_ATTEMPTED_TO_GIVE_TRAIT_TO_" .. tostring(cm:char_lookup_str(character:command_queue_index())))
                end
           end
 
@@ -1185,7 +1163,7 @@ character_traits_expansion.start_trait_listeners = function()
      -----------------------------
      ---- BUILDING COMPLETED ----
      -----------------------------
-     core:add_listener("character_traits_expansion_building_completed", "BuildingCompleted", true, function(context)
+     core:add_listener("trait_manager_building_completed", "BuildingCompleted", true, function(context)
           local building = context:building()
           local settlement = building:region():settlement()
           local building_superchain_key = building:superchain()
@@ -1196,59 +1174,59 @@ character_traits_expansion.start_trait_listeners = function()
                ----------------------------
                ---- BUILT ANY BUILDING ----
                ----------------------------
-               character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_cultured", 20, 5)
+               trait_manager:apply_trait_by_chance(character, "phar_main_trait_cultured", 20, 5)
 
                --------------------------
                ---- BUILT FARMS ----
                --------------------------
                if character_traits_expansion.building_superchains.food[building_superchain_key] then
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_farmer_good", 20, 25)
-                    out("character_traits_expansion_farmer: Applied character_traits_expansion_trait_farmer_good to " .. character:onscreen_name())
+                    trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_farmer_good", 20, 25)
+                    out("trait_manager_farmer: Applied character_traits_expansion_trait_farmer_good to " .. character:onscreen_name())
                else
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_farmer_bad", 20, 7.5)
-                    out("character_traits_expansion_farmer: Building superchain not in character_traits_expansion.building_superchains.food")
+                    trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_farmer_bad", 20, 7.5)
+                    out("trait_manager_farmer: Building superchain not in character_traits_expansion.building_superchains.food")
                end
 
                --------------------------
                ---- BUILT MINES ----
                --------------------------
                if character_traits_expansion.building_superchains.mines[building_superchain_key] then
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_miner", 20, 35)
-                    out("character_traits_expansion_miner: Applied character_traits_expansion_trait_miner to " .. character:onscreen_name())
+                    trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_miner", 20, 35)
+                    out("trait_manager_miner: Applied character_traits_expansion_trait_miner to " .. character:onscreen_name())
                else
-                    out("character_traits_expansion_miner: Building superchain not in character_traits_expansion.building_superchains.mines")
+                    out("trait_manager_miner: Building superchain not in character_traits_expansion.building_superchains.mines")
                end
 
                -------------------------
                ---- BUILT GOLD MINES ----
                -------------------------
                if character_traits_expansion.building_superchains.gold[building_superchain_key] then
-                    character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_materialistic", 20, 25)
-                    out("character_traits_expansion_builder: Applied phar_main_trait_materialistic to " .. character:onscreen_name())
+                    trait_manager:apply_trait_by_chance(character, "phar_main_trait_materialistic", 20, 25)
+                    out("trait_manager_builder: Applied phar_main_trait_materialistic to " .. character:onscreen_name())
                end
 
                -------------------------------------
                --- BUILT MILITARY ADMINISTRATION ---
                -------------------------------------
                if character_traits_expansion.building_superchains.military_administration[building_superchain_key] then
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_military_admin_good", 20, 25)
-                    out("character_traits_expansion_builder: Applied character_traits_expansion_trait_admin_good to " .. character:onscreen_name())
+                    trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_military_admin_good", 20, 25)
+                    out("trait_manager_builder: Applied character_traits_expansion_trait_admin_good to " .. character:onscreen_name())
                end
 
                -------------------------------
                -- BUILT PROVINCE MANAGEMENT --
                ------------------------------
                if character_traits_expansion.building_superchains.province_management[building_superchain_key] then
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_good", 20, 20)
-                    out("character_traits_expansion_builder: Applied character_traits_expansion_trait_admin_good to " .. character:onscreen_name())
+                    trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_good", 20, 20)
+                    out("trait_manager_builder: Applied character_traits_expansion_trait_admin_good to " .. character:onscreen_name())
                end
 
                ----------------------
                ---- BUILT SHRINE ----
                ----------------------
                if building_superchain_key == "phar_main_ers_shrine" then
-                    character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_spiritual", 20, 20)
-                    out("character_traits_expansion_builder: character_traits_expansion_character_present_for_construction_of_shrine")
+                    trait_manager:apply_trait_by_chance(character, "phar_main_trait_spiritual", 20, 20)
+                    out("trait_manager_builder: trait_manager_character_present_for_construction_of_shrine")
                end
 
                ------------------------------
@@ -1256,18 +1234,18 @@ character_traits_expansion.start_trait_listeners = function()
                ------------------------------
                if building_superchain_key == "phar_main_port_coast_derivative_type_a" or building_superchain_key ==
                     "phar_main_irsu_resource_production_port_coast_derivative_type_a" then
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_criminal", 20, 35)
-                    out("character_traits_expansion_smuggler: built smugglers' den and applying trait to " .. character:onscreen_name())
+                    trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_criminal", 20, 35)
+                    out("trait_manager_smuggler: built smugglers' den and applying trait to " .. character:onscreen_name())
                else
-                    out("character_traits_expansion_smuggler: smugglers' den not found")
+                    out("trait_manager_smuggler: smugglers' den not found")
                end
 
                ----------------------
                ---- BUILT TEMPLE ----
                ----------------------
                if building_superchain_key == "phar_main_religion_temple" or building_superchain_key == "phar_map_religion_dwelling_all" then
-                    character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_spiritual", 20, 20)
-                    out("character_traits_expansion_builder: character_traits_expansion_character_present_for_construction_of_temple")
+                    trait_manager:apply_trait_by_chance(character, "phar_main_trait_spiritual", 20, 20)
+                    out("trait_manager_builder: trait_manager_character_present_for_construction_of_temple")
                end
 
           else
@@ -1275,7 +1253,7 @@ character_traits_expansion.start_trait_listeners = function()
           end
      end, true)
 
-     core:add_listener("character_traits_expansion_character_ends_turn_in_province_with_construction", "CharacterEndTurn", function(context)
+     core:add_listener("trait_manager_character_ends_turn_in_province_with_construction", "CharacterEndTurn", function(context)
           local character = context:character()
           if character:has_region() and character:region():owning_faction():command_queue_index() == character:faction():command_queue_index() then
                local province = character:region():province()
@@ -1288,44 +1266,44 @@ character_traits_expansion.start_trait_listeners = function()
           end
           return false
      end, function(context)
-          character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_cultured", 20, 3)
+          trait_manager:apply_trait_by_chance(character, "phar_main_trait_cultured", 20, 3)
           if slot:building_chain_key() == "phar_main_ers_shrine" then return true end
      end, true)
 
-     core:add_listener("character_traits_expansion_character_rank_up", "CharacterRankUp", true, function(context)
+     core:add_listener("trait_manager_character_rank_up", "CharacterRankUp", true, function(context)
           local character = context:character()
 
-          out("character_traits_expansion_CHARACTER_RANKED_UP: " .. character:onscreen_name())
+          out("trait_manager_CHARACTER_RANKED_UP: " .. character:onscreen_name())
 
           ----------------------------
           ---- POLITICIAN RANK UP ----
           ----------------------------
           if character:is_politician() then
-               character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_military_admin_good", 20, 10)
-               out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " IS A POLITICIAN. GIVING MILITARY ADMIN GOOD TRAIT.")
+               trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_military_admin_good", 20, 10)
+               out("trait_manager_CHARACTER_" .. character:onscreen_name() .. " IS A POLITICIAN. GIVING MILITARY ADMIN GOOD TRAIT.")
           end
           if character:is_politician() and character:faction():at_war() then
-               character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_warmonger", 20, 4)
-               out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " IS AT WAR. GIVING WARMONGER TRAIT.")
+               trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_warmonger", 20, 4)
+               out("trait_manager_CHARACTER_" .. character:onscreen_name() .. " IS AT WAR. GIVING WARMONGER TRAIT.")
           elseif character:is_politician() and not character:faction():at_war() then
-               character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_pacifist", 20, 10)
-               out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " IS NOT AT WAR. GIVING PACIFIST TRAIT.")
+               trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_pacifist", 20, 10)
+               out("trait_manager_CHARACTER_" .. character:onscreen_name() .. " IS NOT AT WAR. GIVING PACIFIST TRAIT.")
           end
      end, true)
 
      ----------------------------------------------
      ---- MAIN CHARACTER TURN START PROCESSING ----
      ----------------------------------------------
-     core:add_listener("character_traits_expansion_character_turn_start", "CharacterTurnStart", true, function(context)
+     core:add_listener("trait_manager_character_turn_start", "CharacterTurnStart", true, function(context)
           local character = context:character()
 
           if character:is_null_interface() then
-               out("character_traits_expansion_character_turn_start character is_null_interface!")
+               out("trait_manager_character_turn_start character is_null_interface!")
                return
           end
 
           if not character:character_type("general") or character:character_details():is_civilian() then
-               out("character_traits_expansion_character_turn_start character is not a general or is a civilian!")
+               out("trait_manager_character_turn_start character is not a general or is a civilian!")
                return
           end
           -- ! Lycia Bookmark
@@ -1341,11 +1319,11 @@ character_traits_expansion.start_trait_listeners = function()
                local region_influence = character:region():religion_proportion(religion)
 
                if region_influence > influence_threshold_high then
-                    character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_irreverent", 20, 3)
-                    out("character_traits_expansion_CHAR_IN_HIGH_INFLUENCE_REGION!")
+                    trait_manager:apply_trait_by_chance(character, "phar_main_trait_irreverent", 20, 3)
+                    out("trait_manager_CHAR_IN_HIGH_INFLUENCE_REGION!")
                elseif region_influence < influence_threshold_low then
-                    character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_respectful", 20, 5)
-                    out("character_traits_expansion_CHAR_IN_LOW_INFLUENCE_REGION!")
+                    trait_manager:apply_trait_by_chance(character, "phar_main_trait_respectful", 20, 5)
+                    out("trait_manager_CHAR_IN_LOW_INFLUENCE_REGION!")
                end
           end
 
@@ -1356,9 +1334,9 @@ character_traits_expansion.start_trait_listeners = function()
           -- local faction = character:faction()
 
           -- if faction:num_allies() == 0 and faction:at_war() then
-          --     character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_irreverent", 20, 1)
+          --     trait_manager:apply_trait_by_chance(character, "phar_main_trait_irreverent", 20, 1)
           -- elseif faction:num_allies() > 1 then
-          --     character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_respectful", 20, 1)
+          --     trait_manager:apply_trait_by_chance(character, "phar_main_trait_respectful", 20, 1)
           -- end
 
           -------------------------------------------------------
@@ -1368,7 +1346,7 @@ character_traits_expansion.start_trait_listeners = function()
                local faction_key = character:faction():name()
                local province = character:region():province()
                local province_name = character:region():province_name()
-               out("character_traits_expansion_TEST_BLIGHTED_PASSED_CHECK_CHARACTER_IS_IN_PROVINCE_" .. tostring(province_name))
+               out("trait_manager_TEST_BLIGHTED_PASSED_CHECK_CHARACTER_IS_IN_PROVINCE_" .. tostring(province_name))
 
                local disaster_traits = {
                     {"phar_main_effect_bundle_incident_disaster_plague_recruitment_slots", "character_traits_expansion_trait_blighted"},
@@ -1384,7 +1362,7 @@ character_traits_expansion.start_trait_listeners = function()
                     local trait_key = disaster_traits[i][2]
 
                     if province:has_effect_bundle(effect_bundle_key, faction_key) then
-                         character_traits_expansion:apply_trait_by_chance(character, trait_key, 20, 20)
+                         trait_manager:apply_trait_by_chance(character, trait_key, 20, 20)
                          out("Applied " .. trait_key .. " due to effect bundle " .. effect_bundle_key)
                     end
                end
@@ -1394,8 +1372,8 @@ character_traits_expansion.start_trait_listeners = function()
           ---- AT SEA ----
           ----------------
           if character:is_at_sea() then
-               character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_sea_legs", 20, 25)
-               out("character_traits_expansion_CHAR_IS_AT_SEA_APPLYING_TRAIT")
+               trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_sea_legs", 20, 25)
+               out("trait_manager_CHAR_IS_AT_SEA_APPLYING_TRAIT")
           end
 
           ---------------------------------------------
@@ -1405,10 +1383,10 @@ character_traits_expansion.start_trait_listeners = function()
           --     local random_index = math.random(#character_created_traits)
           --     local selected_trait = character_created_traits[random_index]
 
-          --     out("character_traits_expansion_RANDOM_NUMBER_IS_" .. random_index)
+          --     out("trait_manager_RANDOM_NUMBER_IS_" .. random_index)
 
-          --     character_traits_expansion:apply_trait_by_chance(character, selected_trait, 4)
-          --     out("character_traits_expansion_add_random_trait_to_character_PASSED_RANDOM_CHECK_AND_IS_APPLYING_" .. tostring(selected_trait))
+          --     trait_manager:apply_trait_by_chance(character, selected_trait, 4)
+          --     out("trait_manager_add_random_trait_to_character_PASSED_RANDOM_CHECK_AND_IS_APPLYING_" .. tostring(selected_trait))
           -- end
 
           -------------------------------------------------------------
@@ -1422,13 +1400,13 @@ character_traits_expansion.start_trait_listeners = function()
           if cm:char_is_general_with_army(character) and character:has_region() and is_in_settlement then
                if not character:turns_in_own_regions() < 3 and character:military_force():active_stance() ~= "MILITARY_FORCE_ACTIVE_STANCE_TYPE_MUSTER" then
                     if public_order >= 70 and faction_name == character:faction():name() then
-                         character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_content", 20, 7.5)
-                         character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 3)
-                         out("character_traits_expansion_character_is_garrisoned_in_settlement_with_high_public_order!")
+                         trait_manager:apply_trait_by_chance(character, "phar_main_trait_content", 20, 7.5)
+                         trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 3)
+                         out("trait_manager_character_is_garrisoned_in_settlement_with_high_public_order!")
                     elseif public_order <= -70 and faction_name == character:faction():name() then
-                         character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 10)
-                         character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_bad", 20, 5)
-                         out("character_traits_expansion_character_is_garrisoned_in_settlement_with_low_public_order!")
+                         trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 10)
+                         trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_bad", 20, 5)
+                         out("trait_manager_character_is_garrisoned_in_settlement_with_low_public_order!")
                     end
                end
           end
@@ -1437,16 +1415,16 @@ character_traits_expansion.start_trait_listeners = function()
      --------------------------------------------
      ---- MAIN CHARACTER TURN END PROCESSING ----
      --------------------------------------------
-     core:add_listener("character_traits_expansion_character_turn_end_main", "CharacterTurnEnd", true, function(context)
+     core:add_listener("trait_manager_character_turn_end_main", "CharacterTurnEnd", true, function(context)
           local character = context:character()
 
           if character:is_null_interface() then
-               out("character_traits_expansion_character_turn_end_main character is_null_interface!")
+               out("trait_manager_character_turn_end_main character is_null_interface!")
                return
           end
 
           if character:character_type("colonel") or character:character_details():is_civilian() then
-               out("character_traits_expansion_character_turn_end_main character is a colonel or is a civilian!")
+               out("trait_manager_character_turn_end_main character is a colonel or is a civilian!")
                return
           end
 
@@ -1460,26 +1438,25 @@ character_traits_expansion.start_trait_listeners = function()
           if faction:is_allowed_to_capture_territory() and cm:char_is_general_with_army(character) and character:has_region() and not region:is_abandoned() then
                -- Check if the character is in a settlement and applies hesitant
                if character:in_settlement() then
-                    character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_hesitant", 20, 5)
+                    trait_manager:apply_trait_by_chance(character, "phar_main_trait_hesitant", 20, 5)
                     out("HCP: Character in settlement, applying 'hesitant' trait.")
 
                     -- Check if the character is in an enemy region and apply scout, confident and pragmatic
 
                elseif faction:at_war_with(region:owning_faction()) then
-                    character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_confident", 20, 10)
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 10)
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_pragmatic", 20, 10)
-                    out("HCP: Character in enemy region, applying 'confident' and 'scout' traits.")
+                    trait_manager:apply_trait_by_chance(character, "phar_main_trait_confident", 20, 10)
+                    trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 10)
+                    trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_pragmatic", 20, 10)
+                    out("HCP: Character in enemy region, applying 'confident' and 'scout' ")
 
                     -- Additional check for marriage and action points and applies cuckold.
-                    if character:family_member():has_spouse() and character:turns_in_enemy_regions() >= 10 then
-                         character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_cuckold", 20, 3)
+                    if character:family_member():has_spouse() and character:turns_in_enemy_regions() >= 5 then
+                         trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_cuckold", 20, 3)
                          out("HCP: Character is married and has full action points, applying 'cuckold' trait.")
                     end
-
-                    -- Character is in a friendly region but not in a settlement; he still gets scout.
-               else
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 10)
+      	     else
+			-- Character is in a friendly region but not in a settlement; he still gets scout.
+                    trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 10)
                     out("HCP: Character in friendly region, applying 'scout' trait.")
                end
 
@@ -1489,9 +1466,9 @@ character_traits_expansion.start_trait_listeners = function()
                ---handles feck and bad_disciplinarian
                if not character:in_settlement() and cm:char_is_general_with_army(character) and character:military_force():active_stance() ~=
                     "MILITARY_FORCE_ACTIVE_STANCE_TYPE_MUSTER" then
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_feck", 20, 10)
-                    -- character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 1)
-                    out("HCP: Character not in settlement with full action points, applying 'feck' and 'bad_disciplinarian' traits.")
+                    trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_feck", 20, 10)
+                    trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 1)
+                    out("HCP: Character not in settlement with full action points, applying 'feck' and 'bad_disciplinarian' ")
                end
           end
 
@@ -1501,9 +1478,9 @@ character_traits_expansion.start_trait_listeners = function()
           if cm:char_is_general_with_army(character) and character:has_region() and character:turns_in_own_regions() >= 150 and character:in_settlement() and
                character:military_force():active_stance() ~= "MILITARY_FORCE_ACTIVE_STANCE_TYPE_MUSTER" and character:military_force():active_stance() ~=
                "MILITARY_FORCE_ACTIVE_STANCE_TYPE_MARCH" and character:military_force():active_stance() ~= "MILITARY_FORCE_SITUATIONAL_STANCE_LAY_SIEGE" then
-               out("character_traits_expansion_slothful_character_is_eligible_for_slothful")
+               out("trait_manager_slothful_character_is_eligible_for_slothful")
 
-               character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_slothful", 20, 5)
+               trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_slothful", 20, 5)
           end
 
           ----------------------------
@@ -1512,19 +1489,19 @@ character_traits_expansion.start_trait_listeners = function()
           ---Handles "bad" traits like drink, girls, arse, and gambler
           if cm:char_is_general_with_army(character) and character:has_region() and character:turns_in_own_regions() >= 1 and character:in_settlement() and
                character:military_force():active_stance() ~= "MILITARY_FORCE_ACTIVE_STANCE_TYPE_MUSTER" then
-               out("character_traits_expansion_LAZY_IN_SETTLEMENT_BEGINS")
+               out("trait_manager_LAZY_IN_SETTLEMENT_BEGINS")
 
                local sober_chance = 1
                local drink_chance = 1
 
                local region = character:region()
-               out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " IS GOVERNOR OF REGION: " .. region:name())
+               out("trait_manager_CHARACTER_" .. character:onscreen_name() .. " IS GOVERNOR OF REGION: " .. region:name())
 
                if region:public_order() >= 50 then
                     -- Old characters are more likely to get lazy traits like in Attila
                     if character:age() > 50 then
                          drink_chance = drink_chance + 2
-                         out("character_traits_expansion_give_lazy_traits_character_is_old_so_drink_chance_is " .. drink_chance)
+                         out("trait_manager_give_lazy_traits_character_is_old_so_drink_chance_is " .. drink_chance)
                     end
                     -- Check if settlement has a military admin, temple, or beer building and increase chance if so
                     local slot_list = character:region():settlement():slot_list()
@@ -1537,17 +1514,17 @@ character_traits_expansion.start_trait_listeners = function()
 
                               if character_traits_expansion.building_superchains.military_administration[building_superchain] then
                                    sober_chance = sober_chance + 4
-                                   out("character_traits_expansion_give_lazy_traits_found_military_admin_building_so_sober_chance_is " .. sober_chance)
+                                   out("trait_manager_give_lazy_traits_found_military_admin_building_so_sober_chance_is " .. sober_chance)
                               end
 
                               if character_traits_expansion.building_superchains.drinking[building_superchain] then
                                    drink_chance = drink_chance + 4
-                                   out("character_traits_expansion_give_lazy_traits_found_drink_building_so_drink_chance_is " .. drink_chance)
+                                   out("trait_manager_give_lazy_traits_found_drink_building_so_drink_chance_is " .. drink_chance)
                               end
 
                               if building_superchain == "phar_main_religion_temple" or building_superchain == "phar_map_religion_dwelling_all" then
                                    sober_chance = sober_chance + 4
-                                   out("character_traits_expansion_give_lazy_traits_found_temple_so_sober_chance_is " .. sober_chance)
+                                   out("trait_manager_give_lazy_traits_found_temple_so_sober_chance_is " .. sober_chance)
                               end
                          end
                     end
@@ -1557,15 +1534,14 @@ character_traits_expansion.start_trait_listeners = function()
 
                     -- Apply the traits after processing all the buildings
                     local traits = {
-                         {"character_traits_expansion_trait_sober", sober_chance}, {"character_traits_expansion_trait_drink", drink_chance},
-                         {"character_traits_expansion_trait_girls", drink_chance}, {"character_traits_expansion_trait_arse", drink_chance},
-                         {"character_traits_expansion_trait_degenerate", drink_chance}, {"character_traits_expansion_trait_gambler", drink_chance}
+                         {"character_traits_expansion_trait_sober", sober_chance}, {"character_traits_expansion_trait_drink", drink_chance}, {"character_traits_expansion_trait_girls", drink_chance},
+                         {"character_traits_expansion_trait_arse", drink_chance}, {"character_traits_expansion_trait_degenerate", drink_chance}, {"character_traits_expansion_trait_gambler", drink_chance}
 
                     }
-                    -- ! Lycia Bookmark: This shows how to use a table to pair two values like a trait and its chance, and then loop through it to apply the traits. This is much cleaner than having separate if statements for each trait.
+                    -- ! Lycia Bookmark: This shows how to use a table to pair two values like a trait and its chance, and then loop through it to apply the  This is much cleaner than having separate if statements for each trait.
                     for i = 1, #traits do
                          out("Applying trait: " .. traits[i][1] .. " with chance: " .. traits[i][2])
-                         character_traits_expansion:apply_trait_by_chance(character, traits[i][1], 20, traits[i][2])
+                         trait_manager:apply_trait_by_chance(character, traits[i][1], 20, traits[i][2])
                     end
                     -- else
                     --     out("Character is not eligible for lazy traits (not in settlement or insufficient action points).")
@@ -1579,7 +1555,7 @@ character_traits_expansion.start_trait_listeners = function()
           if cm:char_is_general_with_army(character) and character:has_region() and character:region():owning_faction():command_queue_index() ==
                character:faction():command_queue_index() then
                local building_list = character:region():settlement():building_list()
-               out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " IS IN REGION: " .. region:name() ..
+               out("trait_manager_CHARACTER_" .. character:onscreen_name() .. " IS IN REGION: " .. region:name() ..
                         " CHECKING FOR TREASURY, PALACE OF PLEASURE AND GOLD MINE")
 
                -- check for palace of pleasures
@@ -1588,57 +1564,57 @@ character_traits_expansion.start_trait_listeners = function()
                     if not building:is_null_interface() then
                          local superchain = building:superchain()
                          if superchain == "phar_map_bab_province_management_happiness_growth_type_a" then
-                              character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_corrupt", 20, 5)
-                              character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_degenerate", 20, 5)
-                              out("character_traits_expansion_CORRUPT pleasure palace found!")
+                              trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_corrupt", 20, 5)
+                              trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_degenerate", 20, 5)
+                              out("trait_manager_CORRUPT pleasure palace found!")
                               break
                          end
 
                          -- check for gold mine
                          if character_traits_expansion.building_superchains.gold[superchain] then
-                              character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_corrupt", 20, 5)
-                              out("character_traits_expansion_CORRUPT gold mine found!")
+                              trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_corrupt", 20, 5)
+                              out("trait_manager_CORRUPT gold mine found!")
                               break
                          end
                     end
                end
           end
 
-          if character:is_null_interface() then return out("character_traits_expansion_CHARACTER_RANKED_UP_BUT_IS_NULL_INTERFACE!") end
+          if character:is_null_interface() then return out("trait_manager_CHARACTER_RANKED_UP_BUT_IS_NULL_INTERFACE!") end
 
           ------------------------------------
           ---- POPULAR/UNPOPULAR GOVERNOR ----
           ------------------------------------
           if character:has_region() and character:in_settlement() then
                local region = character:region()
-               out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " IS GOVERNOR OF REGION: " .. region:name())
+               out("trait_manager_CHARACTER_" .. character:onscreen_name() .. " IS GOVERNOR OF REGION: " .. region:name())
                if region:public_order() == 100 then
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 30)
-                    out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " RANKED UP IN SETTLEMENT WITH HIGH PUBLIC ORDER. GIVING POPULAR.")
+                    trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 30)
+                    out("trait_manager_CHARACTER_" .. character:onscreen_name() .. " RANKED UP IN SETTLEMENT WITH HIGH PUBLIC ORDER. GIVING POPULAR.")
                elseif region:public_order() >= 80 then
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 17.5)
-                    out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " RANKED UP IN SETTLEMENT WITH HIGH PUBLIC ORDER. GIVING POPULAR.")
+                    trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 17.5)
+                    out("trait_manager_CHARACTER_" .. character:onscreen_name() .. " RANKED UP IN SETTLEMENT WITH HIGH PUBLIC ORDER. GIVING POPULAR.")
                elseif region:public_order() >= 65 then
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 7.5)
-                    out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " RANKED UP IN SETTLEMENT WITH HIGH PUBLIC ORDER. GIVING POPULAR.")
+                    trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 7.5)
+                    out("trait_manager_CHARACTER_" .. character:onscreen_name() .. " RANKED UP IN SETTLEMENT WITH HIGH PUBLIC ORDER. GIVING POPULAR.")
                elseif region:public_order() >= 50 then
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 2.5)
-                    out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " RANKED UP IN SETTLEMENT WITH HIGH PUBLIC ORDER. GIVING POPULAR.")
+                    trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 2.5)
+                    out("trait_manager_CHARACTER_" .. character:onscreen_name() .. " RANKED UP IN SETTLEMENT WITH HIGH PUBLIC ORDER. GIVING POPULAR.")
                elseif region:public_order() <= -25 then
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 5)
-                    out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " RANKED UP IN SETTLEMENT WITH LOW PUBLIC ORDER. GIVING UNPOPULAR.")
+                    trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 5)
+                    out("trait_manager_CHARACTER_" .. character:onscreen_name() .. " RANKED UP IN SETTLEMENT WITH LOW PUBLIC ORDER. GIVING UNPOPULAR.")
                elseif region:public_order() <= -40 then
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 15)
-                    out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " RANKED UP IN SETTLEMENT WITH LOW PUBLIC ORDER. GIVING UNPOPULAR.")
+                    trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 15)
+                    out("trait_manager_CHARACTER_" .. character:onscreen_name() .. " RANKED UP IN SETTLEMENT WITH LOW PUBLIC ORDER. GIVING UNPOPULAR.")
                elseif region:public_order() <= -60 then
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 22.5)
-                    out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " RANKED UP IN SETTLEMENT WITH LOW PUBLIC ORDER. GIVING UNPOPULAR.")
+                    trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 22.5)
+                    out("trait_manager_CHARACTER_" .. character:onscreen_name() .. " RANKED UP IN SETTLEMENT WITH LOW PUBLIC ORDER. GIVING UNPOPULAR.")
                elseif region:public_order() <= -80 then
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 30)
-                    out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " RANKED UP IN SETTLEMENT WITH LOW PUBLIC ORDER. GIVING UNPOPULAR.")
+                    trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 30)
+                    out("trait_manager_CHARACTER_" .. character:onscreen_name() .. " RANKED UP IN SETTLEMENT WITH LOW PUBLIC ORDER. GIVING UNPOPULAR.")
                elseif region:public_order() == -100 then
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 40)
-                    out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " RANKED UP IN SETTLEMENT WITH LOW PUBLIC ORDER. GIVING UNPOPULAR.")
+                    trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 40)
+                    out("trait_manager_CHARACTER_" .. character:onscreen_name() .. " RANKED UP IN SETTLEMENT WITH LOW PUBLIC ORDER. GIVING UNPOPULAR.")
                end
           end
 
@@ -1652,20 +1628,20 @@ character_traits_expansion.start_trait_listeners = function()
 
                -- RAIDING
                if stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_LAND_RAID" then
-                    character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_blunt", 20, 25);
+                    trait_manager:apply_trait_by_chance(character, "phar_main_trait_blunt", 20, 25);
                     -- AMBUSHING
                elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_AMBUSH" then
-                    character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_underhanded", 20, 25);
+                    trait_manager:apply_trait_by_chance(character, "phar_main_trait_underhanded", 20, 25);
                     -- FORCED MARCH
                elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_MARCH" then
-                    character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_ambitious", 20, 10);
+                    trait_manager:apply_trait_by_chance(character, "phar_main_trait_ambitious", 20, 10);
                     -- ENCAMP
                elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_SET_CAMP" then
-                    character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_content", 20, 30);
+                    trait_manager:apply_trait_by_chance(character, "phar_main_trait_content", 20, 30);
                     -- RECRUITING
                elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_MUSTER" then
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_charismatic", 20, 15);
-                    character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_military_admin_good", 20, 20);
+                    trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_charismatic", 20, 15);
+                    trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_military_admin_good", 20, 20);
                end
           end
 
@@ -1676,8 +1652,8 @@ character_traits_expansion.start_trait_listeners = function()
           local military_force = character:military_force()
           if not military_force:is_null_interface() then
                if military_force:will_suffer_any_attrition() then
-                    character_traits_expansion:apply_trait_by_chance(character, "phar_main_trait_ambitious", 20, 15);
-                    out("character_traits_expansion_character_suffered_attrition")
+                    trait_manager:apply_trait_by_chance(character, "phar_main_trait_ambitious", 20, 15);
+                    out("trait_manager_character_suffered_attrition")
                end
           end
 
@@ -1685,8 +1661,8 @@ character_traits_expansion.start_trait_listeners = function()
           ---- CHARACTER UNDER SIEGE ----
           -------------------------------
           if cm:char_is_general_with_army(character) and character:has_garrison_residence() and character:garrison_residence():is_under_siege() then
-               character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_blighted", 20, 20)
-               out("character_traits_expansion_character_under_siege")
+               trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_blighted", 20, 20)
+               out("trait_manager_character_under_siege")
           end
 
           -- ----------------------
@@ -1695,8 +1671,8 @@ character_traits_expansion.start_trait_listeners = function()
           -- if cm:char_is_general_with_army(character)
           --     and character:faction():losing_money()
           --     and character:model():turn_number() > 5 then
-          --     character_traits_expansion:apply_trait_by_chance(character, "PLACEHOLDER_LOSING_MONEY", 20, 5)
-          --     out("character_traits_expansion_faction_losing_money_" .. tostring(character:faction():name()))
+          --     trait_manager:apply_trait_by_chance(character, "PLACEHOLDER_LOSING_MONEY", 20, 5)
+          --     out("trait_manager_faction_losing_money_" .. tostring(character:faction():name()))
           -- end
 
           -- ----------------------
@@ -1704,8 +1680,8 @@ character_traits_expansion.start_trait_listeners = function()
           -- ----------------------
           -- if cm:char_is_general_with_army(character)
           --     and character:faction():tax_level() < 80 then
-          --     character_traits_expansion:apply_trait_by_chance(character, "PLACEHOLDER_BAD_TAXMAN", 20, 5)
-          --     out("character_traits_expansion_faction_taxes_less_than_80_percent_" .. tostring(character:faction():name()))
+          --     trait_manager:apply_trait_by_chance(character, "PLACEHOLDER_BAD_TAXMAN", 20, 5)
+          --     out("trait_manager_faction_taxes_less_than_80_percent_" .. tostring(character:faction():name()))
           -- end
 
           -- ! Lycia Bookmark
@@ -1715,7 +1691,7 @@ character_traits_expansion.start_trait_listeners = function()
           if cm:char_is_general_with_army(character) and character:has_region() and character:region():owning_faction():command_queue_index() ==
                character:faction():command_queue_index() then
                local building_list = region:settlement():building_list()
-               out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " IS IN REGION: " .. region:name() .. " CHECKING FOR SMUGGLERS' DEN")
+               out("trait_manager_CHARACTER_" .. character:onscreen_name() .. " IS IN REGION: " .. region:name() .. " CHECKING FOR SMUGGLERS' DEN")
 
                -- check for smugglers' den
                for i = 0, building_list:num_items() - 1 do
@@ -1723,8 +1699,8 @@ character_traits_expansion.start_trait_listeners = function()
                     if not building:is_null_interface() then
                          local superchain = building:superchain()
                          if superchain == "phar_main_port_coast_derivative_type_a" or superchain == "phar_main_irsu_resource_production_port_coast_derivative_type_a" then
-                              character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_criminal", 20, 12.5)
-                              out("character_traits_expansion_SMUGGLERS' DEN found!")
+                              trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_criminal", 20, 12.5)
+                              out("trait_manager_SMUGGLERS' DEN found!")
                               break
                          end
                     end
@@ -1739,13 +1715,13 @@ character_traits_expansion.start_trait_listeners = function()
                local region = character:region()
                local building_list = region:settlement():building_list()
 
-               out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " IS IN REGION: " .. region:name() .. " CHECKING FOR MILITARY ADMIN BUILDINGS")
+               out("trait_manager_CHARACTER_" .. character:onscreen_name() .. " IS IN REGION: " .. region:name() .. " CHECKING FOR MILITARY ADMIN BUILDINGS")
                for i = 0, building_list:num_items() - 1 do
                     if building_list:item_at(i):is_null_interface() == false then
                          local building_superchain = building_list:item_at(i):superchain()
                          if character_traits_expansion.building_superchains.military_administration[building_superchain] then
-                              character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_military_admin_good", 20, 7.5)
-                              out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " FOUND MILITARY ADMIN BUILDING: " .. building_superchain)
+                              trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_military_admin_good", 20, 7.5)
+                              out("trait_manager_CHARACTER_" .. character:onscreen_name() .. " FOUND MILITARY ADMIN BUILDING: " .. building_superchain)
                          end
                     end
                end
@@ -1759,13 +1735,13 @@ character_traits_expansion.start_trait_listeners = function()
                local region = character:region()
                local building_list = region:settlement():building_list()
 
-               out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " IS IN REGION: " .. region:name() .. " CHECKING FOR MANAGEMENT BUILDINGS")
+               out("trait_manager_CHARACTER_" .. character:onscreen_name() .. " IS IN REGION: " .. region:name() .. " CHECKING FOR MANAGEMENT BUILDINGS")
                for i = 0, building_list:num_items() - 1 do
                     if building_list:item_at(i):is_null_interface() == false then
                          local building_superchain = building_list:item_at(i):superchain()
                          if character_traits_expansion.building_superchains.province_management[building_superchain] then
-                              character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_good", 20, 7.5)
-                              out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " FOUND MANAGEMENT BUILDING: " .. building_superchain)
+                              trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_good", 20, 7.5)
+                              out("trait_manager_CHARACTER_" .. character:onscreen_name() .. " FOUND MANAGEMENT BUILDING: " .. building_superchain)
                          end
                     end
                end
@@ -1777,15 +1753,15 @@ character_traits_expansion.start_trait_listeners = function()
           local character = context:character()
 
           if character:age() < 35 then
-               character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_energetic", 20, 2)
-               character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_fertile", 20, 3)
-               out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. "_is_young")
+               trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_energetic", 20, 2)
+               trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_fertile", 20, 3)
+               out("trait_manager_CHARACTER_" .. character:onscreen_name() .. "_is_young")
           elseif character:age() > 50 then
-               character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_slothful", 20, 3)
-               character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_mad", 20, 3)
-               character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_infertile", 20, 3)
-               character_traits_expansion:apply_trait_by_chance(character, "character_traits_expansion_trait_blind", 20, 3)
-               out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. "_is_old")
+               trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_slothful", 20, 3)
+               trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_mad", 20, 3)
+               trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_infertile", 20, 3)
+               trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_blind", 20, 3)
+               out("trait_manager_CHARACTER_" .. character:onscreen_name() .. "_is_old")
           end
 
           ----------------------------------
@@ -1793,37 +1769,37 @@ character_traits_expansion.start_trait_listeners = function()
           ----------------------------------
           for i = 1, #self_perpetuating_traits do
                if character:has_trait(self_perpetuating_traits[i]) then
-                    character_traits_expansion:apply_trait_by_chance(character, self_perpetuating_traits[i], 20, 3.5)
-                    out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " HAS SELF PERPETUATING TRAIT: " .. self_perpetuating_traits[i])
+                    trait_manager:apply_trait_by_chance(character, self_perpetuating_traits[i], 20, 3.5)
+                    out("trait_manager_CHARACTER_" .. character:onscreen_name() .. " HAS SELF PERPETUATING TRAIT: " .. self_perpetuating_traits[i])
                end
           end
      end, true)
 end
 
 --------------------------------------------------
----- BEGIN MODIFYING PHAR_CAMPAIGN_TRAITS.LUA
+---- BEGIN MODIFYING PHAR_CAMPAIGN_LUA
 --------------------------------------------------
--- Ensure the script runs after the vanilla script has executed. Modify max_num_traits from phar_campaign_traits.lua. The goal is to ultimately eliminate the need to directly edit the vanilla script.
+-- Ensure the script runs after the vanilla script has executed. Modify max_num_traits from phar_campaign_lua. The goal is to ultimately eliminate the need to directly edit the vanilla script.
 character_traits_expansion.modify_phar_campaign_traits = function()
      cm:add_first_tick_callback(function()
           -- Check if the config table exists to avoid any potential errors
-          if campaign_traits and campaign_traits.config then
-               campaign_traits.config.max_num_traits = 50
-               out("character_traits_expansion_max_num_traits has been set to " .. campaign_traits.config.max_num_traits)
+          if campaign_traits and campaign_config then
+               campaign_config.max_num_traits = 50
+               out("trait_manager_max_num_traits has been set to " .. campaign_config.max_num_traits)
           else
-               out("character_traits_expansion_Mod: Failed to find campaign_traits.config")
+               out("trait_manager_Mod: Failed to find campaign_config")
           end
 
           -- Injects my custom traits into the vanilla civilian_traits table so I don't need to worry about giving traits to them.
-          if campaign_traits and campaign_traits.config.civilian_traits then
-               for i = 1, #character_traits_expansion.traits.randomly_added do
-                    table.insert(campaign_traits.config.civilian_traits, character_traits_expansion.traits.randomly_added[i])
+          if campaign_traits and campaign_config.civilian_traits then
+               for i = 1, #character_traits_expansion.emergent_traits do
+                    table.insert(campaign_config.civilian_traits, character_traits_expansion.emergent_traits[i])
                end
           end
 
           -- Making changes to the vanilla traits and their triggers. For now, many are left alone, but others are given new listeners and triggers. This may eventually change.
-          if campaign_traits and campaign_traits.config.traits_per_events then
-               campaign_traits.config.traits_per_events = {
+          if campaign_traits and campaign_config.trait_managers_per_events then
+               campaign_config.trait_managers_per_events = {
                     character_recruited_1h_melee_unit_spears = {[1] = {trait = "phar_main_trait_cautious", points = 4}},
                     character_recruited_2h_melee_unit_infantry = {[1] = {trait = "phar_main_trait_reckless", points = 4}},
                     character_recruited_khopeshi = {[1] = {trait = "phar_main_trait_brave", points = 4}},
@@ -1879,8 +1855,8 @@ character_traits_expansion.modify_phar_campaign_traits = function()
           end
 
           -- ! Lycia Bookmark
-          if campaign_traits and campaign_traits.config.faction_leader_backgrounds then
-               campaign_traits.config.faction_leader_backgrounds = {
+          if campaign_traits and campaign_config.faction_leader_backgrounds then
+               campaign_config.faction_leader_backgrounds = {
                     -- RAMESSES--
                     [1] = {
                          background_trait_key = "phar_main_background_ramesses",
@@ -2418,8 +2394,8 @@ character_traits_expansion.modify_phar_campaign_traits = function()
                }
           end
 
-          if campaign_traits and campaign_traits.config.modifiable_event_params then
-               campaign_traits.config.modifiable_event_params = {
+          if campaign_traits and campaign_config.modifiable_event_params then
+               campaign_config.modifiable_event_params = {
                     character_fought_battle_far_from_capital = 1750,
                     character_being_lazy_in_owned_settlement_high_public_order = 80,
                     character_being_lazy_in_owned_settlement_low_public_order = 30,
@@ -2443,7 +2419,7 @@ character_traits_expansion.modify_phar_campaign_traits = function()
                }
           end
 
-          -- Removes the original listener(s) and then re-adds some so I can play with them without direct edits to phar_campaign_traits.
+          -- Removes the original listener(s) and then re-adds some so I can play with them without direct edits to phar_campaign_
           core:remove_listener("phar_personality_traits_character_spent_turn_in_enemy_region") -- confident
           core:remove_listener("phar_personality_traits_character_won_defensive_battle") -- hesitant
           core:remove_listener("phar_personality_traits_character_being_lazy_in_owned_settlement_high_public_order") -- respectful
@@ -2473,21 +2449,21 @@ character_traits_expansion.modify_phar_campaign_traits = function()
           core:remove_listener("phar_personality_traits_character_suffered_attrition") -- ambitious
      end)
      ------------------------------------------------
-     ---- END MODIFYING PHAR_CAMPAIGN_TRAITS.LUA ----
+     ---- END MODIFYING PHAR_CAMPAIGN_LUA ----
      ------------------------------------------------
 end
 
-character_traits_expansion:modify_phar_campaign_traits()
-character_traits_expansion:start_trait_listeners()
-character_traits_expansion.ancient_legacies:apply_legacy_traits()
+trait_manager:modify_phar_campaign_traits()
+trait_manager:start_trait_listeners()
+character_traits_expansion.ancient_legacies:apply_traits()
 
 cm:add_saving_game_callback(function(context)
-     cm:save_named_value("is_akhenaten_legacy_claimed", character_traits_expansion.ancient_legacies.is_akhenaten_legacy_claimed, context);
+     cm:save_named_value("is_akhenaten_legacy_claimed", character_traits_expansion.ancient_legacies.is_akhenaten_legacy_claimed, context, false);
 end)
 
 cm:add_loading_game_callback(function(context)
      if cm:is_new_game() == false then
-          --- @diagnostic disable-next-line: cast-local-type
-          character_traits_expansion.ancient_legacies.is_akhenaten_legacy_claimed = cm:load_named_value("is_akhenaten_legacy_claimed", 0, context)
+
+          character_traits_expansion.ancient_legacies.is_akhenaten_legacy_claimed = cm:load_named_value("is_akhenaten_legacy_claimed", false, context) or false
      end
 end)
