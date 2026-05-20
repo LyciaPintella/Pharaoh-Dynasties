@@ -14,13 +14,20 @@ set_class_custom_type_and_tostring(character_traits_expansion, TYPE_CHARACTER_TR
 
 --- @class character_trait_list : table
 character_traits_expansion.self_perpetuating = {
-     "character_traits_expansion_trait_mad", "character_traits_expansion_trait_degenerate", "character_traits_expansion_trait_sober", "character_traits_expansion_trait_drink", "character_traits_expansion_trait_girls", "character_traits_expansion_trait_arse", "character_traits_expansion_trait_gambler", "character_traits_expansion_trait_feck",
-     "character_traits_expansion_trait_corrupt", "character_traits_expansion_trait_blighted", "character_traits_expansion_trait_cuckold", "character_traits_expansion_trait_slothful", "character_traits_expansion_trait_boring", "character_traits_expansion_trait_trusting", "character_traits_expansion_trait_paranoia",
-     "character_traits_expansion_trait_superstitious", "character_traits_expansion_trait_prophetic", "character_traits_expansion_trait_anger", "phar_main_trait_respectful", "phar_main_trait_irreverent", "character_traits_expansion_trait_fertile",
-     "character_traits_expansion_trait_barren", "character_traits_expansion_trait_blind", "character_traits_expansion_trait_heretic"
+     "character_traits_expansion_trait_mad", "character_traits_expansion_trait_degenerate", "character_traits_expansion_trait_sober",
+     "character_traits_expansion_trait_drink", "character_traits_expansion_trait_girls", "character_traits_expansion_trait_arse",
+     "character_traits_expansion_trait_gambler", "character_traits_expansion_trait_feck", "character_traits_expansion_trait_corrupt",
+     "character_traits_expansion_trait_blighted", "character_traits_expansion_trait_cuckold", "character_traits_expansion_trait_slothful",
+     "character_traits_expansion_trait_boring", "character_traits_expansion_trait_trusting", "character_traits_expansion_trait_paranoia",
+     "character_traits_expansion_trait_superstitious", "character_traits_expansion_trait_prophetic", "character_traits_expansion_trait_anger",
+     "phar_main_trait_respectful", "phar_main_trait_irreverent", "character_traits_expansion_trait_fertile", "character_traits_expansion_trait_barren",
+     "character_traits_expansion_trait_blind", "character_traits_expansion_trait_heretic"
 }
-
+set_class_custom_type_and_tostring(character_traits_expansion.self_perpetuating, TYPE_CHARACTER_TRAIT_LIST)
+character_traits_expansion.coming_of_age = {}
+character_traits_expansion.coming_of_age.base_chance = 5
 local base_chance = character_traits_expansion.coming_of_age.base_chance
+
 -- Traits allowed to trigger when character comes of age
 --- @class character_trait_pairs : table
 character_traits_expansion.coming_of_age.traits = {
@@ -115,11 +122,7 @@ character_traits_expansion.coming_of_age.traits = {
      ["character_traits_expansion_trait_defeats_against_sea_peoples"] = 0,
      ["character_traits_expansion_trait_defeats_against_trojans"] = 0
 }
-
-character_traits_expansion.coming_of_age = {}
-character_traits_expansion.coming_of_age.traits = {}
-character_traits_expansion.coming_of_age.base_chance = 5
-
+set_class_custom_type_and_tostring(character_traits_expansion.self_perpetuating, TYPE_CHARACTER_SELF_PERPETUATING_TRAIT_TABLE)
 
 character_traits_expansion.factions_to_culture_pairs = {
      ["phar_main_clt_canaan"] = "canaan",
@@ -162,53 +165,81 @@ character_traits_expansion.legendary_lords_defeated = {
      ["phar_sea_hero_wal_walwetes"] = "character_traits_expansion_trait_defeated_walwetes"
 }
 
+---@type character_trait_list
 character_traits_expansion.character_creation_traits = {
      "phar_main_trait_ambitious", "phar_main_trait_barbaric", "phar_main_trait_blunt", "phar_main_trait_brave", "phar_main_trait_cautious", "phar_main_trait_confident",
      "phar_main_trait_content", "phar_main_trait_cooperative", "phar_main_trait_cowardly", "phar_main_trait_cruel", "phar_main_trait_cultured",
      "phar_main_trait_hesitant", "phar_main_trait_individualistic", "phar_main_trait_irreverent", "phar_main_trait_materialistic", "phar_main_trait_merciful",
-     "phar_main_trait_reckless", "phar_main_trait_respectful", "phar_main_trait_spiritual", "phar_main_trait_underhanded", "character_traits_expansion_trait_degenerate", "character_traits_expansion_trait_scout",
-     "character_traits_expansion_trait_attacking_victory", "character_traits_expansion_trait_attacking_defeat", "character_traits_expansion_trait_defending_defeat", "character_traits_expansion_trait_defending_victory", "character_traits_expansion_trait_siege_victory",
-     "character_traits_expansion_trait_siege_defeat", "character_traits_expansion_trait_siege_defense_victory", "character_traits_expansion_trait_sober", "character_traits_expansion_trait_drink", "character_traits_expansion_trait_girls", "character_traits_expansion_trait_arse", "character_traits_expansion_trait_gambler",
-     "character_traits_expansion_trait_bloody", "character_traits_expansion_trait_inbred", "character_traits_expansion_trait_popular", "character_traits_expansion_trait_unpopular", "character_traits_expansion_trait_lucky", "character_traits_expansion_trait_unlucky", "character_traits_expansion_trait_farmer_good",
-     "character_traits_expansion_trait_farmer_bad", "character_traits_expansion_trait_bereaved", "character_traits_expansion_trait_mad", "character_traits_expansion_trait_healthy", "character_traits_expansion_trait_blighted", "character_traits_expansion_trait_sea_legs", "character_traits_expansion_trait_feck",
-     "character_traits_expansion_trait_survivor", "character_traits_expansion_trait_admin_good", "character_traits_expansion_trait_admin_bad", "character_traits_expansion_trait_miner", "character_traits_expansion_trait_military_admin_good", "character_traits_expansion_trait_military_admin_bad",
-     "character_traits_expansion_trait_warmonger", "character_traits_expansion_trait_pacifist", "character_traits_expansion_trait_corrupt", "character_traits_expansion_trait_noctophilia", "character_traits_expansion_trait_noctophobia", "character_traits_expansion_trait_slothful", "character_traits_expansion_trait_energetic",
-     "character_traits_expansion_trait_charismatic", "character_traits_expansion_trait_boring", "character_traits_expansion_trait_trusting", "character_traits_expansion_trait_paranoia", "character_traits_expansion_trait_pragmatic", "character_traits_expansion_trait_superstitious", "character_traits_expansion_trait_anger",
-     "character_traits_expansion_trait_attractive", "character_traits_expansion_trait_ugly", "character_traits_expansion_trait_prophetic", "character_traits_expansion_trait_authoritarian", "character_traits_expansion_trait_liberal", "character_traits_expansion_trait_fertile", "character_traits_expansion_trait_barren",
+     "phar_main_trait_reckless", "phar_main_trait_respectful", "phar_main_trait_spiritual", "phar_main_trait_underhanded", "character_traits_expansion_trait_degenerate",
+     "character_traits_expansion_trait_scout", "character_traits_expansion_trait_attacking_victory", "character_traits_expansion_trait_attacking_defeat",
+     "character_traits_expansion_trait_defending_defeat", "character_traits_expansion_trait_defending_victory", "character_traits_expansion_trait_siege_victory",
+     "character_traits_expansion_trait_siege_defeat", "character_traits_expansion_trait_siege_defense_victory", "character_traits_expansion_trait_sober",
+     "character_traits_expansion_trait_drink", "character_traits_expansion_trait_girls", "character_traits_expansion_trait_arse",
+     "character_traits_expansion_trait_gambler", "character_traits_expansion_trait_bloody", "character_traits_expansion_trait_inbred",
+     "character_traits_expansion_trait_popular", "character_traits_expansion_trait_unpopular", "character_traits_expansion_trait_lucky",
+     "character_traits_expansion_trait_unlucky", "character_traits_expansion_trait_farmer_good", "character_traits_expansion_trait_farmer_bad",
+     "character_traits_expansion_trait_bereaved", "character_traits_expansion_trait_mad", "character_traits_expansion_trait_healthy",
+     "character_traits_expansion_trait_blighted", "character_traits_expansion_trait_sea_legs", "character_traits_expansion_trait_feck",
+     "character_traits_expansion_trait_survivor", "character_traits_expansion_trait_admin_good", "character_traits_expansion_trait_admin_bad",
+     "character_traits_expansion_trait_miner", "character_traits_expansion_trait_military_admin_good", "character_traits_expansion_trait_military_admin_bad",
+     "character_traits_expansion_trait_warmonger", "character_traits_expansion_trait_pacifist", "character_traits_expansion_trait_corrupt",
+     "character_traits_expansion_trait_noctophilia", "character_traits_expansion_trait_noctophobia", "character_traits_expansion_trait_slothful",
+     "character_traits_expansion_trait_energetic", "character_traits_expansion_trait_charismatic", "character_traits_expansion_trait_boring",
+     "character_traits_expansion_trait_trusting", "character_traits_expansion_trait_paranoia", "character_traits_expansion_trait_pragmatic",
+     "character_traits_expansion_trait_superstitious", "character_traits_expansion_trait_anger", "character_traits_expansion_trait_attractive",
+     "character_traits_expansion_trait_ugly", "character_traits_expansion_trait_prophetic", "character_traits_expansion_trait_authoritarian",
+     "character_traits_expansion_trait_liberal", "character_traits_expansion_trait_fertile", "character_traits_expansion_trait_barren",
      "character_traits_expansion_trait_scarred", "character_traits_expansion_trait_criminal", "character_traits_expansion_trait_blind"
 
 }
 
 -- Traits allowed to trigger for any character on any given turn
 ---@type character_trait_pairs
-character_traits_expansion.emergent_traits = {"character_traits_expansion_trait_degenerate", "character_traits_expansion_trait_unlucky", "character_traits_expansion_trait_lucky"}
+character_traits_expansion.emergent_traits = {
+     "character_traits_expansion_trait_degenerate", "character_traits_expansion_trait_unlucky", "character_traits_expansion_trait_lucky"
+}
 
 -- UNUSED IN CODE! This is for db naming consistency only. Can safely be deleted/commented out once mod is finished.
 ---@type character_trait_list
-character_traits_expansion.character_traits_expansion_new_traits = {
-     "character_traits_expansion_trait_degenerate", "character_traits_expansion_trait_scout", "character_traits_expansion_trait_attacking_victory", "character_traits_expansion_trait_attacking_defeat", "character_traits_expansion_trait_defending_defeat", "character_traits_expansion_trait_defending_victory",
-     "character_traits_expansion_trait_siege_victory", "character_traits_expansion_trait_siege_defeat", "character_traits_expansion_trait_siege_defense_victory", "character_traits_expansion_trait_wins_against_canaan", "character_traits_expansion_trait_wins_against_hatti",
-     "character_traits_expansion_trait_wins_against_egypt", "character_traits_expansion_trait_wins_against_sea_peoples", "character_traits_expansion_trait_wins_against_mesopotamian", "character_traits_expansion_trait_wins_against_danaans",
-     "character_traits_expansion_trait_wins_against_trojans", "character_traits_expansion_trait_defeats_against_canaan", "character_traits_expansion_trait_defeats_against_hatti", "character_traits_expansion_trait_defeats_against_egypt",
-     "character_traits_expansion_trait_defeats_against_sea_peoples", "character_traits_expansion_trait_defeats_against_mesopotamian", "character_traits_expansion_trait_defeats_against_danaans", "character_traits_expansion_trait_defeats_against_trojans",
-     "character_traits_expansion_trait_disciplinarian", "character_traits_expansion_trait_bad_disciplinarian", "character_traits_expansion_trait_sober", "character_traits_expansion_trait_drink", "character_traits_expansion_trait_girls", "character_traits_expansion_trait_arse", "character_traits_expansion_trait_gambler",
-     "character_traits_expansion_trait_bloody", "character_traits_expansion_trait_inbred", "character_traits_expansion_trait_popular", "character_traits_expansion_trait_unpopular", "character_traits_expansion_trait_lucky", "character_traits_expansion_trait_unlucky", "character_traits_expansion_trait_farmer_good",
-     "character_traits_expansion_trait_farmer_bad", "character_traits_expansion_trait_bereaved", "character_traits_expansion_trait_mad", "character_traits_expansion_trait_healthy", "character_traits_expansion_trait_blighted", "character_traits_expansion_trait_sea_legs", "character_traits_expansion_trait_feck",
-     "character_traits_expansion_trait_survivor", "character_traits_expansion_trait_admin_good", "character_traits_expansion_trait_admin_bad", "character_traits_expansion_trait_miner", "character_traits_expansion_trait_military_admin_good", "character_traits_expansion_trait_military_admin_bad",
-     "character_traits_expansion_trait_warmonger", "character_traits_expansion_trait_pacifist", "character_traits_expansion_trait_cuckold", "character_traits_expansion_trait_corrupt", "character_traits_expansion_trait_factionkiller", "character_traits_expansion_trait_noctophilia", "character_traits_expansion_trait_noctophobia",
-     "character_traits_expansion_trait_slothful", "character_traits_expansion_trait_energetic", "character_traits_expansion_trait_charismatic", "character_traits_expansion_trait_boring", "character_traits_expansion_trait_trusting", "character_traits_expansion_trait_paranoia", "character_traits_expansion_trait_pragmatic",
-     "character_traits_expansion_trait_superstitious", "character_traits_expansion_trait_anger", "character_traits_expansion_trait_attractive", "character_traits_expansion_trait_ugly", "character_traits_expansion_trait_prophetic", "character_traits_expansion_trait_authoritarian", "character_traits_expansion_trait_liberal",
-     "character_traits_expansion_trait_fertile", "character_traits_expansion_trait_barren", "character_traits_expansion_trait_scarred", "character_traits_expansion_trait_criminal", "character_traits_expansion_trait_blind", "character_traits_expansion_trait_heretic"
+character_traits_expansion.new_mod_traits = {
+     "character_traits_expansion_trait_degenerate", "character_traits_expansion_trait_scout", "character_traits_expansion_trait_attacking_victory",
+     "character_traits_expansion_trait_attacking_defeat", "character_traits_expansion_trait_defending_defeat", "character_traits_expansion_trait_defending_victory",
+     "character_traits_expansion_trait_siege_victory", "character_traits_expansion_trait_siege_defeat", "character_traits_expansion_trait_siege_defense_victory",
+     "character_traits_expansion_trait_wins_against_canaan", "character_traits_expansion_trait_wins_against_hatti", "character_traits_expansion_trait_wins_against_egypt",
+     "character_traits_expansion_trait_wins_against_sea_peoples", "character_traits_expansion_trait_wins_against_mesopotamian",
+     "character_traits_expansion_trait_wins_against_danaans", "character_traits_expansion_trait_wins_against_trojans",
+     "character_traits_expansion_trait_defeats_against_canaan", "character_traits_expansion_trait_defeats_against_hatti",
+     "character_traits_expansion_trait_defeats_against_egypt", "character_traits_expansion_trait_defeats_against_sea_peoples",
+     "character_traits_expansion_trait_defeats_against_mesopotamian", "character_traits_expansion_trait_defeats_against_danaans",
+     "character_traits_expansion_trait_defeats_against_trojans", "character_traits_expansion_trait_disciplinarian", "character_traits_expansion_trait_bad_disciplinarian",
+     "character_traits_expansion_trait_sober", "character_traits_expansion_trait_drink", "character_traits_expansion_trait_girls",
+     "character_traits_expansion_trait_arse", "character_traits_expansion_trait_gambler", "character_traits_expansion_trait_bloody",
+     "character_traits_expansion_trait_inbred", "character_traits_expansion_trait_popular", "character_traits_expansion_trait_unpopular",
+     "character_traits_expansion_trait_lucky", "character_traits_expansion_trait_unlucky", "character_traits_expansion_trait_farmer_good",
+     "character_traits_expansion_trait_farmer_bad", "character_traits_expansion_trait_bereaved", "character_traits_expansion_trait_mad",
+     "character_traits_expansion_trait_healthy", "character_traits_expansion_trait_blighted", "character_traits_expansion_trait_sea_legs",
+     "character_traits_expansion_trait_feck", "character_traits_expansion_trait_survivor", "character_traits_expansion_trait_admin_good",
+     "character_traits_expansion_trait_admin_bad", "character_traits_expansion_trait_miner", "character_traits_expansion_trait_military_admin_good",
+     "character_traits_expansion_trait_military_admin_bad", "character_traits_expansion_trait_warmonger", "character_traits_expansion_trait_pacifist",
+     "character_traits_expansion_trait_cuckold", "character_traits_expansion_trait_corrupt", "character_traits_expansion_trait_factionkiller",
+     "character_traits_expansion_trait_noctophilia", "character_traits_expansion_trait_noctophobia", "character_traits_expansion_trait_slothful",
+     "character_traits_expansion_trait_energetic", "character_traits_expansion_trait_charismatic", "character_traits_expansion_trait_boring",
+     "character_traits_expansion_trait_trusting", "character_traits_expansion_trait_paranoia", "character_traits_expansion_trait_pragmatic",
+     "character_traits_expansion_trait_superstitious", "character_traits_expansion_trait_anger", "character_traits_expansion_trait_attractive",
+     "character_traits_expansion_trait_ugly", "character_traits_expansion_trait_prophetic", "character_traits_expansion_trait_authoritarian",
+     "character_traits_expansion_trait_liberal", "character_traits_expansion_trait_fertile", "character_traits_expansion_trait_barren",
+     "character_traits_expansion_trait_scarred", "character_traits_expansion_trait_criminal", "character_traits_expansion_trait_blind",
+     "character_traits_expansion_trait_heretic"
 }
 
---- @class building_superchains_lists : table
-character_traits_expansion.building_superchains = {}
+--- @class building_superchain_grouped_lists : table
+character_traits_expansion.building_superchain = {}
 
----@type building_superchains_lists
-character_traits_expansion.building_superchains.drinking = {["phar_main_happiness_type_b"] = true, ["phar_map_bab_province_management_happiness_growth_type_a"] = true}
+--- @class building_superchain_lists : table
+character_traits_expansion.building_superchain.drinking = {["phar_main_happiness_type_b"] = true, ["phar_map_bab_province_management_happiness_growth_type_a"] = true}
 
----@type building_superchains_lists
-character_traits_expansion.building_superchains.military_administration = {
+---@type building_superchain_lists
+character_traits_expansion.building_superchain.military_administration = {
      ["phar_main_all_military_administration_cost_mod"] = true,
      ["phar_main_military_administration_unit_training_type_a"] = true,
      ["phar_main_military_administration_unit_training_type_b"] = true,
@@ -233,8 +264,8 @@ character_traits_expansion.building_superchains.military_administration = {
      ["phar_sea_sherden_military_administration_charge_melee_attack_native"] = true
 }
 
----@type building_superchains_lists
-character_traits_expansion.building_superchains.food = {
+---@type building_superchain_lists
+character_traits_expansion.building_superchain.food = {
      ["phar_main_farm_type_a_hattusa_derivative"] = true,
      ["phar_main_farm_type_a_canaan"] = true,
      ["phar_main_farm_type_a_canaan_derivative"] = true,
@@ -269,8 +300,8 @@ character_traits_expansion.building_superchains.food = {
      ["phar_map_food_cattle_aegean"] = true
 }
 
----@type building_superchains_lists
-character_traits_expansion.building_superchains.gold = {
+---@type building_superchain_lists
+character_traits_expansion.building_superchain.gold = {
      ["phar_main_all_resource_production_gold_mine_nile"] = true,
      ["phar_main_amenmesse_resource_production_gold_mine"] = true,
      ["phar_main_gold_mine"] = true,
@@ -280,8 +311,8 @@ character_traits_expansion.building_superchains.gold = {
      ["phar_map_myc_resource_production_gold_mine_minor"] = true
 }
 
----@type building_superchains_lists
-character_traits_expansion.building_superchains.mines = {
+---@type building_superchain_lists
+character_traits_expansion.building_superchain.mines = {
      ["phar_main_all_resource_production_bronze_mine_nile"] = true,
      ["phar_main_all_resource_production_gold_mine_nile"] = true,
      ["phar_main_all_resource_production_stone_mine_nile"] = true,
@@ -302,8 +333,8 @@ character_traits_expansion.building_superchains.mines = {
      ["phar_map_myc_resource_production_stone_mine_minor"] = true
 }
 
----@type building_superchains_lists
-character_traits_expansion.building_superchains.province_management = {
+---@type building_superchain_lists
+character_traits_expansion.building_superchain.province_management = {
      ["phar_main_all_province_management_influence_type_b"] = true,
      ["phar_main_amenmesse_province_management_main_building_production_boost_growth"] = true,
      ["phar_main_bay_province_management_happiness"] = true,
@@ -341,13 +372,12 @@ character_traits_expansion.building_superchains.province_management = {
      ["phar_map_wil_major_main_building_happiness_boost"] = true
 }
 
-
---- Applies a trait to a character with a percent chance of success.
+--- Applies a trait to a character with a percentage chance of success.
 --- @param character CHARACTER_SCRIPT_INTERFACE #Character object of the target character.
 --- @param trait string Trait key to add.
 --- @param _points number? #optional, default value=1 Trait points to add. The underlying force_add_trait function is called for each point added.
 --- @param _chance number? #optional, default value=100 Percentage chance for the trait to be applied. Value should be between 0 and 100.
---- @param _show_message boolean? #optional, default value=false Show a message when the trait is applied to a general with an army..
+--- @param _show_message boolean? #optional, default value=false Show a message when the trait is applied to a general with an army.
 function trait_manager:apply_trait_by_chance(character, trait, _points, _chance, _show_message)
      local points = _points or 1
      local chance = _chance or 100
@@ -809,13 +839,12 @@ character_traits_expansion.start_trait_listeners = function()
           if enemy_culture ~= character_faction:culture() then
                if character_traits_expansion.factions_to_culture_pairs[enemy_culture] ~= nil then
                     if character:won_battle() then
-                         trait_manager:apply_trait_by_chance(character,
-                                                             "character_traits_expansion_trait_wins_against_" .. character_traits_expansion.factions_to_culture_pairs[enemy_culture], 20, 20)
+                         trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_wins_against_" ..
+                                                                  character_traits_expansion.factions_to_culture_pairs[enemy_culture], 20, 20)
                          out("trait_manager_BATTLE_WINS_AGAINST_" .. tostring(enemy_culture))
                     else
-                         trait_manager:apply_trait_by_chance(character,
-                                                             "character_traits_expansion_trait_defeats_against_" .. character_traits_expansion.factions_to_culture_pairs[enemy_culture], 20,
-                                                             35)
+                         trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_defeats_against_" ..
+                                                                  character_traits_expansion.factions_to_culture_pairs[enemy_culture], 20, 35)
                          out("trait_manager_BATTLE_DEFEATS_AGAINST_" .. tostring(enemy_culture))
                     end
                end
@@ -1177,28 +1206,28 @@ character_traits_expansion.start_trait_listeners = function()
                --------------------------
                ---- BUILT FARMS ----
                --------------------------
-               if character_traits_expansion.building_superchains.food[building_superchain_key] then
+               if character_traits_expansion.building_superchain.food[building_superchain_key] then
                     trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_farmer_good", 20, 25)
                     out("trait_manager_farmer: Applied character_traits_expansion_trait_farmer_good to " .. character:onscreen_name())
                else
                     trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_farmer_bad", 20, 7.5)
-                    out("trait_manager_farmer: Building superchain not in character_traits_expansion.building_superchains.food")
+                    out("trait_manager_farmer: Building superchain not in character_traits_expansion.building_superchain.food")
                end
 
                --------------------------
                ---- BUILT MINES ----
                --------------------------
-               if character_traits_expansion.building_superchains.mines[building_superchain_key] then
+               if character_traits_expansion.building_superchain.mines[building_superchain_key] then
                     trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_miner", 20, 35)
                     out("trait_manager_miner: Applied character_traits_expansion_trait_miner to " .. character:onscreen_name())
                else
-                    out("trait_manager_miner: Building superchain not in character_traits_expansion.building_superchains.mines")
+                    out("trait_manager_miner: Building superchain not in character_traits_expansion.building_superchain.mines")
                end
 
                -------------------------
                ---- BUILT GOLD MINES ----
                -------------------------
-               if character_traits_expansion.building_superchains.gold[building_superchain_key] then
+               if character_traits_expansion.building_superchain.gold[building_superchain_key] then
                     trait_manager:apply_trait_by_chance(character, "phar_main_trait_materialistic", 20, 25)
                     out("trait_manager_builder: Applied phar_main_trait_materialistic to " .. character:onscreen_name())
                end
@@ -1206,7 +1235,7 @@ character_traits_expansion.start_trait_listeners = function()
                -------------------------------------
                --- BUILT MILITARY ADMINISTRATION ---
                -------------------------------------
-               if character_traits_expansion.building_superchains.military_administration[building_superchain_key] then
+               if character_traits_expansion.building_superchain.military_administration[building_superchain_key] then
                     trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_military_admin_good", 20, 25)
                     out("trait_manager_builder: Applied character_traits_expansion_trait_admin_good to " .. character:onscreen_name())
                end
@@ -1214,7 +1243,7 @@ character_traits_expansion.start_trait_listeners = function()
                -------------------------------
                -- BUILT PROVINCE MANAGEMENT --
                ------------------------------
-               if character_traits_expansion.building_superchains.province_management[building_superchain_key] then
+               if character_traits_expansion.building_superchain.province_management[building_superchain_key] then
                     trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_good", 20, 20)
                     out("trait_manager_builder: Applied character_traits_expansion_trait_admin_good to " .. character:onscreen_name())
                end
@@ -1452,8 +1481,8 @@ character_traits_expansion.start_trait_listeners = function()
                          trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_cuckold", 20, 3)
                          out("HCP: Character is married and has full action points, applying 'cuckold' trait.")
                     end
-      	     else
-			-- Character is in a friendly region but not in a settlement; he still gets scout.
+               else
+                    -- Character is in a friendly region but not in a settlement; he still gets scout.
                     trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 10)
                     out("HCP: Character in friendly region, applying 'scout' trait.")
                end
@@ -1510,12 +1539,12 @@ character_traits_expansion.start_trait_listeners = function()
                               local building_superchain = slot_list:item_at(i):building():superchain()
                               out("Checking building with superchain: " .. building_superchain)
 
-                              if character_traits_expansion.building_superchains.military_administration[building_superchain] then
+                              if character_traits_expansion.building_superchain.military_administration[building_superchain] then
                                    sober_chance = sober_chance + 4
                                    out("trait_manager_give_lazy_traits_found_military_admin_building_so_sober_chance_is " .. sober_chance)
                               end
 
-                              if character_traits_expansion.building_superchains.drinking[building_superchain] then
+                              if character_traits_expansion.building_superchain.drinking[building_superchain] then
                                    drink_chance = drink_chance + 4
                                    out("trait_manager_give_lazy_traits_found_drink_building_so_drink_chance_is " .. drink_chance)
                               end
@@ -1532,8 +1561,9 @@ character_traits_expansion.start_trait_listeners = function()
 
                     -- Apply the traits after processing all the buildings
                     local traits = {
-                         {"character_traits_expansion_trait_sober", sober_chance}, {"character_traits_expansion_trait_drink", drink_chance}, {"character_traits_expansion_trait_girls", drink_chance},
-                         {"character_traits_expansion_trait_arse", drink_chance}, {"character_traits_expansion_trait_degenerate", drink_chance}, {"character_traits_expansion_trait_gambler", drink_chance}
+                         {"character_traits_expansion_trait_sober", sober_chance}, {"character_traits_expansion_trait_drink", drink_chance},
+                         {"character_traits_expansion_trait_girls", drink_chance}, {"character_traits_expansion_trait_arse", drink_chance},
+                         {"character_traits_expansion_trait_degenerate", drink_chance}, {"character_traits_expansion_trait_gambler", drink_chance}
 
                     }
                     -- ! Lycia Bookmark: This shows how to use a table to pair two values like a trait and its chance, and then loop through it to apply the  This is much cleaner than having separate if statements for each trait.
@@ -1569,7 +1599,7 @@ character_traits_expansion.start_trait_listeners = function()
                          end
 
                          -- check for gold mine
-                         if character_traits_expansion.building_superchains.gold[superchain] then
+                         if character_traits_expansion.building_superchain.gold[superchain] then
                               trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_corrupt", 20, 5)
                               out("trait_manager_CORRUPT gold mine found!")
                               break
@@ -1717,7 +1747,7 @@ character_traits_expansion.start_trait_listeners = function()
                for i = 0, building_list:num_items() - 1 do
                     if building_list:item_at(i):is_null_interface() == false then
                          local building_superchain = building_list:item_at(i):superchain()
-                         if character_traits_expansion.building_superchains.military_administration[building_superchain] then
+                         if character_traits_expansion.building_superchain.military_administration[building_superchain] then
                               trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_military_admin_good", 20, 7.5)
                               out("trait_manager_CHARACTER_" .. character:onscreen_name() .. " FOUND MILITARY ADMIN BUILDING: " .. building_superchain)
                          end
@@ -1737,7 +1767,7 @@ character_traits_expansion.start_trait_listeners = function()
                for i = 0, building_list:num_items() - 1 do
                     if building_list:item_at(i):is_null_interface() == false then
                          local building_superchain = building_list:item_at(i):superchain()
-                         if character_traits_expansion.building_superchains.province_management[building_superchain] then
+                         if character_traits_expansion.building_superchain.province_management[building_superchain] then
                               trait_manager:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_good", 20, 7.5)
                               out("trait_manager_CHARACTER_" .. character:onscreen_name() .. " FOUND MANAGEMENT BUILDING: " .. building_superchain)
                          end
