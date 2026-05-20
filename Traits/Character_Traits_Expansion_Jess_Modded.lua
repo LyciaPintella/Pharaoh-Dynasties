@@ -341,9 +341,7 @@ character_traits_expansion.building_superchains.province_management = {
      ["phar_map_wil_major_main_building_happiness_boost"] = true
 }
 
-----------------------------------------------
---- Apply a trait to a character with a percent chance of success.
-----------------------------------------------
+
 --- Applies a trait to a character with a percent chance of success.
 --- @param character CHARACTER_SCRIPT_INTERFACE #Character object of the target character.
 --- @param trait string Trait key to add.
