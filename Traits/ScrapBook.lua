@@ -4,6 +4,68 @@
 --[[
 
 
+SCRIPT ERROR, timestamp <3.8s>
+ERROR: set_class_custom_type() called but supplied custom type [nil] is not a string
+	[string "script\_lib\lib_types.lua"]:138: in function 'set_class_custom_type'
+	[string "script\_lib\lib_types.lua"]:227: in function 'set_class_custom_type_and_tostring'
+	[string "script\campaign\mod\character_traits_expansion.lua"]:13: in main chunk
+	[string "script\_lib\lib_types.lua"]:173: in function 'set_class_tostring'
+	[string "script\_lib\lib_types.lua"]:228: in function 'set_class_custom_type_and_tostring'
+	[string "script\campaign\mod\character_traits_expansion.lua"]:13: in main chunk
+	[string "script\_lib\lib_types.lua"]:138: in function 'set_class_custom_type'
+	[string "script\_lib\lib_types.lua"]:227: in function 'set_class_custom_type_and_tostring'
+	[string "script\campaign\mod\character_traits_expansion.lua"]:26: in main chunk
+	[string "script\_lib\lib_types.lua"]:173: in function 'set_class_tostring'
+	[string "script\_lib\lib_types.lua"]:228: in function 'set_class_custom_type_and_tostring'
+	[string "script\campaign\mod\character_traits_expansion.lua"]:26: in main chunk
+	[string "script\campaign\mod\character_traits_expansion.lua"]:125: in main chunk
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[out] <4.3s>     		Failed to execute loaded mod file [script\campaign\mod\character_traits_expansion.lua], error is: [string "script\campaign\mod\character_traits_expansion.lua"]:381: attempt to index global 'trait_manager' (a nil value)
+
+
 phar_main_effect_bundle_province_management_happiness_affected_by_growth|phar_main_effect_bundle_province_management_growth_affected_by_happiness
 
 [design] <52.0s>     & Applying effect bundle [phar_main_effect_bundle_province_management_growth_affected_by_happiness_6_of_9] to province of region with key [phar_main_per_ramesses_meri_amon_per_ramesses_meri_amon] for [0] turns
