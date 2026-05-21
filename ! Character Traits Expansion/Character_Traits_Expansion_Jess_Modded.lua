@@ -416,7 +416,7 @@ character_traits_expansion.building_superchains.province_management = {
      ["phar_map_wil_major_main_building_happiness_boost"] = true
 }
 
---- Starts listeners unique to ancient legacty traits.
+-- Starts listeners unique to ancient legacty traits.
 function character_traits_expansion:start_ancient_legacy_listeners()
      cm:add_first_tick_callback(function()
           if not self.is_akhenaten_legacy_claimed then
@@ -483,7 +483,8 @@ function character_traits_expansion:start_ancient_legacy_listeners()
           end, true)
      end)
 end
----Begin Trait Listeners
+
+-- -Begin Trait Listeners
 function character_traits_expansion.event_listener_functions:battle()
      -----------------------------------------
      ---- CHARACTER MIGHT DESTROY FACTION ----
@@ -2493,6 +2494,7 @@ function character_traits_expansion.event_listener_functions:start_all()
     self:provincial_construction()
 end
 
+character_traits_expansion:modify_phar_campaign_traits()
 character_traits_expansion.event_listener_functions:start_all()
 
 cm:add_saving_game_callback(
