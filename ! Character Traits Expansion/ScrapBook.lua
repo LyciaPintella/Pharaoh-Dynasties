@@ -1,7 +1,88 @@
+--[[
+(method) core:add_listener(listener_name: string, event_name: string, conditional_test: function|true, target_callback: function, listener_persists_after_target_callback_called: boolean)
+]]--
+
+
+core:add_listener("character_traits_expansion_construction_in_region", "CharacterEndTurn", function(context)
+        local character = context:character()
+	   if character:has_region() and character:region():owning_faction():command_queue_index() == character:faction():command_queue_index() then
+		local province = character:region():province()
+		for i = 0, province:region_list():num_items() - 1 do
+			for i = 0, region:slot_list():num_items() - 1 do
+				local slot = region:slot_list():item_at(i)
+				if slot:is_there_construction() then return true end
+			end
+		end
+
+    end
+
+end,
+self:apply_trait_by_chance(character, "phar_main_trait_cultured", 20, 3),
+true)
+    --if slot:building_chain_key() == "phar_main_ers_shrine" then return true end
+
 
 
 
 --[[
+
+character_traits_expansion.trait_lists_table.character_creation_traits
+
+
+character_creation_traits|coming_of_age_traits|factions_to_culture_pairs
+
+	local character_traits_expansion: character_trait_manager {
+		apply_trait_by_chance: function,
+		building_superchains: building_superchain_pairs,
+		coming_of_age_percent_chance: integer = 5,
+
+		initialize: function,
+		is_akhenaten_legacy_claimed: boolean = false,
+		modify_phar_campaign_traits: function,
+		start_ancient_legacy_listeners: function,
+		trait_event_listeners: event_listeners_table,
+		trait_lists_table: trait_lists_table,
+	 }
+	 
+
+
+
+
+(field) character_trait_manager.trait_lists_table: trait_lists_table {
+	character_creation_traits: character_trait_list,
+	coming_of_age_traits: character_trait_pairs,
+	emergent_traits: character_trait_pairs,
+	factions_to_culture_pairs: table,
+	legendary_lords_defeated: character_trait_pairs,
+	new_mod_traits: character_trait_list,
+	self_perpetuating: character_trait_list,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	-- * LOOK INTO THIS LATER!
+function set_object_class(object_table: table, class_table: table, ...any)
+	-> any
+   Sets the supplied object to index from the supplied class in a manner that emulates object-orientation. This will set the class to be the metatable of the object and will set the __index field of the metatable also to the supplied class. This means that if functions or values are looked up on the object and are not present they are then looked up on the class. It is through this kind of mechanism that object-orientation may be emulated in lua. Because the class is also the metatable, it means the metatable is shared between objects of the same type. Use set_object_class_unique if this is not desired.
+   set_object_class will also associate the object with any custom type or tostring values that have been previously set up on the class with calls to set_class_custom_type and set_class_tostring.
+   Any number of additional classes and objects may be specified, from which the main supplied object will also derive. If a value (such as a function to be called) is looked up on the object and is not provided on the object or the main class table it derives from, it will be looked up in turn on each additional classes or objects supplied. These additional objects/classes may be table or userdata values.
+   
+   @param object_table — Object table.
+   
+   @param class_table — Class table.
+   
+   @param ... — Additional classes or objects to index.
 
 
 character_traits_expansion.ancient_legacies
@@ -29,6 +110,7 @@ stack traceback:
 ********************
 [out] <3.8s>     		Failed to execute loaded mod file [script\campaign\mod\character_traits_expansion.lua], error is: [string "script\campaign\mod\character_traits_expansion.lua"]:427: attempt to get length of local 'human_factions' (a boolean value)
 [out] <3.8s>     	Failed to load mod: [script\campaign\mod\character_traits_expansion.lua]
+]]--
 
 
 
@@ -60,8 +142,7 @@ stack traceback:
 
 
 
-
-
+--[[
 
 
 
@@ -139,30 +220,27 @@ start_trait_listeners: function,
 traits_lists: table,
 }
 
-
-
-
 	if cm:char_is_general_with_army(character) and character:has_region() and character:region():owning_faction():name() == character:faction():name() then
 	end
 
-core:add_listener("hcp_character_rank_up_listener", "CharacterRankUp", true, function(context)
+core:add_listener("character_traits_expansion_character_rank_up_listener", "CharacterRankUp", true, function(context)
 local character = context:character()
 
-out("HCP_CHARACTER_RANKED_UP: " .. character:onscreen_name())
+out("character_traits_expansion_CHARACTER_RANKED_UP: " .. character:onscreen_name())
 
 ----------------------------
 ---- POLITICIAN RANK UP ----
 ----------------------------
 if character:is_politician() then
-	character_traits_expansion.apply_trait_by_chance(character, "hcp_trait_military_admin_good", 20, 10)
-	out("HCP_CHARACTER_" .. character:onscreen_name() .. " IS A POLITICIAN. GIVING MILITARY ADMIN GOOD TRAIT.")
+	character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_military_admin_good", 20, 10)
+	out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " IS A POLITICIAN. GIVING MILITARY ADMIN GOOD TRAIT.")
 end
 if character:is_politician() and character:faction():at_war() then
-	character_traits_expansion.apply_trait_by_chance(character, "hcp_trait_warmonger", 20, 4)
-	out("HCP_CHARACTER_" .. character:onscreen_name() .. " IS AT WAR. GIVING WARMONGER TRAIT.")
+	character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_warmonger", 20, 4)
+	out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " IS AT WAR. GIVING WARMONGER TRAIT.")
 elseif character:is_politician() and not character:faction():at_war() then
-	character_traits_expansion.apply_trait_by_chance(character, "hcp_trait_pacifist", 20, 10)
-	out("HCP_CHARACTER_" .. character:onscreen_name() .. " IS NOT AT WAR. GIVING PACIFIST TRAIT.")
+	character_traits_expansion.apply_trait_by_chance(character, "character_traits_expansion_trait_pacifist", 20, 10)
+	out("character_traits_expansion_CHARACTER_" .. character:onscreen_name() .. " IS NOT AT WAR. GIVING PACIFIST TRAIT.")
 end
 end, true)
 
@@ -214,7 +292,7 @@ character_ends_turn_in_region_with_construction_economy_building
 
 
 
-core:add_listener("hcp_building_completed_listener", "BuildingCompleted", true, function(context)
+core:add_listener("character_traits_expansion_building_completed_listener", "BuildingCompleted", true, function(context)
 
 
 
