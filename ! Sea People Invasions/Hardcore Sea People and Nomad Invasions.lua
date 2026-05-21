@@ -1487,7 +1487,7 @@ sea_invasion = {
                          wave.wave_number ..
                          " will spawn on turn " ..
                          wave.final_spawn_on_turn ..
-                         "< \t at location " .. wave.spawn_location.x .. "/" .. wave.spawn_location.y)
+                         " at coordinates " .. wave.spawn_location.x .. "/" .. wave.spawn_location.y)
                     if wave.final_spawn_on_turn == current_turn and wave.has_spawned == false then
                          table.insert(next_turn_wave, wave)
                     end
