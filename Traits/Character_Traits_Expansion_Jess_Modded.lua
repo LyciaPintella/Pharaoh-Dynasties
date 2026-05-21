@@ -478,8 +478,10 @@ function character_traits_expansion.ancient_legacies:apply_traits()
           end
      end, true)
 end
-
-character_traits_expansion.start_trait_listeners = function()
+]]--
+function character_traits_expansion:start_trait_listeners()
+	--! Lycia Bookmark
+     core:add_listener("character_traits_expansion_on_first_tick", "FirstTickAfterWorldCreated", true, function(context)
      -----------------------------------------------
      ---- FACTION LEADER DECLARES WAR AND PEACE ----
      -----------------------------------------------
