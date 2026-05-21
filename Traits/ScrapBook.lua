@@ -4,28 +4,31 @@
 --[[
 
 
+character_traits_expansion.ancient_legacies
+
+
+
+
+[out] <3.8s>     	Loading mod file [script\campaign\mod\character_traits_expansion.lua]
+********************
 SCRIPT ERROR, timestamp <3.8s>
-ERROR: set_class_custom_type() called but supplied custom type [nil] is not a string
-	[string "script\_lib\lib_types.lua"]:138: in function 'set_class_custom_type'
-	[string "script\_lib\lib_types.lua"]:227: in function 'set_class_custom_type_and_tostring'
-	[string "script\campaign\mod\character_traits_expansion.lua"]:13: in main chunk
-	[string "script\_lib\lib_types.lua"]:173: in function 'set_class_tostring'
-	[string "script\_lib\lib_types.lua"]:228: in function 'set_class_custom_type_and_tostring'
-	[string "script\campaign\mod\character_traits_expansion.lua"]:13: in main chunk
-	[string "script\_lib\lib_types.lua"]:138: in function 'set_class_custom_type'
-	[string "script\_lib\lib_types.lua"]:227: in function 'set_class_custom_type_and_tostring'
-	[string "script\campaign\mod\character_traits_expansion.lua"]:26: in main chunk
-	[string "script\_lib\lib_types.lua"]:173: in function 'set_class_tostring'
-	[string "script\_lib\lib_types.lua"]:228: in function 'set_class_custom_type_and_tostring'
-	[string "script\campaign\mod\character_traits_expansion.lua"]:26: in main chunk
-	[string "script\campaign\mod\character_traits_expansion.lua"]:125: in main chunk
+phar_combi ERROR: get_human_factions() called before game has been created
 
 
-
-
-
-
-
+stack traceback:
+	[string "script\_lib\lib_campaign_manager.lua"]:3416: in function 'get_human_factions'
+	[string "script\campaign\mod\character_traits_expansion.lua"]:425: in function 'apply_traits'
+	[string "script\campaign\mod\character_traits_expansion.lua"]:2487: in main chunk
+	[C]: in function 'pcall'
+	[string "script\_lib\lib_core.lua"]:718: in function 'load_mod_script'
+	[string "script\_lib\lib_core.lua"]:652: in function 'load_mods'
+	[string "script\_lib\lib_mod_loader.lua"]:63: in function <[string "script\_lib\lib_mod_loader.lua"]:61>
+	(tail call): ?
+	[string "script\_lib\lib_core.lua"]:2071: in function 'event_triggered'
+	[string "script\_lib\lib_core.lua"]:2131: in function <[string "script\_lib\lib_core.lua"]:2131>
+********************
+[out] <3.8s>     		Failed to execute loaded mod file [script\campaign\mod\character_traits_expansion.lua], error is: [string "script\campaign\mod\character_traits_expansion.lua"]:427: attempt to get length of local 'human_factions' (a boolean value)
+[out] <3.8s>     	Failed to load mod: [script\campaign\mod\character_traits_expansion.lua]
 
 
 
