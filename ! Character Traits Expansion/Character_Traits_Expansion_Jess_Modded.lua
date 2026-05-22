@@ -769,26 +769,55 @@ function event_listener_functions:misc()
                return
           end
 
-          -------------------------------------------------------------
-          ---- LOW/HIGH INFLUENCE REGION FOR RESPECTFUL/IRREVERENT ----
-          -------------------------------------------------------------
-          local character = context:character()
-          local influence_threshold_high = 0.75
-          local influence_threshold_low = 0.35
-          local religion = character:faction():state_religion()
+          if character:has_region() then
+               -------------------------------------------------------------
+               ---- LOW/HIGH INFLUENCE REGION FOR RESPECTFUL/IRREVERENT ----
+               -------------------------------------------------------------
+               local character = context:character()
+               local influence_threshold_high = 0.70
+               local influence_threshold_low = 0.6
+               local religion = character:faction():state_religion()
 
-          if cm:char_is_general_with_army(character) and not character:region():is_null_interface() and character:has_region() then
-               local region_influence = character:region():religion_proportion(religion)
+               if cm:char_is_general_with_army(character) and not character:region():is_null_interface() then
+                    local region_influence = character:region():religion_proportion(religion)
 
-               if region_influence > influence_threshold_high then
-                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_irreverent", 20, 3)
-                    out("Character Traits Expansion: char_in_high_influence_region!")
-               elseif region_influence < influence_threshold_low then
-                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_respectful", 20, 5)
-                    out("Character Traits Expansion: char_in_low_influence_region!")
+                    if region_influence >= influence_threshold_high then
+                         self.character_traits:apply_trait_by_chance(character, "phar_main_trait_irreverent", 20, 3)
+                         out("Character Traits Expansion: char_in_high_influence_region!")
+                    elseif region_influence <= influence_threshold_low then
+                         self.character_traits:apply_trait_by_chance(character, "phar_main_trait_respectful", 20, 5)
+                         out("Character Traits Expansion: char_in_low_influence_region!")
+                    end
+               else
+                    -------------------------------------------------------
+                    ---- PLAGUE, EARTHQUAKE, FLOOD, DROUGHT, DISASTERS ----
+                    -------------------------------------------------------
+                    local faction_key = character:faction():name()
+                    local province = character:region():province()
+                    local province_name = character:region():province_name()
+                    out("Character Traits Expansion: TEST_BLIGHTED_PASSED_CHECK_CHARACTER_IS_IN_PROVINCE_" .. tostring(province_name))
+
+                    local disaster_traits = {
+                         {"phar_main_effect_bundle_incident_disaster_plague_recruitment_slots", "character_traits_expansion_trait_blighted"},
+                         {"phar_main_effect_bundle_incident_disaster_flood", "character_traits_expansion_trait_unpopular"},
+                         {"phar_main_effect_bundle_incident_disaster_drought_food_production", "character_traits_expansion_trait_farmer_bad"},
+                         {"phar_main_effect_bundle_incident_disaster_earthquake", "character_traits_expansion_trait_unpopular"}
+                    }
+
+                    -- Loop through the table
+                    for i = 1, #disaster_traits do
+                         local effect_bundle_key = disaster_traits[i][1]
+                         local trait_key = disaster_traits[i][2]
+
+                         if province:has_effect_bundle(effect_bundle_key, faction_key) then
+                              self.character_traits:apply_trait_by_chance(character, trait_key, 20, 20)
+                              out("Applied " .. trait_key .. " due to effect bundle " .. effect_bundle_key)
+                         end
+                    end
+
                end
-          end
 
+          end
           ---------------------------------------------------------
           ---- WARS AND ALLIES CHECK FOR RESPECTFUL/IRREVERENT ----
           ---------------------------------------------------------
@@ -800,34 +829,6 @@ function event_listener_functions:misc()
           -- elseif faction:num_allies() > 1 then
           --     self.character_traits:apply_trait_by_chance(character, "phar_main_trait_respectful", 20, 1)
           -- end
-
-          -------------------------------------------------------
-          ---- PLAGUE, EARTHQUAKE, FLOOD, DROUGHT, DISASTERS ----
-          -------------------------------------------------------
-          if character:has_region() then
-               local faction_key = character:faction():name()
-               local province = character:region():province()
-               local province_name = character:region():province_name()
-               out("Character Traits Expansion: TEST_BLIGHTED_PASSED_CHECK_CHARACTER_IS_IN_PROVINCE_" .. tostring(province_name))
-
-               local disaster_traits = {
-                    {"phar_main_effect_bundle_incident_disaster_plague_recruitment_slots", "character_traits_expansion_trait_blighted"},
-                    {"phar_main_effect_bundle_incident_disaster_flood", "character_traits_expansion_trait_unpopular"},
-                    {"phar_main_effect_bundle_incident_disaster_drought_food_production", "character_traits_expansion_trait_farmer_bad"},
-                    {"phar_main_effect_bundle_incident_disaster_earthquake", "character_traits_expansion_trait_unpopular"}
-               }
-
-               -- Loop through the table
-               for i = 1, #disaster_traits do
-                    local effect_bundle_key = disaster_traits[i][1]
-                    local trait_key = disaster_traits[i][2]
-
-                    if province:has_effect_bundle(effect_bundle_key, faction_key) then
-                         self.character_traits:apply_trait_by_chance(character, trait_key, 20, 20)
-                         out("Applied " .. trait_key .. " due to effect bundle " .. effect_bundle_key)
-                    end
-               end
-          end
 
           ----------------
           ---- at sea ----
@@ -1099,7 +1100,9 @@ function event_listener_functions:characters_in_regions()
           local province = character:region():province()
           local contested = false
           for i = 0, province:region_list():num_items() - 1 do
-               if not character:region():owning_faction():command_queue_index() == character:faction():command_queue_index() and not region:is_abandoned() then
+            if not character:region():is_null_interface() and not region:is_abandoned()
+                and not character:region():owning_faction():command_queue_index() == character:faction():command_queue_index()
+			  then
                     contested = true
                     break
                end
