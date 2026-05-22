@@ -220,8 +220,11 @@ event_listener_functions.character_traits.self_perpetuating_traits = {
      "character_traits_expansion_trait_boring", "character_traits_expansion_trait_trusting", "character_traits_expansion_trait_paranoia",
      "character_traits_expansion_trait_superstitious", "character_traits_expansion_trait_prophetic", "character_traits_expansion_trait_anger",
      "phar_main_trait_respectful", "phar_main_trait_irreverent", "character_traits_expansion_trait_fertile", "character_traits_expansion_trait_barren",
-     "character_traits_expansion_trait_blind", "character_traits_expansion_trait_heretic"
+     "character_traits_expansion_trait_blind" 
 }
+
+-- ! Removed "character_traits_expansion_trait_heretic" from self_perpetuating_traits because the ancient legacy funtion injects it.
+-- ! "character_traits_expansion_trait_heretic"
 
 --- @class building_superchain_pairs_tables : table
 event_listener_functions.character_traits.building_superchains = {}
