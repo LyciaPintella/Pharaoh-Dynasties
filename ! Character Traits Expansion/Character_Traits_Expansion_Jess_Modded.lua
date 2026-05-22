@@ -14,6 +14,352 @@ event_listener_functions.is_akhenaten_legacy_claimed = false
 --- @class character_trait_manager : table
 event_listener_functions.character_traits = {coming_of_age_percent_chance = 5}
 
+event_listener_functions.character_traits.character_creation_traits = {
+     "phar_main_trait_ambitious", "phar_main_trait_barbaric", "phar_main_trait_blunt", "phar_main_trait_brave", "phar_main_trait_cautious", "phar_main_trait_confident",
+     "phar_main_trait_content", "phar_main_trait_cooperative", "phar_main_trait_cowardly", "phar_main_trait_cruel", "phar_main_trait_cultured",
+     "phar_main_trait_hesitant", "phar_main_trait_individualistic", "phar_main_trait_irreverent", "phar_main_trait_materialistic", "phar_main_trait_merciful",
+     "phar_main_trait_reckless", "phar_main_trait_respectful", "phar_main_trait_spiritual", "phar_main_trait_underhanded", "character_traits_expansion_trait_degenerate",
+     "character_traits_expansion_trait_scout", "character_traits_expansion_trait_attacking_victory", "character_traits_expansion_trait_attacking_defeat",
+     "character_traits_expansion_trait_defending_defeat", "character_traits_expansion_trait_defending_victory", "character_traits_expansion_trait_siege_victory",
+     "character_traits_expansion_trait_siege_defeat", "character_traits_expansion_trait_siege_defense_victory", "character_traits_expansion_trait_sober",
+     "character_traits_expansion_trait_drink", "character_traits_expansion_trait_girls", "character_traits_expansion_trait_arse",
+     "character_traits_expansion_trait_gambler", "character_traits_expansion_trait_bloody", "character_traits_expansion_trait_inbred",
+     "character_traits_expansion_trait_popular", "character_traits_expansion_trait_unpopular", "character_traits_expansion_trait_lucky",
+     "character_traits_expansion_trait_unlucky", "character_traits_expansion_trait_farmer_good", "character_traits_expansion_trait_farmer_bad",
+     "character_traits_expansion_trait_bereaved", "character_traits_expansion_trait_mad", "character_traits_expansion_trait_healthy",
+     "character_traits_expansion_trait_blighted", "character_traits_expansion_trait_sea_legs", "character_traits_expansion_trait_feck",
+     "character_traits_expansion_trait_survivor", "character_traits_expansion_trait_admin_good", "character_traits_expansion_trait_admin_bad",
+     "character_traits_expansion_trait_miner", "character_traits_expansion_trait_military_admin_good", "character_traits_expansion_trait_military_admin_bad",
+     "character_traits_expansion_trait_warmonger", "character_traits_expansion_trait_pacifist", "character_traits_expansion_trait_corrupt",
+     "character_traits_expansion_trait_noctophilia", "character_traits_expansion_trait_noctophobia", "character_traits_expansion_trait_slothful",
+     "character_traits_expansion_trait_energetic", "character_traits_expansion_trait_charismatic", "character_traits_expansion_trait_boring",
+     "character_traits_expansion_trait_trusting", "character_traits_expansion_trait_paranoia", "character_traits_expansion_trait_pragmatic",
+     "character_traits_expansion_trait_superstitious", "character_traits_expansion_trait_anger", "character_traits_expansion_trait_attractive",
+     "character_traits_expansion_trait_ugly", "character_traits_expansion_trait_prophetic", "character_traits_expansion_trait_authoritarian",
+     "character_traits_expansion_trait_liberal", "character_traits_expansion_trait_fertile", "character_traits_expansion_trait_barren",
+     "character_traits_expansion_trait_scarred", "character_traits_expansion_trait_criminal", "character_traits_expansion_trait_blind"
+}
+
+-- UNUSED IN CODE! This is for db naming consistency only. Can safely be deleted/commented out once mod is finished.
+event_listener_functions.character_traits.character_trait_expansion = {
+     "character_traits_expansion_trait_degenerate", "character_traits_expansion_trait_scout", "character_traits_expansion_trait_attacking_victory",
+     "character_traits_expansion_trait_attacking_defeat", "character_traits_expansion_trait_defending_defeat", "character_traits_expansion_trait_defending_victory",
+     "character_traits_expansion_trait_siege_victory", "character_traits_expansion_trait_siege_defeat", "character_traits_expansion_trait_siege_defense_victory",
+     "character_traits_expansion_trait_wins_against_canaan", "character_traits_expansion_trait_wins_against_hatti", "character_traits_expansion_trait_wins_against_egypt",
+     "character_traits_expansion_trait_wins_against_sea_peoples", "character_traits_expansion_trait_wins_against_mesopotamian",
+     "character_traits_expansion_trait_wins_against_danaans", "character_traits_expansion_trait_wins_against_trojans",
+     "character_traits_expansion_trait_defeats_against_canaan", "character_traits_expansion_trait_defeats_against_hatti",
+     "character_traits_expansion_trait_defeats_against_egypt", "character_traits_expansion_trait_defeats_against_sea_peoples",
+     "character_traits_expansion_trait_defeats_against_mesopotamian", "character_traits_expansion_trait_defeats_against_danaans",
+     "character_traits_expansion_trait_defeats_against_trojans", "character_traits_expansion_trait_disciplinarian", "character_traits_expansion_trait_bad_disciplinarian",
+     "character_traits_expansion_trait_sober", "character_traits_expansion_trait_drink", "character_traits_expansion_trait_girls",
+     "character_traits_expansion_trait_arse", "character_traits_expansion_trait_gambler", "character_traits_expansion_trait_bloody",
+     "character_traits_expansion_trait_inbred", "character_traits_expansion_trait_popular", "character_traits_expansion_trait_unpopular",
+     "character_traits_expansion_trait_lucky", "character_traits_expansion_trait_unlucky", "character_traits_expansion_trait_farmer_good",
+     "character_traits_expansion_trait_farmer_bad", "character_traits_expansion_trait_bereaved", "character_traits_expansion_trait_mad",
+     "character_traits_expansion_trait_healthy", "character_traits_expansion_trait_blighted", "character_traits_expansion_trait_sea_legs",
+     "character_traits_expansion_trait_feck", "character_traits_expansion_trait_survivor", "character_traits_expansion_trait_admin_good",
+     "character_traits_expansion_trait_admin_bad", "character_traits_expansion_trait_miner", "character_traits_expansion_trait_military_admin_good",
+     "character_traits_expansion_trait_military_admin_bad", "character_traits_expansion_trait_warmonger", "character_traits_expansion_trait_pacifist",
+     "character_traits_expansion_trait_cuckold", "character_traits_expansion_trait_corrupt", "character_traits_expansion_trait_factionkiller",
+     "character_traits_expansion_trait_noctophilia", "character_traits_expansion_trait_noctophobia", "character_traits_expansion_trait_slothful",
+     "character_traits_expansion_trait_energetic", "character_traits_expansion_trait_charismatic", "character_traits_expansion_trait_boring",
+     "character_traits_expansion_trait_trusting", "character_traits_expansion_trait_paranoia", "character_traits_expansion_trait_pragmatic",
+     "character_traits_expansion_trait_superstitious", "character_traits_expansion_trait_anger", "character_traits_expansion_trait_attractive",
+     "character_traits_expansion_trait_ugly", "character_traits_expansion_trait_prophetic", "character_traits_expansion_trait_authoritarian",
+     "character_traits_expansion_trait_liberal", "character_traits_expansion_trait_fertile", "character_traits_expansion_trait_barren",
+     "character_traits_expansion_trait_scarred", "character_traits_expansion_trait_criminal", "character_traits_expansion_trait_blind",
+     "character_traits_expansion_trait_heretic"
+}
+
+local percent_chance = event_listener_functions.character_traits.coming_of_age_percent_chance
+-- Traits allowed to trigger when character comes of age
+event_listener_functions.character_traits.coming_of_age_traits = {
+     ["phar_main_trait_ambitious"] = percent_chance,
+     ["phar_main_trait_barbaric"] = percent_chance,
+     ["phar_main_trait_blunt"] = percent_chance,
+     ["phar_main_trait_brave"] = percent_chance,
+     ["phar_main_trait_cautious"] = percent_chance,
+     ["phar_main_trait_content"] = percent_chance,
+     ["phar_main_trait_cooperative"] = percent_chance,
+     ["phar_main_trait_cowardly"] = percent_chance,
+     ["phar_main_trait_cruel"] = percent_chance,
+     ["phar_main_trait_cultured"] = percent_chance,
+     ["phar_main_trait_hesitant"] = percent_chance,
+     ["phar_main_trait_individualistic"] = percent_chance,
+     ["phar_main_trait_irreverent"] = percent_chance,
+     ["phar_main_trait_materialistic"] = percent_chance,
+     ["phar_main_trait_merciful"] = percent_chance,
+     ["phar_main_trait_reckless"] = percent_chance,
+     ["phar_main_trait_respectful"] = percent_chance,
+     ["phar_main_trait_spiritual"] = percent_chance,
+     ["phar_main_trait_underhanded"] = percent_chance,
+     ["character_traits_expansion_trait_degenerate"] = percent_chance,
+     ["character_traits_expansion_trait_scout"] = percent_chance,
+     ["character_traits_expansion_trait_attacking_victory"] = percent_chance,
+     ["character_traits_expansion_trait_attacking_defeat"] = percent_chance,
+     ["character_traits_expansion_trait_defending_defeat"] = percent_chance,
+     ["character_traits_expansion_trait_defending_victory"] = percent_chance,
+     ["character_traits_expansion_trait_siege_victory"] = percent_chance,
+     ["character_traits_expansion_trait_siege_defeat"] = percent_chance,
+     ["character_traits_expansion_trait_siege_defense_victory"] = percent_chance,
+     ["character_traits_expansion_trait_sober"] = percent_chance,
+     ["character_traits_expansion_trait_drink"] = percent_chance,
+     ["character_traits_expansion_trait_girls"] = percent_chance,
+     ["character_traits_expansion_trait_arse"] = percent_chance,
+     ["character_traits_expansion_trait_gambler"] = percent_chance,
+     ["character_traits_expansion_trait_bloody"] = percent_chance,
+     ["character_traits_expansion_trait_inbred"] = percent_chance,
+     ["character_traits_expansion_trait_popular"] = percent_chance,
+     ["character_traits_expansion_trait_unpopular"] = percent_chance,
+     ["character_traits_expansion_trait_lucky"] = percent_chance,
+     ["character_traits_expansion_trait_unlucky"] = percent_chance,
+     ["character_traits_expansion_trait_farmer_good"] = percent_chance,
+     ["character_traits_expansion_trait_farmer_bad"] = percent_chance,
+     ["character_traits_expansion_trait_mad"] = percent_chance,
+     ["character_traits_expansion_trait_healthy"] = percent_chance,
+     ["character_traits_expansion_trait_blighted"] = percent_chance,
+     ["character_traits_expansion_trait_sea_legs"] = percent_chance,
+     ["character_traits_expansion_trait_feck"] = percent_chance,
+     ["character_traits_expansion_trait_survivor"] = percent_chance,
+     ["character_traits_expansion_trait_admin_good"] = percent_chance,
+     ["character_traits_expansion_trait_admin_bad"] = percent_chance,
+     ["character_traits_expansion_trait_miner"] = percent_chance,
+     ["character_traits_expansion_trait_military_admin_good"] = percent_chance,
+     ["character_traits_expansion_trait_military_admin_bad"] = percent_chance,
+     ["character_traits_expansion_trait_warmonger"] = percent_chance,
+     ["character_traits_expansion_trait_pacifist"] = percent_chance,
+     ["character_traits_expansion_trait_corrupt"] = percent_chance,
+     ["character_traits_expansion_trait_noctophilia"] = percent_chance,
+     ["character_traits_expansion_trait_noctophobia"] = percent_chance,
+     ["character_traits_expansion_trait_slothful"] = percent_chance,
+     ["character_traits_expansion_trait_energetic"] = percent_chance,
+     ["character_traits_expansion_trait_charismatic"] = percent_chance,
+     ["character_traits_expansion_trait_boring"] = percent_chance,
+     ["character_traits_expansion_trait_trusting"] = percent_chance,
+     ["character_traits_expansion_trait_paranoia"] = percent_chance,
+     ["character_traits_expansion_trait_pragmatic"] = percent_chance,
+     ["character_traits_expansion_trait_superstitious"] = percent_chance,
+     ["character_traits_expansion_trait_anger"] = percent_chance,
+     ["character_traits_expansion_trait_attractive"] = percent_chance,
+     ["character_traits_expansion_trait_ugly"] = percent_chance,
+     ["character_traits_expansion_trait_prophetic"] = percent_chance,
+     ["character_traits_expansion_trait_authoritarian"] = percent_chance,
+     ["character_traits_expansion_trait_liberal"] = percent_chance,
+     ["character_traits_expansion_trait_fertile"] = percent_chance,
+     ["character_traits_expansion_trait_barren"] = percent_chance,
+     ["character_traits_expansion_trait_scarred"] = percent_chance,
+     ["character_traits_expansion_trait_criminal"] = percent_chance,
+     ["character_traits_expansion_trait_blind"] = percent_chance,
+     ["character_traits_expansion_trait_wins_against_canaan"] = 0,
+     ["character_traits_expansion_trait_wins_against_danaans"] = 0,
+     ["character_traits_expansion_trait_wins_against_egypt"] = 0,
+     ["character_traits_expansion_trait_wins_against_hatti"] = 0,
+     ["character_traits_expansion_trait_wins_against_mesopotamian"] = 0,
+     ["character_traits_expansion_trait_wins_against_sea_peoples"] = 0,
+     ["character_traits_expansion_trait_wins_against_trojans"] = 0,
+     ["character_traits_expansion_trait_defeats_against_canaan"] = 0,
+     ["character_traits_expansion_trait_defeats_against_danaans"] = 0,
+     ["character_traits_expansion_trait_defeats_against_egypt"] = 0,
+     ["character_traits_expansion_trait_defeats_against_hatti"] = 0,
+     ["character_traits_expansion_trait_defeats_against_mesopotamian"] = 0,
+     ["character_traits_expansion_trait_defeats_against_sea_peoples"] = 0,
+     ["character_traits_expansion_trait_defeats_against_trojans"] = 0
+}
+
+-- Traits allowed to trigger for any character on any given turn
+event_listener_functions.character_traits.emergent_traits = {
+     "character_traits_expansion_trait_degenerate", "character_traits_expansion_trait_unlucky", "character_traits_expansion_trait_lucky"
+}
+
+event_listener_functions.character_traits.faction_to_culture_pairs = {
+     ["phar_main_clt_canaan"] = "canaan",
+     ["phar_main_clt_hatti"] = "hatti",
+     ["phar_main_clt_kemet"] = "egypt",
+     ["phar_main_clt_sea_peoples"] = "sea_peoples",
+     ["phar_map_clt_mesopotamian"] = "mesopotamian",
+     ["troy_main_clt_danaans"] = "danaans",
+     ["troy_main_clt_trojans"] = "trojans"
+}
+
+event_listener_functions.character_traits.legendary_lords_defeated = {
+     ["phar_hero_can_bay_bay"] = "character_traits_expansion_trait_defeated_bay",
+     ["phar_hero_can_irs_irsu"] = "character_traits_expansion_trait_defeated_irsu",
+     ["phar_hero_egy_ame_amenmesse"] = "character_traits_expansion_trait_defeated_amenmesse",
+     ["phar_hero_egy_mer_merneptah"] = "character_traits_expansion_trait_defeated_merneptah",
+     ["phar_hero_egy_ram_ramesses"] = "character_traits_expansion_trait_defeated_ramesses",
+     ["phar_hero_egy_set_seti"] = "character_traits_expansion_trait_defeated_seti",
+     ["phar_hero_egy_setn_setnakhte"] = "character_traits_expansion_trait_defeated_setnakhte",
+     ["phar_hero_egy_tau_tausret"] = "character_traits_expansion_trait_defeated_tausret",
+     ["phar_hero_hit_hat_suppiluliuma"] = "character_traits_expansion_trait_defeated_suppiluliuma",
+     ["phar_hero_hit_tarh_kurunta"] = "character_traits_expansion_trait_defeated_kurunta",
+     ["phar_map_hero_ach_achilles"] = "character_traits_expansion_trait_defeated_achilles",
+     ["phar_map_hero_ach_agamemnon"] = "character_traits_expansion_trait_defeated_agamemnon",
+     ["phar_map_hero_ach_ajax"] = "character_traits_expansion_trait_defeated_ajax",
+     ["phar_map_hero_ach_diomedes"] = "character_traits_expansion_trait_defeated_diomedes",
+     ["phar_map_hero_ach_menelaus"] = "character_traits_expansion_trait_defeated_menelaus",
+     ["phar_map_hero_ach_odysseus"] = "character_traits_expansion_trait_defeated_odysseus",
+     ["phar_map_hero_ash_ninurta"] = "character_traits_expansion_trait_defeated_ninurta",
+     ["phar_map_hero_bab_adad"] = "character_traits_expansion_trait_defeated_adad",
+     ["phar_map_hero_egy_memnon"] = "character_traits_expansion_trait_defeated_memnon",
+     ["phar_map_hero_thr_rhesus"] = "character_traits_expansion_trait_defeated_rhesus",
+     ["phar_map_hero_tro_aeneas"] = "character_traits_expansion_trait_defeated_aeneas",
+     ["phar_map_hero_tro_hector"] = "character_traits_expansion_trait_defeated_hector",
+     ["phar_map_hero_tro_paris"] = "character_traits_expansion_trait_defeated_paris",
+     ["phar_map_hero_tro_priam"] = "character_traits_expansion_trait_defeated_priam",
+     ["phar_map_hero_tro_sarpedon"] = "character_traits_expansion_trait_defeated_sarpedon",
+     ["phar_sea_hero_iol_iolaos"] = "character_traits_expansion_trait_defeated_iolaos",
+     ["phar_sea_hero_wal_walwetes"] = "character_traits_expansion_trait_defeated_walwetes"
+}
+
+event_listener_functions.character_traits.self_perpetuating_traits = {
+     "character_traits_expansion_trait_mad", "character_traits_expansion_trait_degenerate", "character_traits_expansion_trait_sober",
+     "character_traits_expansion_trait_drink", "character_traits_expansion_trait_girls", "character_traits_expansion_trait_arse",
+     "character_traits_expansion_trait_gambler", "character_traits_expansion_trait_feck", "character_traits_expansion_trait_corrupt",
+     "character_traits_expansion_trait_blighted", "character_traits_expansion_trait_cuckold", "character_traits_expansion_trait_slothful",
+     "character_traits_expansion_trait_boring", "character_traits_expansion_trait_trusting", "character_traits_expansion_trait_paranoia",
+     "character_traits_expansion_trait_superstitious", "character_traits_expansion_trait_prophetic", "character_traits_expansion_trait_anger",
+     "phar_main_trait_respectful", "phar_main_trait_irreverent", "character_traits_expansion_trait_fertile", "character_traits_expansion_trait_barren",
+     "character_traits_expansion_trait_blind", "character_traits_expansion_trait_heretic"
+}
+
+--- @class building_superchain_pairs_tables : table
+event_listener_functions.character_traits.building_superchains = {}
+
+event_listener_functions.character_traits.building_superchains.drinking = {
+     ["phar_main_happiness_type_b"] = true,
+     ["phar_map_bab_province_management_happiness_growth_type_a"] = true
+}
+
+event_listener_functions.character_traits.building_superchains.military_administration = {
+     ["phar_main_all_military_administration_cost_mod"] = true,
+     ["phar_main_military_administration_unit_training_type_a"] = true,
+     ["phar_main_military_administration_unit_training_type_b"] = true,
+     ["phar_main_kuru_military_administration_army_debuff"] = true,
+     ["phar_main_kuru_military_administration_unit_training_type_a"] = true,
+     ["phar_main_kuru_military_administration_unit_training_type_b"] = true,
+     ["phar_main_ram_military_administration_hero_training"] = true,
+     ["phar_main_seti_military_administration_cost_mod_recruit_slot_type_a"] = true,
+     ["phar_main_seti_military_administration_cost_mod_recruit_slot_type_b"] = true,
+     ["phar_main_suppi_military_administration_army_buff"] = true,
+     ["phar_main_suppi_military_administration_garrison_type_a"] = true,
+     ["phar_main_suppi_military_administration_garrison_type_b"] = true,
+     ["phar_main_military_garrison_type_b"] = true,
+     ["phar_main_all_military_administration_hero_training"] = true,
+     ["phar_map_military_administration_unit_training_type_b_wilusa_province"] = true,
+     ["phar_sea_administration_commandment_modifier"] = true,
+     ["phar_sea_administration_factionwide_production"] = true,
+     ["phar_sea_administration_happiness_influence"] = true,
+     ["phar_sea_military_administration_hero_training_unit_cost_mod_native_settled"] = true,
+     ["phar_sea_military_administration_unit_ring_settled_native"] = true,
+     ["phar_sea_peleset_military_administration_weapon_damage_armour"] = true,
+     ["phar_sea_sherden_military_administration_charge_melee_attack_native"] = true
+}
+
+event_listener_functions.character_traits.building_superchains.food = {
+     ["phar_main_farm_type_a_hattusa_derivative"] = true,
+     ["phar_main_farm_type_a_canaan"] = true,
+     ["phar_main_farm_type_a_canaan_derivative"] = true,
+     ["phar_main_farm_type_a_hattusa"] = true,
+     ["phar_main_farm_type_a_nile"] = true,
+     ["phar_main_farm_type_b_nile"] = true,
+     ["phar_main_farm_type_c_nile"] = true,
+     ["phar_main_irsu_resource_production_food_farm"] = true,
+     ["phar_main_irsu_resource_production_food_farm_derivative"] = true,
+     ["phar_main_irsu_resource_production_food_farm_nile_type_a"] = true,
+     ["phar_main_irsu_resource_production_food_farm_nile_type_b"] = true,
+     ["phar_main_irsu_resource_production_food_farm_nile_type_c"] = true,
+     ["phar_map_all_resource_production_food_farm_type_a_mesopotamia"] = true,
+     ["phar_map_all_resource_production_food_farm_type_a_mesopotamia_derivative"] = true,
+     ["phar_map_all_resource_production_food_farm_type_b_mesopotamia"] = true,
+     ["phar_map_all_resource_production_food_farm_type_b_mesopotamia_derivative"] = true,
+     ["phar_map_farm_achaea_derivative"] = true,
+     ["phar_map_farm_assuwa_derivative"] = true,
+     ["phar_map_farm_thrace_derivative"] = true,
+     ["phar_map_food_farm_aegean"] = true,
+     ["phar_map_myc_resource_production_food_farm_minor"] = true,
+     ["troy_main_ody_settlements_farm_myth_harpies"] = true,
+     ["troy_main_ody_settlement_farm_myth_giants"] = true,
+     ["troy_main_ody_settlement_farm_myth_sirens"] = true,
+     ["troy_main_farm_bull"] = true,
+     ["troy_main_settlement_farm"] = true,
+     ["troy_main_settlement_farm_sea"] = true,
+     ["phar_main_food_cattle_canaan"] = true,
+     ["phar_main_food_cattle_hattusa"] = true,
+     ["phar_main_irsu_resource_production_food_cattle"] = true,
+     ["phar_map_all_resource_production_food_cattle_mesopotamia"] = true,
+     ["phar_map_food_cattle_aegean"] = true
+}
+
+event_listener_functions.character_traits.building_superchains.gold = {
+     ["phar_main_all_resource_production_gold_mine_nile"] = true,
+     ["phar_main_amenmesse_resource_production_gold_mine"] = true,
+     ["phar_main_gold_mine"] = true,
+     ["phar_main_gold_mine_derivative_type_b"] = true,
+     ["phar_main_irsu_resource_production_gold_mine"] = true,
+     ["phar_main_irsu_resource_production_gold_mine_derivative_type_b"] = true,
+     ["phar_map_myc_resource_production_gold_mine_minor"] = true
+}
+
+event_listener_functions.character_traits.building_superchains.mines = {
+     ["phar_main_all_resource_production_bronze_mine_nile"] = true,
+     ["phar_main_all_resource_production_gold_mine_nile"] = true,
+     ["phar_main_all_resource_production_stone_mine_nile"] = true,
+     ["phar_main_amenmesse_resource_production_gold_mine"] = true,
+     ["phar_main_bronze_mine"] = true,
+     ["phar_main_bronze_mine_derivative_type_a"] = true,
+     ["phar_main_bronze_mine_type_b"] = true,
+     ["phar_main_gold_mine"] = true,
+     ["phar_main_gold_mine_derivative_type_b"] = true,
+     ["phar_main_irsu_resource_production_gold_mine"] = true,
+     ["phar_main_irsu_resource_production_gold_mine_derivative_type_b"] = true,
+     ["phar_main_irsu_resource_production_stone_mine"] = true,
+     ["phar_main_irsu_resource_production_stone_mine_derivative_type_a"] = true,
+     ["phar_main_stone_mine"] = true,
+     ["phar_main_stone_mine_derivative_type_a"] = true,
+     ["phar_main_stone_mine_derivative_type_b"] = true,
+     ["phar_map_myc_resource_production_gold_mine_minor"] = true,
+     ["phar_map_myc_resource_production_stone_mine_minor"] = true
+}
+
+event_listener_functions.character_traits.building_superchains.province_management = {
+     ["phar_main_all_province_management_influence_type_b"] = true,
+     ["phar_main_amenmesse_province_management_main_building_production_boost_growth"] = true,
+     ["phar_main_bay_province_management_happiness"] = true,
+     ["phar_main_bay_province_management_main_building_diplomatic_relations"] = true,
+     ["phar_main_bay_province_management_production_boost_overall"] = true,
+     ["phar_main_irsu_province_management_main_building_loot_boost"] = true,
+     ["phar_main_irsu_province_management_main_building_production_boost"] = true,
+     ["phar_main_irsu_province_management_production_boost"] = true,
+     ["phar_main_ram_province_management_influence_happiness"] = true,
+     ["phar_main_ram_province_management_production_boost_happiness"] = true,
+     ["phar_main_seti_province_management_main_building_legitimacy_influence_boost"] = true,
+     ["phar_main_seti_province_management_main_building_production_boost_overall"] = true,
+     ["phar_main_suppi_province_management_growth"] = true,
+     ["phar_map_all_province_management_main_building_minor_halt"] = true,
+     ["phar_map_bab_province_management_gold_diplomacy"] = true,
+     ["phar_map_bab_province_management_happiness_growth_type_a"] = true,
+     ["phar_map_bab_province_management_happiness_influence_type_b"] = true,
+     ["phar_map_bab_province_management_influence_roads_type_a"] = true,
+     ["phar_map_bab_province_management_main_building_poc_production_influence"] = true,
+     ["phar_map_bab_province_management_main_building_production_influence"] = true,
+     ["phar_map_bab_province_management_workforce_build_time"] = true,
+     ["phar_sea_peleset_province_management_influence_xp_per_turn_native_settled"] = true,
+     ["phar_sea_peleset_province_management_movement_production_boost"] = true,
+     ["phar_sea_sherden_province_management_growth_production_adjacent"] = true,
+     ["phar_main_all_landmark_production_boost_emar"] = true,
+     ["phar_main_all_landmark_production_boost_tarsus"] = true,
+     ["phar_main_all_landmark_production_boost_thebes"] = true,
+     ["phar_main_all_landmark_legitimacy_influence_megiddo"] = true,
+     ["phar_main_all_landmark_legitimacy_influence_amarna"] = true,
+     ["phar_main_major_main_building_poc_production_boost_overall"] = true,
+     ["phar_main_major_main_building_production_boost_overall"] = true,
+     ["phar_main_major_main_building_legitimacy_influence_boost"] = true,
+     ["phar_main_major_poc_main_building_legitimacy_influence_boost"] = true,
+     ["phar_map_major_poc_main_building_happiness_boost"] = true,
+     ["phar_map_wil_major_main_building_happiness_boost"] = true
+}
+
 --- Applies a trait to a character with a percentage chance of success.
 --- @index_pos 1
 --- @param character CHARACTER_SCRIPT_INTERFACE #Character object of the target character.
@@ -645,7 +991,6 @@ function event_listener_functions:pillage_and_conquest()
           end
      end, true)
 end
-
 function event_listener_functions:faction_leaders()
      -----------------------------------------------
      ---- FACTION LEADER DECLARES WAR AND PEACE ----
@@ -1013,7 +1358,6 @@ function event_listener_functions:misc()
      end, true)
 
 end
-
 function event_listener_functions:emergent_traits()
      ---------------------------------------------------
      ---- RANDOM TRAITS WHEN CHARACTER COMES OF AGE ----
@@ -1100,9 +1444,8 @@ function event_listener_functions:characters_in_regions()
           local province = character:region():province()
           local contested = false
           for i = 0, province:region_list():num_items() - 1 do
-            if not character:region():is_null_interface() and not region:is_abandoned()
-                and not character:region():owning_faction():command_queue_index() == character:faction():command_queue_index()
-			  then
+               if not character:region():is_null_interface() and not region:is_abandoned() and not character:region():owning_faction():command_queue_index() ==
+                    character:faction():command_queue_index() then
                     contested = true
                     break
                end
@@ -1441,363 +1784,16 @@ function event_listener_functions:provincial_construction()
      end, true)
 end
 
-event_listener_functions.character_traits.character_creation_traits = {
-     "phar_main_trait_ambitious", "phar_main_trait_barbaric", "phar_main_trait_blunt", "phar_main_trait_brave", "phar_main_trait_cautious", "phar_main_trait_confident",
-     "phar_main_trait_content", "phar_main_trait_cooperative", "phar_main_trait_cowardly", "phar_main_trait_cruel", "phar_main_trait_cultured",
-     "phar_main_trait_hesitant", "phar_main_trait_individualistic", "phar_main_trait_irreverent", "phar_main_trait_materialistic", "phar_main_trait_merciful",
-     "phar_main_trait_reckless", "phar_main_trait_respectful", "phar_main_trait_spiritual", "phar_main_trait_underhanded", "character_traits_expansion_trait_degenerate",
-     "character_traits_expansion_trait_scout", "character_traits_expansion_trait_attacking_victory", "character_traits_expansion_trait_attacking_defeat",
-     "character_traits_expansion_trait_defending_defeat", "character_traits_expansion_trait_defending_victory", "character_traits_expansion_trait_siege_victory",
-     "character_traits_expansion_trait_siege_defeat", "character_traits_expansion_trait_siege_defense_victory", "character_traits_expansion_trait_sober",
-     "character_traits_expansion_trait_drink", "character_traits_expansion_trait_girls", "character_traits_expansion_trait_arse",
-     "character_traits_expansion_trait_gambler", "character_traits_expansion_trait_bloody", "character_traits_expansion_trait_inbred",
-     "character_traits_expansion_trait_popular", "character_traits_expansion_trait_unpopular", "character_traits_expansion_trait_lucky",
-     "character_traits_expansion_trait_unlucky", "character_traits_expansion_trait_farmer_good", "character_traits_expansion_trait_farmer_bad",
-     "character_traits_expansion_trait_bereaved", "character_traits_expansion_trait_mad", "character_traits_expansion_trait_healthy",
-     "character_traits_expansion_trait_blighted", "character_traits_expansion_trait_sea_legs", "character_traits_expansion_trait_feck",
-     "character_traits_expansion_trait_survivor", "character_traits_expansion_trait_admin_good", "character_traits_expansion_trait_admin_bad",
-     "character_traits_expansion_trait_miner", "character_traits_expansion_trait_military_admin_good", "character_traits_expansion_trait_military_admin_bad",
-     "character_traits_expansion_trait_warmonger", "character_traits_expansion_trait_pacifist", "character_traits_expansion_trait_corrupt",
-     "character_traits_expansion_trait_noctophilia", "character_traits_expansion_trait_noctophobia", "character_traits_expansion_trait_slothful",
-     "character_traits_expansion_trait_energetic", "character_traits_expansion_trait_charismatic", "character_traits_expansion_trait_boring",
-     "character_traits_expansion_trait_trusting", "character_traits_expansion_trait_paranoia", "character_traits_expansion_trait_pragmatic",
-     "character_traits_expansion_trait_superstitious", "character_traits_expansion_trait_anger", "character_traits_expansion_trait_attractive",
-     "character_traits_expansion_trait_ugly", "character_traits_expansion_trait_prophetic", "character_traits_expansion_trait_authoritarian",
-     "character_traits_expansion_trait_liberal", "character_traits_expansion_trait_fertile", "character_traits_expansion_trait_barren",
-     "character_traits_expansion_trait_scarred", "character_traits_expansion_trait_criminal", "character_traits_expansion_trait_blind"
-}
-
--- UNUSED IN CODE! This is for db naming consistency only. Can safely be deleted/commented out once mod is finished.
-event_listener_functions.character_traits.character_trait_expansion = {
-     "character_traits_expansion_trait_degenerate", "character_traits_expansion_trait_scout", "character_traits_expansion_trait_attacking_victory",
-     "character_traits_expansion_trait_attacking_defeat", "character_traits_expansion_trait_defending_defeat", "character_traits_expansion_trait_defending_victory",
-     "character_traits_expansion_trait_siege_victory", "character_traits_expansion_trait_siege_defeat", "character_traits_expansion_trait_siege_defense_victory",
-     "character_traits_expansion_trait_wins_against_canaan", "character_traits_expansion_trait_wins_against_hatti", "character_traits_expansion_trait_wins_against_egypt",
-     "character_traits_expansion_trait_wins_against_sea_peoples", "character_traits_expansion_trait_wins_against_mesopotamian",
-     "character_traits_expansion_trait_wins_against_danaans", "character_traits_expansion_trait_wins_against_trojans",
-     "character_traits_expansion_trait_defeats_against_canaan", "character_traits_expansion_trait_defeats_against_hatti",
-     "character_traits_expansion_trait_defeats_against_egypt", "character_traits_expansion_trait_defeats_against_sea_peoples",
-     "character_traits_expansion_trait_defeats_against_mesopotamian", "character_traits_expansion_trait_defeats_against_danaans",
-     "character_traits_expansion_trait_defeats_against_trojans", "character_traits_expansion_trait_disciplinarian", "character_traits_expansion_trait_bad_disciplinarian",
-     "character_traits_expansion_trait_sober", "character_traits_expansion_trait_drink", "character_traits_expansion_trait_girls",
-     "character_traits_expansion_trait_arse", "character_traits_expansion_trait_gambler", "character_traits_expansion_trait_bloody",
-     "character_traits_expansion_trait_inbred", "character_traits_expansion_trait_popular", "character_traits_expansion_trait_unpopular",
-     "character_traits_expansion_trait_lucky", "character_traits_expansion_trait_unlucky", "character_traits_expansion_trait_farmer_good",
-     "character_traits_expansion_trait_farmer_bad", "character_traits_expansion_trait_bereaved", "character_traits_expansion_trait_mad",
-     "character_traits_expansion_trait_healthy", "character_traits_expansion_trait_blighted", "character_traits_expansion_trait_sea_legs",
-     "character_traits_expansion_trait_feck", "character_traits_expansion_trait_survivor", "character_traits_expansion_trait_admin_good",
-     "character_traits_expansion_trait_admin_bad", "character_traits_expansion_trait_miner", "character_traits_expansion_trait_military_admin_good",
-     "character_traits_expansion_trait_military_admin_bad", "character_traits_expansion_trait_warmonger", "character_traits_expansion_trait_pacifist",
-     "character_traits_expansion_trait_cuckold", "character_traits_expansion_trait_corrupt", "character_traits_expansion_trait_factionkiller",
-     "character_traits_expansion_trait_noctophilia", "character_traits_expansion_trait_noctophobia", "character_traits_expansion_trait_slothful",
-     "character_traits_expansion_trait_energetic", "character_traits_expansion_trait_charismatic", "character_traits_expansion_trait_boring",
-     "character_traits_expansion_trait_trusting", "character_traits_expansion_trait_paranoia", "character_traits_expansion_trait_pragmatic",
-     "character_traits_expansion_trait_superstitious", "character_traits_expansion_trait_anger", "character_traits_expansion_trait_attractive",
-     "character_traits_expansion_trait_ugly", "character_traits_expansion_trait_prophetic", "character_traits_expansion_trait_authoritarian",
-     "character_traits_expansion_trait_liberal", "character_traits_expansion_trait_fertile", "character_traits_expansion_trait_barren",
-     "character_traits_expansion_trait_scarred", "character_traits_expansion_trait_criminal", "character_traits_expansion_trait_blind",
-     "character_traits_expansion_trait_heretic"
-}
-
-local percent_chance = event_listener_functions.character_traits.coming_of_age_percent_chance
--- Traits allowed to trigger when character comes of age
-event_listener_functions.character_traits.coming_of_age_traits = {
-     ["phar_main_trait_ambitious"] = percent_chance,
-     ["phar_main_trait_barbaric"] = percent_chance,
-     ["phar_main_trait_blunt"] = percent_chance,
-     ["phar_main_trait_brave"] = percent_chance,
-     ["phar_main_trait_cautious"] = percent_chance,
-     ["phar_main_trait_content"] = percent_chance,
-     ["phar_main_trait_cooperative"] = percent_chance,
-     ["phar_main_trait_cowardly"] = percent_chance,
-     ["phar_main_trait_cruel"] = percent_chance,
-     ["phar_main_trait_cultured"] = percent_chance,
-     ["phar_main_trait_hesitant"] = percent_chance,
-     ["phar_main_trait_individualistic"] = percent_chance,
-     ["phar_main_trait_irreverent"] = percent_chance,
-     ["phar_main_trait_materialistic"] = percent_chance,
-     ["phar_main_trait_merciful"] = percent_chance,
-     ["phar_main_trait_reckless"] = percent_chance,
-     ["phar_main_trait_respectful"] = percent_chance,
-     ["phar_main_trait_spiritual"] = percent_chance,
-     ["phar_main_trait_underhanded"] = percent_chance,
-     ["character_traits_expansion_trait_degenerate"] = percent_chance,
-     ["character_traits_expansion_trait_scout"] = percent_chance,
-     ["character_traits_expansion_trait_attacking_victory"] = percent_chance,
-     ["character_traits_expansion_trait_attacking_defeat"] = percent_chance,
-     ["character_traits_expansion_trait_defending_defeat"] = percent_chance,
-     ["character_traits_expansion_trait_defending_victory"] = percent_chance,
-     ["character_traits_expansion_trait_siege_victory"] = percent_chance,
-     ["character_traits_expansion_trait_siege_defeat"] = percent_chance,
-     ["character_traits_expansion_trait_siege_defense_victory"] = percent_chance,
-     ["character_traits_expansion_trait_sober"] = percent_chance,
-     ["character_traits_expansion_trait_drink"] = percent_chance,
-     ["character_traits_expansion_trait_girls"] = percent_chance,
-     ["character_traits_expansion_trait_arse"] = percent_chance,
-     ["character_traits_expansion_trait_gambler"] = percent_chance,
-     ["character_traits_expansion_trait_bloody"] = percent_chance,
-     ["character_traits_expansion_trait_inbred"] = percent_chance,
-     ["character_traits_expansion_trait_popular"] = percent_chance,
-     ["character_traits_expansion_trait_unpopular"] = percent_chance,
-     ["character_traits_expansion_trait_lucky"] = percent_chance,
-     ["character_traits_expansion_trait_unlucky"] = percent_chance,
-     ["character_traits_expansion_trait_farmer_good"] = percent_chance,
-     ["character_traits_expansion_trait_farmer_bad"] = percent_chance,
-     ["character_traits_expansion_trait_mad"] = percent_chance,
-     ["character_traits_expansion_trait_healthy"] = percent_chance,
-     ["character_traits_expansion_trait_blighted"] = percent_chance,
-     ["character_traits_expansion_trait_sea_legs"] = percent_chance,
-     ["character_traits_expansion_trait_feck"] = percent_chance,
-     ["character_traits_expansion_trait_survivor"] = percent_chance,
-     ["character_traits_expansion_trait_admin_good"] = percent_chance,
-     ["character_traits_expansion_trait_admin_bad"] = percent_chance,
-     ["character_traits_expansion_trait_miner"] = percent_chance,
-     ["character_traits_expansion_trait_military_admin_good"] = percent_chance,
-     ["character_traits_expansion_trait_military_admin_bad"] = percent_chance,
-     ["character_traits_expansion_trait_warmonger"] = percent_chance,
-     ["character_traits_expansion_trait_pacifist"] = percent_chance,
-     ["character_traits_expansion_trait_corrupt"] = percent_chance,
-     ["character_traits_expansion_trait_noctophilia"] = percent_chance,
-     ["character_traits_expansion_trait_noctophobia"] = percent_chance,
-     ["character_traits_expansion_trait_slothful"] = percent_chance,
-     ["character_traits_expansion_trait_energetic"] = percent_chance,
-     ["character_traits_expansion_trait_charismatic"] = percent_chance,
-     ["character_traits_expansion_trait_boring"] = percent_chance,
-     ["character_traits_expansion_trait_trusting"] = percent_chance,
-     ["character_traits_expansion_trait_paranoia"] = percent_chance,
-     ["character_traits_expansion_trait_pragmatic"] = percent_chance,
-     ["character_traits_expansion_trait_superstitious"] = percent_chance,
-     ["character_traits_expansion_trait_anger"] = percent_chance,
-     ["character_traits_expansion_trait_attractive"] = percent_chance,
-     ["character_traits_expansion_trait_ugly"] = percent_chance,
-     ["character_traits_expansion_trait_prophetic"] = percent_chance,
-     ["character_traits_expansion_trait_authoritarian"] = percent_chance,
-     ["character_traits_expansion_trait_liberal"] = percent_chance,
-     ["character_traits_expansion_trait_fertile"] = percent_chance,
-     ["character_traits_expansion_trait_barren"] = percent_chance,
-     ["character_traits_expansion_trait_scarred"] = percent_chance,
-     ["character_traits_expansion_trait_criminal"] = percent_chance,
-     ["character_traits_expansion_trait_blind"] = percent_chance,
-     ["character_traits_expansion_trait_wins_against_canaan"] = 0,
-     ["character_traits_expansion_trait_wins_against_danaans"] = 0,
-     ["character_traits_expansion_trait_wins_against_egypt"] = 0,
-     ["character_traits_expansion_trait_wins_against_hatti"] = 0,
-     ["character_traits_expansion_trait_wins_against_mesopotamian"] = 0,
-     ["character_traits_expansion_trait_wins_against_sea_peoples"] = 0,
-     ["character_traits_expansion_trait_wins_against_trojans"] = 0,
-     ["character_traits_expansion_trait_defeats_against_canaan"] = 0,
-     ["character_traits_expansion_trait_defeats_against_danaans"] = 0,
-     ["character_traits_expansion_trait_defeats_against_egypt"] = 0,
-     ["character_traits_expansion_trait_defeats_against_hatti"] = 0,
-     ["character_traits_expansion_trait_defeats_against_mesopotamian"] = 0,
-     ["character_traits_expansion_trait_defeats_against_sea_peoples"] = 0,
-     ["character_traits_expansion_trait_defeats_against_trojans"] = 0
-}
-
--- Traits allowed to trigger for any character on any given turn
-event_listener_functions.character_traits.emergent_traits = {
-     "character_traits_expansion_trait_degenerate", "character_traits_expansion_trait_unlucky", "character_traits_expansion_trait_lucky"
-}
-
-event_listener_functions.character_traits.faction_to_culture_pairs = {
-     ["phar_main_clt_canaan"] = "canaan",
-     ["phar_main_clt_hatti"] = "hatti",
-     ["phar_main_clt_kemet"] = "egypt",
-     ["phar_main_clt_sea_peoples"] = "sea_peoples",
-     ["phar_map_clt_mesopotamian"] = "mesopotamian",
-     ["troy_main_clt_danaans"] = "danaans",
-     ["troy_main_clt_trojans"] = "trojans"
-}
-
-event_listener_functions.character_traits.legendary_lords_defeated = {
-     ["phar_hero_can_bay_bay"] = "character_traits_expansion_trait_defeated_bay",
-     ["phar_hero_can_irs_irsu"] = "character_traits_expansion_trait_defeated_irsu",
-     ["phar_hero_egy_ame_amenmesse"] = "character_traits_expansion_trait_defeated_amenmesse",
-     ["phar_hero_egy_mer_merneptah"] = "character_traits_expansion_trait_defeated_merneptah",
-     ["phar_hero_egy_ram_ramesses"] = "character_traits_expansion_trait_defeated_ramesses",
-     ["phar_hero_egy_set_seti"] = "character_traits_expansion_trait_defeated_seti",
-     ["phar_hero_egy_setn_setnakhte"] = "character_traits_expansion_trait_defeated_setnakhte",
-     ["phar_hero_egy_tau_tausret"] = "character_traits_expansion_trait_defeated_tausret",
-     ["phar_hero_hit_hat_suppiluliuma"] = "character_traits_expansion_trait_defeated_suppiluliuma",
-     ["phar_hero_hit_tarh_kurunta"] = "character_traits_expansion_trait_defeated_kurunta",
-     ["phar_map_hero_ach_achilles"] = "character_traits_expansion_trait_defeated_achilles",
-     ["phar_map_hero_ach_agamemnon"] = "character_traits_expansion_trait_defeated_agamemnon",
-     ["phar_map_hero_ach_ajax"] = "character_traits_expansion_trait_defeated_ajax",
-     ["phar_map_hero_ach_diomedes"] = "character_traits_expansion_trait_defeated_diomedes",
-     ["phar_map_hero_ach_menelaus"] = "character_traits_expansion_trait_defeated_menelaus",
-     ["phar_map_hero_ach_odysseus"] = "character_traits_expansion_trait_defeated_odysseus",
-     ["phar_map_hero_ash_ninurta"] = "character_traits_expansion_trait_defeated_ninurta",
-     ["phar_map_hero_bab_adad"] = "character_traits_expansion_trait_defeated_adad",
-     ["phar_map_hero_egy_memnon"] = "character_traits_expansion_trait_defeated_memnon",
-     ["phar_map_hero_thr_rhesus"] = "character_traits_expansion_trait_defeated_rhesus",
-     ["phar_map_hero_tro_aeneas"] = "character_traits_expansion_trait_defeated_aeneas",
-     ["phar_map_hero_tro_hector"] = "character_traits_expansion_trait_defeated_hector",
-     ["phar_map_hero_tro_paris"] = "character_traits_expansion_trait_defeated_paris",
-     ["phar_map_hero_tro_priam"] = "character_traits_expansion_trait_defeated_priam",
-     ["phar_map_hero_tro_sarpedon"] = "character_traits_expansion_trait_defeated_sarpedon",
-     ["phar_sea_hero_iol_iolaos"] = "character_traits_expansion_trait_defeated_iolaos",
-     ["phar_sea_hero_wal_walwetes"] = "character_traits_expansion_trait_defeated_walwetes"
-}
-
-event_listener_functions.character_traits.self_perpetuating_traits = {
-     "character_traits_expansion_trait_mad", "character_traits_expansion_trait_degenerate", "character_traits_expansion_trait_sober",
-     "character_traits_expansion_trait_drink", "character_traits_expansion_trait_girls", "character_traits_expansion_trait_arse",
-     "character_traits_expansion_trait_gambler", "character_traits_expansion_trait_feck", "character_traits_expansion_trait_corrupt",
-     "character_traits_expansion_trait_blighted", "character_traits_expansion_trait_cuckold", "character_traits_expansion_trait_slothful",
-     "character_traits_expansion_trait_boring", "character_traits_expansion_trait_trusting", "character_traits_expansion_trait_paranoia",
-     "character_traits_expansion_trait_superstitious", "character_traits_expansion_trait_prophetic", "character_traits_expansion_trait_anger",
-     "phar_main_trait_respectful", "phar_main_trait_irreverent", "character_traits_expansion_trait_fertile", "character_traits_expansion_trait_barren",
-     "character_traits_expansion_trait_blind", "character_traits_expansion_trait_heretic"
-}
-
---- @class building_superchain_pairs_tables : table
-event_listener_functions.character_traits.building_superchains = {}
-
-event_listener_functions.character_traits.building_superchains.drinking = {
-     ["phar_main_happiness_type_b"] = true,
-     ["phar_map_bab_province_management_happiness_growth_type_a"] = true
-}
-
-event_listener_functions.character_traits.building_superchains.military_administration = {
-     ["phar_main_all_military_administration_cost_mod"] = true,
-     ["phar_main_military_administration_unit_training_type_a"] = true,
-     ["phar_main_military_administration_unit_training_type_b"] = true,
-     ["phar_main_kuru_military_administration_army_debuff"] = true,
-     ["phar_main_kuru_military_administration_unit_training_type_a"] = true,
-     ["phar_main_kuru_military_administration_unit_training_type_b"] = true,
-     ["phar_main_ram_military_administration_hero_training"] = true,
-     ["phar_main_seti_military_administration_cost_mod_recruit_slot_type_a"] = true,
-     ["phar_main_seti_military_administration_cost_mod_recruit_slot_type_b"] = true,
-     ["phar_main_suppi_military_administration_army_buff"] = true,
-     ["phar_main_suppi_military_administration_garrison_type_a"] = true,
-     ["phar_main_suppi_military_administration_garrison_type_b"] = true,
-     ["phar_main_military_garrison_type_b"] = true,
-     ["phar_main_all_military_administration_hero_training"] = true,
-     ["phar_map_military_administration_unit_training_type_b_wilusa_province"] = true,
-     ["phar_sea_administration_commandment_modifier"] = true,
-     ["phar_sea_administration_factionwide_production"] = true,
-     ["phar_sea_administration_happiness_influence"] = true,
-     ["phar_sea_military_administration_hero_training_unit_cost_mod_native_settled"] = true,
-     ["phar_sea_military_administration_unit_ring_settled_native"] = true,
-     ["phar_sea_peleset_military_administration_weapon_damage_armour"] = true,
-     ["phar_sea_sherden_military_administration_charge_melee_attack_native"] = true
-}
-
-event_listener_functions.character_traits.building_superchains.food = {
-     ["phar_main_farm_type_a_hattusa_derivative"] = true,
-     ["phar_main_farm_type_a_canaan"] = true,
-     ["phar_main_farm_type_a_canaan_derivative"] = true,
-     ["phar_main_farm_type_a_hattusa"] = true,
-     ["phar_main_farm_type_a_nile"] = true,
-     ["phar_main_farm_type_b_nile"] = true,
-     ["phar_main_farm_type_c_nile"] = true,
-     ["phar_main_irsu_resource_production_food_farm"] = true,
-     ["phar_main_irsu_resource_production_food_farm_derivative"] = true,
-     ["phar_main_irsu_resource_production_food_farm_nile_type_a"] = true,
-     ["phar_main_irsu_resource_production_food_farm_nile_type_b"] = true,
-     ["phar_main_irsu_resource_production_food_farm_nile_type_c"] = true,
-     ["phar_map_all_resource_production_food_farm_type_a_mesopotamia"] = true,
-     ["phar_map_all_resource_production_food_farm_type_a_mesopotamia_derivative"] = true,
-     ["phar_map_all_resource_production_food_farm_type_b_mesopotamia"] = true,
-     ["phar_map_all_resource_production_food_farm_type_b_mesopotamia_derivative"] = true,
-     ["phar_map_farm_achaea_derivative"] = true,
-     ["phar_map_farm_assuwa_derivative"] = true,
-     ["phar_map_farm_thrace_derivative"] = true,
-     ["phar_map_food_farm_aegean"] = true,
-     ["phar_map_myc_resource_production_food_farm_minor"] = true,
-     ["troy_main_ody_settlements_farm_myth_harpies"] = true,
-     ["troy_main_ody_settlement_farm_myth_giants"] = true,
-     ["troy_main_ody_settlement_farm_myth_sirens"] = true,
-     ["troy_main_farm_bull"] = true,
-     ["troy_main_settlement_farm"] = true,
-     ["troy_main_settlement_farm_sea"] = true,
-     ["phar_main_food_cattle_canaan"] = true,
-     ["phar_main_food_cattle_hattusa"] = true,
-     ["phar_main_irsu_resource_production_food_cattle"] = true,
-     ["phar_map_all_resource_production_food_cattle_mesopotamia"] = true,
-     ["phar_map_food_cattle_aegean"] = true
-}
-
-event_listener_functions.character_traits.building_superchains.gold = {
-     ["phar_main_all_resource_production_gold_mine_nile"] = true,
-     ["phar_main_amenmesse_resource_production_gold_mine"] = true,
-     ["phar_main_gold_mine"] = true,
-     ["phar_main_gold_mine_derivative_type_b"] = true,
-     ["phar_main_irsu_resource_production_gold_mine"] = true,
-     ["phar_main_irsu_resource_production_gold_mine_derivative_type_b"] = true,
-     ["phar_map_myc_resource_production_gold_mine_minor"] = true
-}
-
-event_listener_functions.character_traits.building_superchains.mines = {
-     ["phar_main_all_resource_production_bronze_mine_nile"] = true,
-     ["phar_main_all_resource_production_gold_mine_nile"] = true,
-     ["phar_main_all_resource_production_stone_mine_nile"] = true,
-     ["phar_main_amenmesse_resource_production_gold_mine"] = true,
-     ["phar_main_bronze_mine"] = true,
-     ["phar_main_bronze_mine_derivative_type_a"] = true,
-     ["phar_main_bronze_mine_type_b"] = true,
-     ["phar_main_gold_mine"] = true,
-     ["phar_main_gold_mine_derivative_type_b"] = true,
-     ["phar_main_irsu_resource_production_gold_mine"] = true,
-     ["phar_main_irsu_resource_production_gold_mine_derivative_type_b"] = true,
-     ["phar_main_irsu_resource_production_stone_mine"] = true,
-     ["phar_main_irsu_resource_production_stone_mine_derivative_type_a"] = true,
-     ["phar_main_stone_mine"] = true,
-     ["phar_main_stone_mine_derivative_type_a"] = true,
-     ["phar_main_stone_mine_derivative_type_b"] = true,
-     ["phar_map_myc_resource_production_gold_mine_minor"] = true,
-     ["phar_map_myc_resource_production_stone_mine_minor"] = true
-}
-
-event_listener_functions.character_traits.building_superchains.province_management = {
-     ["phar_main_all_province_management_influence_type_b"] = true,
-     ["phar_main_amenmesse_province_management_main_building_production_boost_growth"] = true,
-     ["phar_main_bay_province_management_happiness"] = true,
-     ["phar_main_bay_province_management_main_building_diplomatic_relations"] = true,
-     ["phar_main_bay_province_management_production_boost_overall"] = true,
-     ["phar_main_irsu_province_management_main_building_loot_boost"] = true,
-     ["phar_main_irsu_province_management_main_building_production_boost"] = true,
-     ["phar_main_irsu_province_management_production_boost"] = true,
-     ["phar_main_ram_province_management_influence_happiness"] = true,
-     ["phar_main_ram_province_management_production_boost_happiness"] = true,
-     ["phar_main_seti_province_management_main_building_legitimacy_influence_boost"] = true,
-     ["phar_main_seti_province_management_main_building_production_boost_overall"] = true,
-     ["phar_main_suppi_province_management_growth"] = true,
-     ["phar_map_all_province_management_main_building_minor_halt"] = true,
-     ["phar_map_bab_province_management_gold_diplomacy"] = true,
-     ["phar_map_bab_province_management_happiness_growth_type_a"] = true,
-     ["phar_map_bab_province_management_happiness_influence_type_b"] = true,
-     ["phar_map_bab_province_management_influence_roads_type_a"] = true,
-     ["phar_map_bab_province_management_main_building_poc_production_influence"] = true,
-     ["phar_map_bab_province_management_main_building_production_influence"] = true,
-     ["phar_map_bab_province_management_workforce_build_time"] = true,
-     ["phar_sea_peleset_province_management_influence_xp_per_turn_native_settled"] = true,
-     ["phar_sea_peleset_province_management_movement_production_boost"] = true,
-     ["phar_sea_sherden_province_management_growth_production_adjacent"] = true,
-     ["phar_main_all_landmark_production_boost_emar"] = true,
-     ["phar_main_all_landmark_production_boost_tarsus"] = true,
-     ["phar_main_all_landmark_production_boost_thebes"] = true,
-     ["phar_main_all_landmark_legitimacy_influence_megiddo"] = true,
-     ["phar_main_all_landmark_legitimacy_influence_amarna"] = true,
-     ["phar_main_major_main_building_poc_production_boost_overall"] = true,
-     ["phar_main_major_main_building_production_boost_overall"] = true,
-     ["phar_main_major_main_building_legitimacy_influence_boost"] = true,
-     ["phar_main_major_poc_main_building_legitimacy_influence_boost"] = true,
-     ["phar_map_major_poc_main_building_happiness_boost"] = true,
-     ["phar_map_wil_major_main_building_happiness_boost"] = true
-}
-
 -- ! Come back to this when I can unfuck it!
---[[
 --------------------------------------------
 --- BEGIN MODIFYING PHAR_CAMPAIGN_TRAITS.LUA
 --------------------------------------------
 --- Ensure the script runs after the vanilla script has executed. Modifies the campaign_traits.config class to increase max_num_traits as well as other changes.
-function event_listener_functions:modify_phar_campaign_traits()
+function event_listener_functions.character_traits:modify_phar_campaign_traits()
      cm:add_first_tick_callback(function()
           -- Check if the config table exists to avoid any potential errors
           if campaign_traits and campaign_traits.config then
-               campaign_traits.config.max_num_traits = 50
+               campaign_traits.config.max_num_traits = 20
                out("Character Traits Expansion: max_num_traits has been set to " .. campaign_traits.config.max_num_traits)
           else
                out("Character Traits Expansion: event_listener_functions:modify_phar_campaign_traits Failed to find campaign_traits.config")
@@ -1805,9 +1801,7 @@ function event_listener_functions:modify_phar_campaign_traits()
 
           -- Injects my custom traits into the vanilla civilian_traits table so I don't need to worry about giving traits to them.
           if campaign_traits and campaign_traits.config.civilian_traits then
-               for i = 1, #self.character_creation_traits.emergent_traits do
-                    table.insert(campaign_traits.config.civilian_traits, self.character_traits.emergent_traits[i])
-               end
+               for i = 1, #self.emergent_traits do table.insert(campaign_traits.config.civilian_traits, self.emergent_traits[i]) end
           end
 
           -- Making changes to the vanilla traits and their triggers. For now, many are left alone, but others are given new listeners and triggers. This may eventually change.
@@ -2445,13 +2439,13 @@ function event_listener_functions:modify_phar_campaign_traits()
           core:remove_listener("phar_personality_traits_character_suffered_attrition") -- ambitious
      end)
 end
-]] --
 
+--[[
 --------------------------------------------
 --- BEGIN MODIFYING PHAR_CAMPAIGN_TRAITS.LUA
 --------------------------------------------
 --- Ensure the script runs after the vanilla script has executed. Modifies the campaign_traits.config class to increase max_num_traits as well as other changes.
-function event_listener_functions:modify_phar_campaign_traits()
+function event_listener_functions.character_traits:modify_phar_campaign_traits()
      cm:add_first_tick_callback(function()
           -- Check if the config table exists to avoid any potential errors
           if campaign_traits and campaign_traits.config then
@@ -2461,19 +2455,9 @@ function event_listener_functions:modify_phar_campaign_traits()
                out("Character Traits Expansion:: Failed to find campaign_traits.config")
           end
 
-          --[[
-			if campaign_traits and campaign_traits.config.civilian_traits then
-				for i = 1, #self.character_creation_traits.emergent_traits do
-					table.insert(campaign_traits.config.civilian_traits, self.character_traits.emergent_traits[i])
-				end
-			end
-		]] --
-
           -- Injects my custom traits into the vanilla civilian_traits table so I don't need to worry about giving traits to them.
           if campaign_traits and campaign_traits.config.civilian_traits then
-               for i = 1, #self.character_creation_traits.emergent_traits do
-                    table.insert(campaign_traits.config.civilian_traits, self.character_traits.emergent_traits[i])
-               end
+               for i = 1, #self.emergent_traits do table.insert(campaign_traits.config.civilian_traits, self.emergent_traits[i]) end
           end
 
           -- Making changes to the vanilla traits and their triggers. For now, many are left alone, but others are given new listeners and triggers. This may eventually change.
@@ -2539,13 +2523,14 @@ function event_listener_functions:modify_phar_campaign_traits()
           core:remove_listener("phar_personality_traits_character_suffered_attrition") -- ambitious
      end)
 end
+]] --
 
 --------------------------------------------
 --- FIRE EVERY LISTENER WE HAVE!
 --------------------------------------------
 --- Launches all trait assignment event listener functions.
 function event_listener_functions:start_all()
-     self:modify_phar_campaign_traits()
+     self.character_traits:modify_phar_campaign_traits()
      self:ancient_legacies()
      self:characters_in_regions()
      self:battle()
