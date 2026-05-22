@@ -1784,8 +1784,10 @@ event_listener_functions.character_traits.building_superchains.province_manageme
      ["phar_map_wil_major_main_building_happiness_boost"] = true
 }
 
+-- ! Come back to this when I can unfuck it!
+--[[
 --------------------------------------------
---- BEGIN MODIFYING PHAR_CAMPAIGN_TRAITS.LUA 
+--- BEGIN MODIFYING PHAR_CAMPAIGN_TRAITS.LUA
 --------------------------------------------
 --- Ensure the script runs after the vanilla script has executed. Modifies the campaign_traits.config class to increase max_num_traits as well as other changes.
 function event_listener_functions:modify_phar_campaign_traits()
@@ -2411,6 +2413,100 @@ function event_listener_functions:modify_phar_campaign_traits()
           end
 
           -- Removes the original listener(s) and then re-adds some so I can play with them without direct edits to phar_campaign_
+          core:remove_listener("phar_personality_traits_character_spent_turn_in_enemy_region") -- confident
+          core:remove_listener("phar_personality_traits_character_won_defensive_battle") -- hesitant
+          core:remove_listener("phar_personality_traits_character_being_lazy_in_owned_settlement_high_public_order") -- respectful
+          core:remove_listener("phar_personality_traits_character_being_lazy_in_owned_settlement_low_public_order") -- irreverent
+          core:remove_listener("phar_personality_traits_character_suffered_high_casualties_in_battle") -- unused in vanilla
+          core:remove_listener("phar_personality_traits_character_routed_in_battle") -- unused in vanilla
+          core:remove_listener("phar_personality_traits_character_post_battle_release_generic") -- merciful
+          core:remove_listener("phar_personality_traits_character_post_battle_enslave_generic") -- unused in vanilla
+          core:remove_listener("phar_personality_traits_character_executed_captives") -- cruel
+          core:remove_listener("phar_personality_traits_character_bodyguard_suffered_casualties") -- reckless and cautious
+          core:remove_listener("phar_personality_traits_character_prayed_at_ers") -- spiritual
+          core:remove_listener("phar_personality_traits_character_interacted_with_non_shrine_ers") -- materialistic
+          core:remove_listener("phar_personality_traits_character_spent_turns_in_raiding_stance") -- blunt
+          core:remove_listener("phar_personality_traits_character_spent_turn_in_ambush_stance") -- underhanded
+          core:remove_listener("phar_personality_traits_character_spent_turns_in_march_stance") -- ambitious
+          core:remove_listener("phar_personality_traits_character_spent_turn_recruiting") -- unused in vanilla
+          core:remove_listener("phar_personality_traits_character_spent_turns_in_encamp_stance") -- content
+          core:remove_listener("phar_personality_traits_character_sacked_settlement") -- barbaric
+          core:remove_listener("phar_personality_traits_character_razed_settlement") -- barbaric
+          core:remove_listener("phar_personality_traits_character_ends_turn_in_region_with_construction_shrine_building") -- spiritual
+          core:remove_listener("phar_personality_traits_character_present_for_construction") -- cultured
+          core:remove_listener("phar_personality_traits_character_fought_alone") -- individualistic
+          core:remove_listener("phar_personality_traits_character_reinforces_other_armies") -- cooperative
+          core:remove_listener("phar_personality_traits_character_beeing_reinforced") -- cooperative
+          core:remove_listener("phar_personality_traits_character_fought_battle_far_from_capital") -- individualistic
+          core:remove_listener("phar_personality_traits_character_sacks_or_razes_ers_shrine") -- barbaric and underhanded
+          core:remove_listener("phar_personality_traits_character_suffered_attrition") -- ambitious
+     end)
+end
+]] --
+
+--------------------------------------------
+--- BEGIN MODIFYING PHAR_CAMPAIGN_TRAITS.LUA
+--------------------------------------------
+--- Ensure the script runs after the vanilla script has executed. Modifies the campaign_traits.config class to increase max_num_traits as well as other changes.
+function event_listener_functions:modify_phar_campaign_traits()
+     cm:add_first_tick_callback(function()
+          -- Check if the config table exists to avoid any potential errors
+          if campaign_traits and campaign_traits.config then
+               campaign_traits.config.max_num_traits = 20
+               out("Character Traits Expansion: campaign_traits.config.max_num_traits has been set to " .. campaign_traits.config.max_num_traits)
+          else
+               out("Character Traits Expansion:: Failed to find campaign_traits.config")
+          end
+
+          --[[
+			if campaign_traits and campaign_traits.config.civilian_traits then
+				for i = 1, #self.character_creation_traits.emergent_traits do
+					table.insert(campaign_traits.config.civilian_traits, self.character_traits.emergent_traits[i])
+				end
+			end
+		]] --
+
+          -- Injects my custom traits into the vanilla civilian_traits table so I don't need to worry about giving traits to them.
+          if campaign_traits and campaign_traits.config.civilian_traits then
+               for i = 1, #self.character_creation_traits.emergent_traits do
+                    table.insert(campaign_traits.config.civilian_traits, self.character_traits.emergent_traits[i])
+               end
+          end
+
+          -- Making changes to the vanilla traits and their triggers. For now, many are left alone, but others are given new listeners and triggers. This may eventually change.
+          if campaign_traits and campaign_traits.config.traits_per_events then
+               campaign_traits.config.traits_per_events = {
+                    character_recruited_1h_melee_unit_spears = {[1] = {trait = "phar_main_trait_cautious", points = 2}},
+                    character_recruited_2h_melee_unit_infantry = {[1] = {trait = "phar_main_trait_reckless", points = 2}},
+                    character_recruited_khopeshi = {[1] = {trait = "phar_main_trait_brave", points = 2}},
+
+                    character_recruited_swordmen = {[1] = {trait = "phar_main_trait_brave", points = 2}},
+                    character_sacks_or_razes_port_settlement = {
+                         [1] = {trait = "phar_sea_special_colonizer", points = 2},
+                         [2] = {trait = "phar_sea_special_coastal_predator", points = 2}
+                    },
+                    character_won_battle = {
+                         [1] = {trait = "phar_main_trait_amenmesse", points = 0},
+                         [2] = {trait = "phar_main_trait_ramesses", points = 0},
+                         [3] = {trait = "phar_main_trait_tausret", points = 0},
+                         [4] = {trait = "phar_main_trait_bay", points = 0},
+                         [5] = {trait = "phar_main_trait_kurunta", points = 0},
+                         [6] = {trait = "phar_main_trait_irsu", points = 0},
+                         [7] = {trait = "phar_main_trait_suppiluliuma", points = 0},
+                         [8] = {trait = "phar_main_trait_seti", points = 0},
+                         [9] = {trait = "phar_sea_trait_iolas", points = 0},
+                         [10] = {trait = "phar_sea_trait_walwetes", points = 0}
+                    },
+
+                    character_won_battle_sea = {[1] = {trait = "phar_sea_special_sea_wolf", points = 2}},
+
+                    character_won_battle_sea_region_ports = {[1] = {trait = "phar_sea_special_coastal_ambusher", points = 2}}
+
+               }
+          end
+
+          -- Removes the original listener(s) and then re-adds some so I can play with them without direct edits to phar_campaign_traits.
+
           core:remove_listener("phar_personality_traits_character_spent_turn_in_enemy_region") -- confident
           core:remove_listener("phar_personality_traits_character_won_defensive_battle") -- hesitant
           core:remove_listener("phar_personality_traits_character_being_lazy_in_owned_settlement_high_public_order") -- respectful
