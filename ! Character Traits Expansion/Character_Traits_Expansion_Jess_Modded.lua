@@ -1,11 +1,10 @@
---* REGEX search keys:
---* (?!_trait_)(?!\.\.)(?!_)Character Traits Expansion:
---* (?!_trait_)(?!\.\.)(?!_)Character Traits Expansion:.*
---* (^(?!\.\.)(?!_)(?!_trait_)Character Traits Expansion:)
---* ^((?!.*\.\.)(?!.*_)(?!.*_trait_)(?!.*_traits_).*Character Traits Expansion).*
---*
---*
-
+-- * REGEX search keys:
+-- * (?!_trait_)(?!\.\.)(?!_)Character Traits Expansion:
+-- * (?!_trait_)(?!\.\.)(?!_)Character Traits Expansion:.*
+-- * (^(?!\.\.)(?!_)(?!_trait_)Character Traits Expansion:)
+-- * ^((?!.*\.\.)(?!.*_)(?!.*_trait_)(?!.*_traits_).*Character Traits Expansion).*
+-- *
+-- *
 --- @class trait_event_listener_table : table
 local event_listener_functions = {is_akhenaten_legacy_claimed = false}
 
@@ -138,7 +137,8 @@ function event_listener_functions:battle()
                local defender_faction = defender:faction()
                if defender_faction:num_regions() <= 1 then
                     potential_faction_killers[defender_faction:name()] = attacker
-                    out("Character Traits Expansion: PotentialFactionKiller: Attacker " .. attacker:onscreen_name() .. " might destroy faction " .. defender_faction:name())
+                    out("Character Traits Expansion: PotentialFactionKiller: Attacker " .. attacker:onscreen_name() .. " might destroy faction " ..
+                             defender_faction:name())
                end
           end
 
@@ -147,7 +147,8 @@ function event_listener_functions:battle()
                local attacker_faction = attacker:faction()
                if attacker_faction:num_regions() <= 1 then
                     potential_faction_killers[attacker_faction:name()] = defender
-                    out("Character Traits Expansion: PotentialFactionKiller: Defender " .. defender:onscreen_name() .. " might destroy faction " .. attacker_faction:name())
+                    out("Character Traits Expansion: PotentialFactionKiller: Defender " .. defender:onscreen_name() .. " might destroy faction " ..
+                             attacker_faction:name())
                end
           end
      end, true)
@@ -1783,7 +1784,6 @@ event_listener_functions.character_traits.building_superchains.province_manageme
      ["phar_map_wil_major_main_building_happiness_boost"] = true
 }
 
-
 --------------------------------------------
 --- BEGIN MODIFYING PHAR_CAMPAIGN_TRAITS.LUA 
 --------------------------------------------
@@ -1924,10 +1924,7 @@ function event_listener_functions:modify_phar_campaign_traits()
                               character_post_battle_release_generic = {phar_main_trait_merciful = 3, phar_main_trait_materialistic = 5},
                               character_sacked_settlement = {phar_main_trait_barbaric = 3},
                               character_being_lazy_in_owned_settlement_high_public_order = {phar_main_trait_respectful = 3, phar_main_trait_hesitant = 3},
-                              character_being_lazy_in_owned_settlement_low_public_order = {
-                                   phar_main_trait_irreverent = 2,
-                                   phar_main_trait_hesitant = 3
-                              },
+                              character_being_lazy_in_owned_settlement_low_public_order = {phar_main_trait_irreverent = 2, phar_main_trait_hesitant = 3},
                               character_present_for_construction = {phar_main_trait_cultured = 3},
                               character_won_battle_cadmean_victory = {phar_main_trait_blunt = 3},
                               character_spent_turn_in_ambush_stance = {phar_main_trait_cowardly = 3, phar_main_trait_underhanded = 3},
@@ -1952,7 +1949,7 @@ function event_listener_functions:modify_phar_campaign_traits()
                               character_bodyguard_suffered_casualties_low = {phar_main_trait_cautious = 5, phar_main_trait_brave = 3},
                               character_recruited_khopeshi = {phar_main_trait_brave = 3},
                               character_recruited_swordmen = {phar_main_trait_brave = 3},
-                              character_sacks_or_razes_ers_shrine = {phar_main_trait_underhanded = 2,phar_main_trait_barbaric = 3},
+                              character_sacks_or_razes_ers_shrine = {phar_main_trait_underhanded = 2, phar_main_trait_barbaric = 3},
                               character_spent_turns_in_encamp_stance = {phar_main_trait_content = 3},
                               character_suffered_attrition = {phar_main_trait_ambitious = 3},
                               character_interacted_with_non_shrine_ers = {phar_main_trait_materialistic = 5},
@@ -2002,10 +1999,7 @@ function event_listener_functions:modify_phar_campaign_traits()
                               character_post_battle_release_generic = {phar_main_trait_merciful = 3, phar_main_trait_materialistic = 5},
                               character_sacked_settlement = {phar_main_trait_barbaric = 5},
                               character_being_lazy_in_owned_settlement_high_public_order = {phar_main_trait_respectful = 3, phar_main_trait_hesitant = 3},
-                              character_being_lazy_in_owned_settlement_low_public_order = {
-                                   phar_main_trait_irreverent = 2,
-                                   phar_main_trait_hesitant = 3
-                              },
+                              character_being_lazy_in_owned_settlement_low_public_order = {phar_main_trait_irreverent = 2, phar_main_trait_hesitant = 3},
                               character_present_for_construction = {phar_main_trait_cultured = 3},
                               character_won_battle_cadmean_victory = {phar_main_trait_blunt = 3},
                               character_spent_turn_in_ambush_stance = {phar_main_trait_cowardly = 3, phar_main_trait_underhanded = 3},
@@ -2031,10 +2025,7 @@ function event_listener_functions:modify_phar_campaign_traits()
                               character_bodyguard_suffered_casualties_low = {phar_main_trait_cautious = 5, phar_main_trait_brave = 3},
                               character_recruited_khopeshi = {phar_main_trait_brave = 3},
                               character_recruited_swordmen = {phar_main_trait_brave = 3},
-                              character_sacks_or_razes_ers_shrine = {
-                                   phar_main_trait_underhanded = 2,
-                                   phar_main_trait_barbaric = 5
-                              },
+                              character_sacks_or_razes_ers_shrine = {phar_main_trait_underhanded = 2, phar_main_trait_barbaric = 5},
                               character_spent_turns_in_encamp_stance = {phar_main_trait_content = 3},
                               character_suffered_attrition = {phar_main_trait_ambitious = 3},
                               character_interacted_with_non_shrine_ers = {phar_main_trait_materialistic = 3},
@@ -2155,7 +2146,7 @@ function event_listener_functions:modify_phar_campaign_traits()
                               character_fought_alone = {phar_main_trait_individualistic = 3},
                               character_bodyguard_suffered_casualties_high = {phar_main_trait_reckless = 3},
                               character_recruited_2h_melee_unit_infantry = {phar_main_trait_reckless = 3},
-                              character_post_battle_release_generic = {phar_main_trait_merciful = 2,phar_main_trait_materialistic = 3},
+                              character_post_battle_release_generic = {phar_main_trait_merciful = 2, phar_main_trait_materialistic = 3},
                               character_sacked_settlement = {phar_main_trait_barbaric = 3},
                               character_being_lazy_in_owned_settlement_high_public_order = {phar_main_trait_respectful = 2, phar_main_trait_hesitant = 3},
                               character_being_lazy_in_owned_settlement_low_public_order = {phar_main_trait_irreverent = 3, phar_main_trait_hesitant = 3},
@@ -2299,7 +2290,7 @@ function event_listener_functions:modify_phar_campaign_traits()
                               character_fought_alone = {phar_main_trait_individualistic = 3},
                               character_fought_battle_far_from_capital = {phar_main_trait_individualistic = 3},
                               character_interacted_with_non_shrine_ers = {phar_main_trait_materialistic = 3},
-                              character_post_battle_release_generic = {phar_main_trait_merciful = 2,phar_main_trait_materialistic = 3},
+                              character_post_battle_release_generic = {phar_main_trait_merciful = 2, phar_main_trait_materialistic = 3},
                               character_prayed_at_ers = {phar_main_trait_spiritual = 3},
                               character_present_for_construction = {phar_main_trait_cultured = 1},
                               character_razed_settlement = {phar_main_trait_barbaric = 3},
@@ -2330,7 +2321,7 @@ function event_listener_functions:modify_phar_campaign_traits()
                               character_being_lazy_in_owned_settlement_high_public_order = {phar_main_trait_respectful = 3, phar_main_trait_hesitant = 3},
                               character_being_lazy_in_owned_settlement_low_public_order = {phar_main_trait_irreverent = 3, phar_main_trait_hesitant = 3},
                               character_bodyguard_suffered_casualties_high = {phar_main_trait_reckless = 3},
-                              character_bodyguard_suffered_casualties_low = {phar_main_trait_cautious = 2,phar_main_trait_brave = 3},
+                              character_bodyguard_suffered_casualties_low = {phar_main_trait_cautious = 2, phar_main_trait_brave = 3},
                               character_executed_captives = {phar_main_trait_cruel = 3},
                               character_fought_alone = {phar_main_trait_individualistic = 3},
                               character_fought_battle_far_from_capital = {phar_main_trait_individualistic = 3},
@@ -2448,23 +2439,23 @@ function event_listener_functions:modify_phar_campaign_traits()
           core:remove_listener("phar_personality_traits_character_sacks_or_razes_ers_shrine") -- barbaric and underhanded
           core:remove_listener("phar_personality_traits_character_suffered_attrition") -- ambitious
      end)
---end
+end
 
 --------------------------------------------
 --- FIRE EVERY LISTENER WE HAVE!
 --------------------------------------------
 --- Launches all trait assignment event listener functions.
 function event_listener_functions:start_all()
-    self:modify_phar_campaign_traits()
-    self:ancient_legacies()
-    self:characters_in_regions()
-    self:battle()
-    self:emergent_traits()
-    self:faction_leaders()
-    self:misc()
-    self:pillage_and_conquest()
-    self:weak_corrupt_governants()
-    self:provincial_construction()
+     self:modify_phar_campaign_traits()
+     self:ancient_legacies()
+     self:characters_in_regions()
+     self:battle()
+     self:emergent_traits()
+     self:faction_leaders()
+     self:misc()
+     self:pillage_and_conquest()
+     self:weak_corrupt_governants()
+     self:provincial_construction()
 end
 event_listener_functions:start_all()
 
