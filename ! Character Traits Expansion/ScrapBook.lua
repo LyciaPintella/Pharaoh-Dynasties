@@ -1,4 +1,10 @@
 --[[
+
+
+character_creation_trait character_trait_expansion: table,
+    coming_of_age_percent_chance
+
+
 (method) core:add_listener(listener_name: string, event_name: string, conditional_test: function|true, target_callback: function, listener_persists_after_target_callback_called: boolean)
 ]]--ocal event_listener_functions: trait_event_listener_table {
 
