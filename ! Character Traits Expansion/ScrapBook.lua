@@ -1,6 +1,10 @@
 --[[
 (method) core:add_listener(listener_name: string, event_name: string, conditional_test: function|true, target_callback: function, listener_persists_after_target_callback_called: boolean)
-]]--
+]]--ocal event_listener_functions: trait_event_listener_table {
+
+	emergent_traits|modify_phar_campaign_traits
+
+
 
 
 core:add_listener("character_traits_expansion_construction_in_region", "CharacterEndTurn", function(context)
