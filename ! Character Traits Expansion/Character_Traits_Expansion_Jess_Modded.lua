@@ -53,8 +53,6 @@ function event_listener_functions.character_traits:apply_trait_by_chance(charact
      return true
 end
 
-
-	
 -- Starts listeners unique to ancient legacty traits.
 function event_listener_functions:ancient_legacies()
      cm:add_first_tick_callback(function()
@@ -1069,7 +1067,7 @@ function event_listener_functions:emergent_traits()
 
           if character:age() >= 16 and cm:char_is_general_with_army(character) and not character:character_type("colonel") then
                -- ! Lycia Bookmark good use of a table
-               for i = 1, #self.character_creation_traits.character_creation_traits do
+               for i = 1, #self.character_traits.character_creation_traits do
                     self.character_traits:apply_trait_by_chance(character, self.character_traits.character_creation_traits[i], 20, 1)
                     out("Character Traits Expansion: character_created_IS_APPLYING_" .. tostring(self.character_creation_traits.character_creation_traits[i]))
                end
@@ -1785,30 +1783,31 @@ event_listener_functions.character_traits.building_superchains.province_manageme
      ["phar_map_wil_major_main_building_happiness_boost"] = true
 }
 
+
 --------------------------------------------
 --- BEGIN MODIFYING PHAR_CAMPAIGN_TRAITS.LUA 
 --------------------------------------------
---- Ensure the script runs after the vanilla script has executed. Modifies the campaign_config class to increase max_num_traits as well as other changes.
+--- Ensure the script runs after the vanilla script has executed. Modifies the campaign_traits.config class to increase max_num_traits as well as other changes.
 function event_listener_functions:modify_phar_campaign_traits()
      cm:add_first_tick_callback(function()
           -- Check if the config table exists to avoid any potential errors
-          if campaign_traits and campaign_config then
-               campaign_config.max_num_traits = 50
-               out("Character Traits Expansion: max_num_traits has been set to " .. campaign_config.max_num_traits)
+          if campaign_traits and campaign_traits.config then
+               campaign_traits.config.max_num_traits = 50
+               out("Character Traits Expansion: max_num_traits has been set to " .. campaign_traits.config.max_num_traits)
           else
-               out("Character Traits Expansion: event_listener_functions:modify_phar_campaign_traits Failed to find campaign_config")
+               out("Character Traits Expansion: event_listener_functions:modify_phar_campaign_traits Failed to find campaign_traits.config")
           end
 
           -- Injects my custom traits into the vanilla civilian_traits table so I don't need to worry about giving traits to them.
-          if campaign_traits and campaign_config.civilian_traits then
+          if campaign_traits and campaign_traits.config.civilian_traits then
                for i = 1, #self.character_creation_traits.emergent_traits do
-                    table.insert(campaign_config.civilian_traits, self.character_traits.emergent_traits[i])
+                    table.insert(campaign_traits.config.civilian_traits, self.character_traits.emergent_traits[i])
                end
           end
 
           -- Making changes to the vanilla traits and their triggers. For now, many are left alone, but others are given new listeners and triggers. This may eventually change.
-          if campaign_traits and campaign_config.trait_managers_per_events then
-               campaign_config.trait_managers_per_events = {
+          if campaign_traits and campaign_traits.config.traits_per_events then
+               campaign_traits.config.traits_per_events = {
                     character_recruited_1h_melee_unit_spears = {[1] = {trait = "phar_main_trait_cautious", points = 4}},
                     character_recruited_2h_melee_unit_infantry = {[1] = {trait = "phar_main_trait_reckless", points = 4}},
                     character_recruited_khopeshi = {[1] = {trait = "phar_main_trait_brave", points = 4}},
@@ -1863,25 +1862,25 @@ function event_listener_functions:modify_phar_campaign_traits()
                }
           end
 
-          if campaign_traits and campaign_config.faction_leader_backgrounds then
-               campaign_config.faction_leader_backgrounds = {
+          if campaign_traits and campaign_traits.config.faction_leader_backgrounds then
+               campaign_traits.config.faction_leader_backgrounds = {
                     -- RAMESSES--
                     [1] = {
                          background_trait_key = "phar_main_background_ramesses",
                          faction = "phar_main_ramesses",
                          events = {
-                              character_ends_turn_in_region_with_construction_shrine_building = {phar_main_trait_spiritual = 5 --[[Predisposed--]] },
+                              character_ends_turn_in_region_with_construction_shrine_building = {phar_main_trait_spiritual = 5},
                               character_beeing_reinforced = {phar_main_trait_cooperative = 3},
                               character_being_lazy_in_owned_settlement_high_public_order = {phar_main_trait_respectful = 3, phar_main_trait_hesitant = 3},
                               character_being_lazy_in_owned_settlement_low_public_order = {phar_main_trait_irreverent = 3, phar_main_trait_hesitant = 3},
                               character_bodyguard_suffered_casualties_high = {phar_main_trait_reckless = 3},
                               character_bodyguard_suffered_casualties_low = {phar_main_trait_cautious = 4, phar_main_trait_brave = 3},
                               character_executed_captives = {phar_main_trait_cruel = 3},
-                              character_fought_alone = {phar_main_trait_individualistic = 5 --[[Predisposed--]] },
-                              character_fought_battle_far_from_capital = {phar_main_trait_individualistic = 5 --[[Predisposed--]] },
+                              character_fought_alone = {phar_main_trait_individualistic = 5},
+                              character_fought_battle_far_from_capital = {phar_main_trait_individualistic = 5},
                               character_interacted_with_non_shrine_ers = {phar_main_trait_materialistic = 3},
                               character_post_battle_release_generic = {phar_main_trait_merciful = 3, phar_main_trait_materialistic = 3},
-                              character_prayed_at_ers = {phar_main_trait_spiritual = 5 --[[Predisposed--]] },
+                              character_prayed_at_ers = {phar_main_trait_spiritual = 5},
                               character_present_for_construction = {phar_main_trait_cultured = 3},
                               character_razed_settlement = {phar_main_trait_barbaric = 3},
                               character_recruited_1h_melee_unit_spears = {phar_main_trait_cautious = 3},
@@ -1892,14 +1891,14 @@ function event_listener_functions:modify_phar_campaign_traits()
                               character_sacked_settlement = {phar_main_trait_barbaric = 3},
                               character_sacks_or_razes_ers_shrine = {phar_main_trait_underhanded = 3, phar_main_trait_barbaric = 3},
                               character_spent_turn_in_ambush_stance = {phar_main_trait_cowardly = 3, phar_main_trait_underhanded = 3},
-                              character_spent_turn_in_enemy_region = {phar_main_trait_confident = 5 --[[Predisposed--]] },
+                              character_spent_turn_in_enemy_region = {phar_main_trait_confident = 5},
                               character_spent_turns_in_encamp_stance = {phar_main_trait_content = 3},
-                              character_spent_turns_in_march_stance = {phar_main_trait_ambitious = 5 --[[Predisposed--]] },
+                              character_spent_turns_in_march_stance = {phar_main_trait_ambitious = 5},
                               character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 3},
-                              character_suffered_attrition = {phar_main_trait_ambitious = 4 --[[Predisposed--]] },
+                              character_suffered_attrition = {phar_main_trait_ambitious = 4},
                               character_won_battle_cadmean_victory = {phar_main_trait_blunt = 3},
                               character_won_defensive_battle = {phar_main_trait_hesitant = 3},
-                              character_won_battle = {phar_main_trait_ramesses = 2 --[[Special Trait--]] }
+                              character_won_battle = {phar_main_trait_ramesses = 2}
                          }
                     },
                     -- AMENMESSE--
@@ -1907,8 +1906,8 @@ function event_listener_functions:modify_phar_campaign_traits()
                          background_trait_key = "phar_main_background_amenmesse",
                          faction = "phar_main_amenmesse",
                          events = {
-                              character_ends_turn_in_region_with_construction_economy_building = {phar_main_trait_amenmesse = 3 --[[Special Trait--]] },
-                              character_won_battle = {phar_main_trait_amenmesse = 3 --[[Special Trait--]] },
+                              character_ends_turn_in_region_with_construction_economy_building = {phar_main_trait_amenmesse = 3},
+                              character_won_battle = {phar_main_trait_amenmesse = 3},
                               character_ends_turn_in_region_with_construction_shrine_building = {phar_main_trait_spiritual = 3},
                               character_bodyguard_suffered_casualties_low = {phar_main_trait_cautious = 4, phar_main_trait_brave = 3},
                               character_recruited_1h_melee_unit_spears = {phar_main_trait_cautious = 3},
@@ -1916,28 +1915,28 @@ function event_listener_functions:modify_phar_campaign_traits()
                               character_recruited_swordmen = {phar_main_trait_brave = 3},
                               character_sacks_or_razes_ers_shrine = {phar_main_trait_underhanded = 3, phar_main_trait_barbaric = 3},
                               character_spent_turns_in_encamp_stance = {phar_main_trait_content = 3},
-                              character_suffered_attrition = {phar_main_trait_ambitious = 4 --[[Predisposed--]] },
-                              character_interacted_with_non_shrine_ers = {phar_main_trait_materialistic = 5 --[[Predisposed--]] },
+                              character_suffered_attrition = {phar_main_trait_ambitious = 4},
+                              character_interacted_with_non_shrine_ers = {phar_main_trait_materialistic = 5},
                               character_prayed_at_ers = {phar_main_trait_spiritual = 3},
                               character_fought_alone = {phar_main_trait_individualistic = 3},
                               character_bodyguard_suffered_casualties_high = {phar_main_trait_reckless = 3},
                               character_recruited_2h_melee_unit_infantry = {phar_main_trait_reckless = 3},
-                              character_post_battle_release_generic = {phar_main_trait_merciful = 3, phar_main_trait_materialistic = 5 --[[Predisposed--]] },
+                              character_post_battle_release_generic = {phar_main_trait_merciful = 3, phar_main_trait_materialistic = 5},
                               character_sacked_settlement = {phar_main_trait_barbaric = 3},
                               character_being_lazy_in_owned_settlement_high_public_order = {phar_main_trait_respectful = 3, phar_main_trait_hesitant = 3},
                               character_being_lazy_in_owned_settlement_low_public_order = {
-                                   phar_main_trait_irreverent = 2, --[[Predisposed--]]
+                                   phar_main_trait_irreverent = 2,
                                    phar_main_trait_hesitant = 3
                               },
                               character_present_for_construction = {phar_main_trait_cultured = 3},
                               character_won_battle_cadmean_victory = {phar_main_trait_blunt = 3},
                               character_spent_turn_in_ambush_stance = {phar_main_trait_cowardly = 3, phar_main_trait_underhanded = 3},
-                              character_spent_turns_in_march_stance = {phar_main_trait_ambitious = 5 --[[Predisposed--]] },
+                              character_spent_turns_in_march_stance = {phar_main_trait_ambitious = 5},
                               character_razed_settlement = {phar_main_trait_barbaric = 3},
                               character_executed_captives = {phar_main_trait_cruel = 3},
-                              character_beeing_reinforced = {phar_main_trait_cooperative = 5 --[[Predisposed--]] },
+                              character_beeing_reinforced = {phar_main_trait_cooperative = 5},
                               character_fought_battle_far_from_capital = {phar_main_trait_individualistic = 3},
-                              character_reinforces_other_armies = {phar_main_trait_cooperative = 5 --[[Predisposed--]] },
+                              character_reinforces_other_armies = {phar_main_trait_cooperative = 5},
                               character_spent_turn_in_enemy_region = {phar_main_trait_confident = 3},
                               character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 3},
                               character_won_defensive_battle = {phar_main_trait_hesitant = 3}
@@ -1953,32 +1952,32 @@ function event_listener_functions:modify_phar_campaign_traits()
                               character_bodyguard_suffered_casualties_low = {phar_main_trait_cautious = 5, phar_main_trait_brave = 3},
                               character_recruited_khopeshi = {phar_main_trait_brave = 3},
                               character_recruited_swordmen = {phar_main_trait_brave = 3},
-                              character_sacks_or_razes_ers_shrine = {phar_main_trait_underhanded = 2, --[[Predisposed--]] phar_main_trait_barbaric = 3},
+                              character_sacks_or_razes_ers_shrine = {phar_main_trait_underhanded = 2,phar_main_trait_barbaric = 3},
                               character_spent_turns_in_encamp_stance = {phar_main_trait_content = 3},
                               character_suffered_attrition = {phar_main_trait_ambitious = 3},
-                              character_interacted_with_non_shrine_ers = {phar_main_trait_materialistic = 5 --[[Predisposed--]] },
+                              character_interacted_with_non_shrine_ers = {phar_main_trait_materialistic = 5},
                               character_prayed_at_ers = {phar_main_trait_spiritual = 3},
 
                               character_fought_alone = {phar_main_trait_individualistic = 3},
                               character_bodyguard_suffered_casualties_high = {phar_main_trait_reckless = 3},
                               character_recruited_2h_melee_unit_infantry = {phar_main_trait_reckless = 3},
-                              character_post_battle_release_generic = {phar_main_trait_merciful = 3, phar_main_trait_materialistic = 5 --[[Predisposed--]] },
+                              character_post_battle_release_generic = {phar_main_trait_merciful = 3, phar_main_trait_materialistic = 5},
                               character_sacked_settlement = {phar_main_trait_barbaric = 3},
                               character_being_lazy_in_owned_settlement_high_public_order = {phar_main_trait_respectful = 3, phar_main_trait_hesitant = 3},
                               character_being_lazy_in_owned_settlement_low_public_order = {phar_main_trait_irreverent = 3, phar_main_trait_hesitant = 3},
-                              character_present_for_construction = {phar_main_trait_cultured = 5 --[[Predisposed--]] },
+                              character_present_for_construction = {phar_main_trait_cultured = 5},
                               character_won_battle_cadmean_victory = {phar_main_trait_blunt = 3},
                               character_spent_turn_in_ambush_stance = {phar_main_trait_cowardly = 3, phar_main_trait_underhanded = 3},
                               character_spent_turns_in_march_stance = {phar_main_trait_ambitious = 3},
                               character_razed_settlement = {phar_main_trait_barbaric = 3},
                               character_executed_captives = {phar_main_trait_cruel = 3},
-                              character_beeing_reinforced = {phar_main_trait_cooperative = 5 --[[Predisposed--]] },
+                              character_beeing_reinforced = {phar_main_trait_cooperative = 5},
                               character_fought_battle_far_from_capital = {phar_main_trait_individualistic = 3},
-                              character_reinforces_other_armies = {phar_main_trait_cooperative = 5 --[[Predisposed--]] },
+                              character_reinforces_other_armies = {phar_main_trait_cooperative = 5},
                               character_spent_turn_in_enemy_region = {phar_main_trait_confident = 3},
                               character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 3},
                               character_won_defensive_battle = {phar_main_trait_hesitant = 3},
-                              character_won_battle = {phar_main_trait_bay = 2 --[[Special Trait--]] }
+                              character_won_battle = {phar_main_trait_bay = 2}
                          }
                     },
                     -- IRSU--
@@ -1991,35 +1990,35 @@ function event_listener_functions:modify_phar_campaign_traits()
                               character_bodyguard_suffered_casualties_low = {phar_main_trait_cautious = 5, phar_main_trait_brave = 3},
                               character_recruited_khopeshi = {phar_main_trait_brave = 3},
                               character_recruited_swordmen = {phar_main_trait_brave = 3},
-                              character_sacks_or_razes_ers_shrine = {phar_main_trait_underhanded = 3, phar_main_trait_barbaric = 5 --[[Predisposed--]] },
+                              character_sacks_or_razes_ers_shrine = {phar_main_trait_underhanded = 3, phar_main_trait_barbaric = 5},
                               character_spent_turns_in_encamp_stance = {phar_main_trait_content = 3},
                               character_suffered_attrition = {phar_main_trait_ambitious = 3},
-                              character_interacted_with_non_shrine_ers = {phar_main_trait_materialistic = 5 --[[Predisposed--]] },
+                              character_interacted_with_non_shrine_ers = {phar_main_trait_materialistic = 5},
                               character_prayed_at_ers = {phar_main_trait_spiritual = 3},
 
                               character_fought_alone = {phar_main_trait_individualistic = 3},
                               character_bodyguard_suffered_casualties_high = {phar_main_trait_reckless = 3},
                               character_recruited_2h_melee_unit_infantry = {phar_main_trait_reckless = 3},
-                              character_post_battle_release_generic = {phar_main_trait_merciful = 3, phar_main_trait_materialistic = 5 --[[Predisposed--]] },
-                              character_sacked_settlement = {phar_main_trait_barbaric = 5 --[[Predisposed--]] },
+                              character_post_battle_release_generic = {phar_main_trait_merciful = 3, phar_main_trait_materialistic = 5},
+                              character_sacked_settlement = {phar_main_trait_barbaric = 5},
                               character_being_lazy_in_owned_settlement_high_public_order = {phar_main_trait_respectful = 3, phar_main_trait_hesitant = 3},
                               character_being_lazy_in_owned_settlement_low_public_order = {
-                                   phar_main_trait_irreverent = 2, --[[Predisposed--]]
+                                   phar_main_trait_irreverent = 2,
                                    phar_main_trait_hesitant = 3
                               },
                               character_present_for_construction = {phar_main_trait_cultured = 3},
                               character_won_battle_cadmean_victory = {phar_main_trait_blunt = 3},
                               character_spent_turn_in_ambush_stance = {phar_main_trait_cowardly = 3, phar_main_trait_underhanded = 3},
                               character_spent_turns_in_march_stance = {phar_main_trait_ambitious = 3},
-                              character_razed_settlement = {phar_main_trait_barbaric = 5 --[[Predisposed--]] },
-                              character_executed_captives = {phar_main_trait_cruel = 5 --[[Predisposed--]] },
+                              character_razed_settlement = {phar_main_trait_barbaric = 5},
+                              character_executed_captives = {phar_main_trait_cruel = 5},
                               character_fought_battle_far_from_capital = {phar_main_trait_individualistic = 3},
                               character_reinforces_other_armies = {phar_main_trait_cooperative = 3},
                               character_beeing_reinforced = {phar_main_trait_cooperative = 3},
                               character_spent_turn_in_enemy_region = {phar_main_trait_confident = 3},
                               character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 3},
                               character_won_defensive_battle = {phar_main_trait_hesitant = 3},
-                              character_won_battle = {phar_main_trait_irsu = 2 --[[Special Trait--]] }
+                              character_won_battle = {phar_main_trait_irsu = 2}
                          }
                     },
                     -- KURUNTA--
@@ -2033,34 +2032,34 @@ function event_listener_functions:modify_phar_campaign_traits()
                               character_recruited_khopeshi = {phar_main_trait_brave = 3},
                               character_recruited_swordmen = {phar_main_trait_brave = 3},
                               character_sacks_or_razes_ers_shrine = {
-                                   phar_main_trait_underhanded = 2, --[[Predisposed--]]
-                                   phar_main_trait_barbaric = 5 --[[Predisposed--]]
+                                   phar_main_trait_underhanded = 2,
+                                   phar_main_trait_barbaric = 5
                               },
                               character_spent_turns_in_encamp_stance = {phar_main_trait_content = 3},
                               character_suffered_attrition = {phar_main_trait_ambitious = 3},
                               character_interacted_with_non_shrine_ers = {phar_main_trait_materialistic = 3},
-                              character_prayed_at_ers = {phar_main_trait_spiritual = 5 --[[Predisposed--]] },
+                              character_prayed_at_ers = {phar_main_trait_spiritual = 5},
 
                               character_fought_alone = {phar_main_trait_individualistic = 3},
                               character_bodyguard_suffered_casualties_high = {phar_main_trait_reckless = 3},
                               character_recruited_2h_melee_unit_infantry = {phar_main_trait_reckless = 3},
                               character_post_battle_release_generic = {phar_main_trait_merciful = 3, phar_main_trait_materialistic = 3},
-                              character_sacked_settlement = {phar_main_trait_barbaric = 5 --[[Predisposed--]] },
+                              character_sacked_settlement = {phar_main_trait_barbaric = 5},
                               character_being_lazy_in_owned_settlement_high_public_order = {phar_main_trait_respectful = 3, phar_main_trait_hesitant = 3},
                               character_being_lazy_in_owned_settlement_low_public_order = {phar_main_trait_irreverent = 3, phar_main_trait_hesitant = 3},
                               character_present_for_construction = {phar_main_trait_cultured = 3},
                               character_won_battle_cadmean_victory = {phar_main_trait_blunt = 3},
-                              character_spent_turn_in_ambush_stance = {phar_main_trait_cowardly = 3, phar_main_trait_underhanded = 5 --[[Predisposed--]] },
+                              character_spent_turn_in_ambush_stance = {phar_main_trait_cowardly = 3, phar_main_trait_underhanded = 5},
                               character_spent_turns_in_march_stance = {phar_main_trait_ambitious = 3},
-                              character_razed_settlement = {phar_main_trait_barbaric = 5 --[[Predisposed--]] },
-                              character_executed_captives = {phar_main_trait_cruel = 5 --[[Predisposed--]] },
+                              character_razed_settlement = {phar_main_trait_barbaric = 5},
+                              character_executed_captives = {phar_main_trait_cruel = 5},
                               character_fought_battle_far_from_capital = {phar_main_trait_individualistic = 3},
                               character_reinforces_other_armies = {phar_main_trait_cooperative = 3},
                               character_beeing_reinforced = {phar_main_trait_cooperative = 3},
                               character_spent_turn_in_enemy_region = {phar_main_trait_confident = 3},
                               character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 3},
                               character_won_defensive_battle = {phar_main_trait_hesitant = 3},
-                              character_won_battle = {phar_main_trait_kurunta = 2 --[[Special Trait--]] }
+                              character_won_battle = {phar_main_trait_kurunta = 2}
                          }
                     },
                     -- SETI--
@@ -2075,7 +2074,7 @@ function event_listener_functions:modify_phar_campaign_traits()
                               character_recruited_swordmen = {phar_main_trait_brave = 3},
                               character_sacks_or_razes_ers_shrine = {phar_main_trait_underhanded = 3, phar_main_trait_barbaric = 3},
                               character_spent_turns_in_encamp_stance = {phar_main_trait_content = 3},
-                              character_suffered_attrition = {phar_main_trait_ambitious = 4 --[[Predisposed--]] },
+                              character_suffered_attrition = {phar_main_trait_ambitious = 4},
                               character_interacted_with_non_shrine_ers = {phar_main_trait_materialistic = 3},
                               character_prayed_at_ers = {phar_main_trait_spiritual = 3},
 
@@ -2087,17 +2086,17 @@ function event_listener_functions:modify_phar_campaign_traits()
                               character_being_lazy_in_owned_settlement_high_public_order = {phar_main_trait_respectful = 3, phar_main_trait_hesitant = 3},
                               character_being_lazy_in_owned_settlement_low_public_order = {phar_main_trait_irreverent = 3, phar_main_trait_hesitant = 3},
                               character_present_for_construction = {phar_main_trait_cultured = 3},
-                              character_won_battle_cadmean_victory = {phar_main_trait_blunt = 5 --[[Predisposed--]] },
+                              character_won_battle_cadmean_victory = {phar_main_trait_blunt = 5},
                               character_spent_turn_in_ambush_stance = {phar_main_trait_cowardly = 3, phar_main_trait_underhanded = 3},
-                              character_spent_turns_in_march_stance = {phar_main_trait_ambitious = 5 --[[Predisposed--]] },
+                              character_spent_turns_in_march_stance = {phar_main_trait_ambitious = 5},
                               character_razed_settlement = {phar_main_trait_barbaric = 3},
-                              character_executed_captives = {phar_main_trait_cruel = 5 --[[Predisposed--]] },
+                              character_executed_captives = {phar_main_trait_cruel = 5},
                               character_fought_battle_far_from_capital = {phar_main_trait_individualistic = 3},
                               character_reinforces_other_armies = {phar_main_trait_cooperative = 3},
-                              character_spent_turn_in_enemy_region = {phar_main_trait_confident = 5 --[[Predisposed--]] },
-                              character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 5 --[[Predisposed--]] },
+                              character_spent_turn_in_enemy_region = {phar_main_trait_confident = 5},
+                              character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 5},
                               character_won_defensive_battle = {phar_main_trait_hesitant = 3},
-                              character_won_battle = {phar_main_trait_seti = 2 --[[Special Trait--]] }
+                              character_won_battle = {phar_main_trait_seti = 2}
                          }
                     },
                     -- SUPPI--
@@ -2105,16 +2104,16 @@ function event_listener_functions:modify_phar_campaign_traits()
                          background_trait_key = "phar_main_background_suppiliuliuma",
                          faction = "phar_main_suppiluliuma",
                          events = {
-                              character_ends_turn_in_region_with_construction_shrine_building = {phar_main_trait_spiritual = 5 --[[Predisposed--]] },
+                              character_ends_turn_in_region_with_construction_shrine_building = {phar_main_trait_spiritual = 5},
                               character_recruited_1h_melee_unit_spears = {phar_main_trait_cautious = 3},
                               character_bodyguard_suffered_casualties_low = {phar_main_trait_cautious = 5, phar_main_trait_brave = 3},
                               character_recruited_khopeshi = {phar_main_trait_brave = 3},
                               character_recruited_swordmen = {phar_main_trait_brave = 3},
                               character_sacks_or_razes_ers_shrine = {phar_main_trait_underhanded = 3, phar_main_trait_barbaric = 3},
-                              character_spent_turns_in_encamp_stance = {phar_main_trait_content = 5 --[[Predisposed--]] },
+                              character_spent_turns_in_encamp_stance = {phar_main_trait_content = 5},
                               character_suffered_attrition = {phar_main_trait_ambitious = 3},
                               character_interacted_with_non_shrine_ers = {phar_main_trait_materialistic = 3},
-                              character_prayed_at_ers = {phar_main_trait_spiritual = 5 --[[Predisposed--]] },
+                              character_prayed_at_ers = {phar_main_trait_spiritual = 5},
 
                               character_fought_alone = {phar_main_trait_individualistic = 3},
                               character_bodyguard_suffered_casualties_high = {phar_main_trait_reckless = 3},
@@ -2123,19 +2122,19 @@ function event_listener_functions:modify_phar_campaign_traits()
                               character_sacked_settlement = {phar_main_trait_barbaric = 3},
                               character_being_lazy_in_owned_settlement_high_public_order = {phar_main_trait_respectful = 3, phar_main_trait_hesitant = 3},
                               character_being_lazy_in_owned_settlement_low_public_order = {phar_main_trait_irreverent = 3, phar_main_trait_hesitant = 3},
-                              character_present_for_construction = {phar_main_trait_cultured = 5 --[[Predisposed--]] },
+                              character_present_for_construction = {phar_main_trait_cultured = 5},
                               character_won_battle_cadmean_victory = {phar_main_trait_blunt = 3},
                               character_spent_turn_in_ambush_stance = {phar_main_trait_cowardly = 3, phar_main_trait_underhanded = 3},
                               character_spent_turns_in_march_stance = {phar_main_trait_ambitious = 3},
                               character_razed_settlement = {phar_main_trait_barbaric = 3},
                               character_executed_captives = {phar_main_trait_cruel = 3},
-                              character_beeing_reinforced = {phar_main_trait_cooperative = 5 --[[Predisposed--]] },
+                              character_beeing_reinforced = {phar_main_trait_cooperative = 5},
                               character_fought_battle_far_from_capital = {phar_main_trait_individualistic = 3},
-                              character_reinforces_other_armies = {phar_main_trait_cooperative = 5 --[[Predisposed--]] },
+                              character_reinforces_other_armies = {phar_main_trait_cooperative = 5},
                               character_spent_turn_in_enemy_region = {phar_main_trait_confident = 3},
                               character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 3},
                               character_won_defensive_battle = {phar_main_trait_hesitant = 3},
-                              character_won_battle = {phar_main_trait_suppiluliuma = 2 --[[Special Trait--]] }
+                              character_won_battle = {phar_main_trait_suppiluliuma = 2}
                          }
                     },
                     -- TAUSRET--
@@ -2156,26 +2155,23 @@ function event_listener_functions:modify_phar_campaign_traits()
                               character_fought_alone = {phar_main_trait_individualistic = 3},
                               character_bodyguard_suffered_casualties_high = {phar_main_trait_reckless = 3},
                               character_recruited_2h_melee_unit_infantry = {phar_main_trait_reckless = 3},
-                              character_post_battle_release_generic = {phar_main_trait_merciful = 2, --[[Predisposed--]] phar_main_trait_materialistic = 3},
+                              character_post_battle_release_generic = {phar_main_trait_merciful = 2,phar_main_trait_materialistic = 3},
                               character_sacked_settlement = {phar_main_trait_barbaric = 3},
-                              character_being_lazy_in_owned_settlement_high_public_order = {
-                                   phar_main_trait_respectful = 2, --[[Predisposed--]]
-                                   phar_main_trait_hesitant = 3
-                              },
+                              character_being_lazy_in_owned_settlement_high_public_order = {phar_main_trait_respectful = 2, phar_main_trait_hesitant = 3},
                               character_being_lazy_in_owned_settlement_low_public_order = {phar_main_trait_irreverent = 3, phar_main_trait_hesitant = 3},
-                              character_present_for_construction = {phar_main_trait_cultured = 5 --[[Predisposed--]] },
+                              character_present_for_construction = {phar_main_trait_cultured = 5},
                               character_won_battle_cadmean_victory = {phar_main_trait_blunt = 3},
                               character_spent_turn_in_ambush_stance = {phar_main_trait_cowardly = 3, phar_main_trait_underhanded = 3},
                               character_spent_turns_in_march_stance = {phar_main_trait_ambitious = 3},
                               character_razed_settlement = {phar_main_trait_barbaric = 3},
                               character_executed_captives = {phar_main_trait_cruel = 3},
-                              character_beeing_reinforced = {phar_main_trait_cooperative = 5 --[[Predisposed--]] },
+                              character_beeing_reinforced = {phar_main_trait_cooperative = 5},
                               character_fought_battle_far_from_capital = {phar_main_trait_individualistic = 3},
-                              character_reinforces_other_armies = {phar_main_trait_cooperative = 5 --[[Predisposed--]] },
+                              character_reinforces_other_armies = {phar_main_trait_cooperative = 5},
                               character_spent_turn_in_enemy_region = {phar_main_trait_confident = 3},
                               character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 3},
                               character_won_defensive_battle = {phar_main_trait_hesitant = 3},
-                              character_won_battle = {phar_main_trait_tausret = 2 --[[Special Trait--]] }
+                              character_won_battle = {phar_main_trait_tausret = 2}
                          }
                     },
                     -- WALWETES--
@@ -2186,7 +2182,7 @@ function event_listener_functions:modify_phar_campaign_traits()
                               character_ends_turn_in_region_with_construction_shrine_building = {phar_main_trait_spiritual = 3},
                               character_won_defensive_battle = {phar_main_trait_hesitant = 3},
                               character_won_battle_cadmean_victory = {phar_main_trait_blunt = 3},
-                              character_won_battle = {phar_sea_trait_walwetes = 1 --[[Special Trait--]] },
+                              character_won_battle = {phar_sea_trait_walwetes = 1},
                               character_suffered_attrition = {phar_main_trait_ambitious = 3},
                               character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 3},
                               character_spent_turns_in_march_stance = {phar_main_trait_ambitious = 3},
@@ -2194,25 +2190,25 @@ function event_listener_functions:modify_phar_campaign_traits()
                               character_spent_turn_in_enemy_region = {phar_main_trait_confident = 3},
                               character_spent_turn_in_ambush_stance = {phar_main_trait_cowardly = 3, phar_main_trait_underhanded = 3},
                               character_sacks_or_razes_ers_shrine = {phar_main_trait_underhanded = 3, phar_main_trait_barbaric = 3},
-                              character_sacked_settlement = {phar_main_trait_barbaric = 5 --[[Predisposed--]] },
-                              character_reinforces_other_armies = {phar_main_trait_cooperative = 5 --[[Predisposed--]] },
-                              character_recruited_swordmen = {phar_main_trait_brave = 5 --[[Predisposed--]] },
-                              character_recruited_khopeshi = {phar_main_trait_brave = 5 --[[Predisposed--]] },
+                              character_sacked_settlement = {phar_main_trait_barbaric = 5},
+                              character_reinforces_other_armies = {phar_main_trait_cooperative = 5},
+                              character_recruited_swordmen = {phar_main_trait_brave = 5},
+                              character_recruited_khopeshi = {phar_main_trait_brave = 5},
                               character_recruited_2h_melee_unit_infantry = {phar_main_trait_reckless = 3},
                               character_recruited_1h_melee_unit_spears = {phar_main_trait_cautious = 3},
-                              character_razed_settlement = {phar_main_trait_barbaric = 5 --[[Predisposed--]] },
+                              character_razed_settlement = {phar_main_trait_barbaric = 5},
                               character_present_for_construction = {phar_main_trait_cultured = 3},
                               character_prayed_at_ers = {phar_main_trait_spiritual = 3},
-                              character_post_battle_release_generic = {phar_main_trait_merciful = 3, phar_main_trait_materialistic = 5 --[[Predisposed--]] },
-                              character_interacted_with_non_shrine_ers = {phar_main_trait_materialistic = 5 --[[Predisposed--]] },
+                              character_post_battle_release_generic = {phar_main_trait_merciful = 3, phar_main_trait_materialistic = 5},
+                              character_interacted_with_non_shrine_ers = {phar_main_trait_materialistic = 5},
                               character_fought_battle_far_from_capital = {phar_main_trait_individualistic = 3},
                               character_fought_alone = {phar_main_trait_individualistic = 3},
                               character_executed_captives = {phar_main_trait_cruel = 3},
-                              character_bodyguard_suffered_casualties_low = {phar_main_trait_cautious = 3, phar_main_trait_brave = 5 --[[Predisposed--]] },
+                              character_bodyguard_suffered_casualties_low = {phar_main_trait_cautious = 3, phar_main_trait_brave = 5},
                               character_bodyguard_suffered_casualties_high = {phar_main_trait_reckless = 3},
                               character_being_lazy_in_owned_settlement_low_public_order = {phar_main_trait_irreverent = 3, phar_main_trait_hesitant = 3},
                               character_being_lazy_in_owned_settlement_high_public_order = {phar_main_trait_respectful = 3, phar_main_trait_hesitant = 3},
-                              character_beeing_reinforced = {phar_main_trait_cooperative = 5 --[[Predisposed--]] }
+                              character_beeing_reinforced = {phar_main_trait_cooperative = 5}
                          }
                     },
                     -- IOLAOS--
@@ -2223,30 +2219,30 @@ function event_listener_functions:modify_phar_campaign_traits()
                               character_ends_turn_in_region_with_construction_shrine_building = {phar_main_trait_spiritual = 3},
                               character_won_defensive_battle = {phar_main_trait_hesitant = 3},
                               character_won_battle_cadmean_victory = {phar_main_trait_blunt = 3},
-                              character_won_battle = {phar_sea_trait_iolas = 2 --[[Special Trait--]] },
+                              character_won_battle = {phar_sea_trait_iolas = 2},
                               character_suffered_attrition = {phar_main_trait_ambitious = 3},
                               character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 3},
                               character_spent_turns_in_march_stance = {phar_main_trait_ambitious = 3},
                               character_spent_turns_in_encamp_stance = {phar_main_trait_content = 3},
-                              character_spent_turn_in_enemy_region = {phar_main_trait_confident = 5 --[[Predisposed--]] },
+                              character_spent_turn_in_enemy_region = {phar_main_trait_confident = 5},
                               character_spent_turn_in_ambush_stance = {phar_main_trait_cowardly = 3, phar_main_trait_underhanded = 3},
                               character_sacks_or_razes_ers_shrine = {phar_main_trait_underhanded = 3, phar_main_trait_barbaric = 3},
                               character_sacked_settlement = {phar_main_trait_barbaric = 3},
                               character_reinforces_other_armies = {phar_main_trait_cooperative = 3},
                               character_recruited_swordmen = {phar_main_trait_brave = 3},
                               character_recruited_khopeshi = {phar_main_trait_brave = 3},
-                              character_recruited_2h_melee_unit_infantry = {phar_main_trait_reckless = 5 --[[Predisposed--]] },
+                              character_recruited_2h_melee_unit_infantry = {phar_main_trait_reckless = 5},
                               character_recruited_1h_melee_unit_spears = {phar_main_trait_cautious = 3},
                               character_razed_settlement = {phar_main_trait_barbaric = 3},
                               character_present_for_construction = {phar_main_trait_cultured = 3},
-                              character_prayed_at_ers = {phar_main_trait_spiritual = 5 --[[Predisposed--]] },
+                              character_prayed_at_ers = {phar_main_trait_spiritual = 5},
                               character_post_battle_release_generic = {phar_main_trait_merciful = 3, phar_main_trait_materialistic = 3},
                               character_interacted_with_non_shrine_ers = {phar_main_trait_materialistic = 3},
                               character_fought_battle_far_from_capital = {phar_main_trait_individualistic = 3},
                               character_fought_alone = {phar_main_trait_individualistic = 3},
-                              character_executed_captives = {phar_main_trait_cruel = 5 --[[Predisposed--]] },
+                              character_executed_captives = {phar_main_trait_cruel = 5},
                               character_bodyguard_suffered_casualties_low = {phar_main_trait_cautious = 5, phar_main_trait_brave = 3},
-                              character_bodyguard_suffered_casualties_high = {phar_main_trait_reckless = 5 --[[Predisposed--]] },
+                              character_bodyguard_suffered_casualties_high = {phar_main_trait_reckless = 5},
                               character_being_lazy_in_owned_settlement_low_public_order = {phar_main_trait_irreverent = 3, phar_main_trait_hesitant = 3},
                               character_being_lazy_in_owned_settlement_high_public_order = {phar_main_trait_respectful = 3, phar_main_trait_hesitant = 3},
                               character_beeing_reinforced = {phar_main_trait_cooperative = 3}
@@ -2263,9 +2259,9 @@ function event_listener_functions:modify_phar_campaign_traits()
                               character_being_lazy_in_owned_settlement_low_public_order = {phar_main_trait_irreverent = 3, phar_main_trait_hesitant = 3},
                               character_bodyguard_suffered_casualties_high = {phar_main_trait_reckless = 3},
                               character_bodyguard_suffered_casualties_low = {phar_main_trait_cautious = 5, phar_main_trait_brave = 3},
-                              character_executed_captives = {phar_main_trait_cruel = 5 --[[Predisposed--]] },
-                              character_fought_alone = {phar_main_trait_individualistic = 5 --[[Predisposed--]] },
-                              character_fought_battle_far_from_capital = {phar_main_trait_individualistic = 1 --[[Predisposed--]] },
+                              character_executed_captives = {phar_main_trait_cruel = 5},
+                              character_fought_alone = {phar_main_trait_individualistic = 5},
+                              character_fought_battle_far_from_capital = {phar_main_trait_individualistic = 1},
                               character_interacted_with_non_shrine_ers = {phar_main_trait_materialistic = 3},
                               character_post_battle_release_generic = {phar_main_trait_merciful = 3, phar_main_trait_materialistic = 3},
                               character_prayed_at_ers = {phar_main_trait_spiritual = 3},
@@ -2279,11 +2275,11 @@ function event_listener_functions:modify_phar_campaign_traits()
                               character_sacked_settlement = {phar_main_trait_barbaric = 3},
                               character_sacks_or_razes_ers_shrine = {phar_main_trait_underhanded = 3, phar_main_trait_barbaric = 3},
                               character_spent_turn_in_ambush_stance = {phar_main_trait_cowardly = 3, phar_main_trait_underhanded = 3},
-                              character_spent_turn_in_enemy_region = {phar_main_trait_confident = 5 --[[Predisposed--]] },
+                              character_spent_turn_in_enemy_region = {phar_main_trait_confident = 5},
                               character_spent_turns_in_encamp_stance = {phar_main_trait_content = 3},
-                              character_spent_turns_in_march_stance = {phar_main_trait_ambitious = 5 --[[Predisposed--]] },
+                              character_spent_turns_in_march_stance = {phar_main_trait_ambitious = 5},
                               character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 3},
-                              character_suffered_attrition = {phar_main_trait_ambitious = 5 --[[Predisposed--]] },
+                              character_suffered_attrition = {phar_main_trait_ambitious = 5},
                               character_won_battle_cadmean_victory = {phar_main_trait_blunt = 3},
                               character_won_defensive_battle = {phar_main_trait_hesitant = 1}
                          }
@@ -2294,11 +2290,8 @@ function event_listener_functions:modify_phar_campaign_traits()
                          faction = "troy_main_trj_troy",
                          events = {
                               character_ends_turn_in_region_with_construction_shrine_building = {phar_main_trait_spiritual = 3},
-                              character_beeing_reinforced = {phar_main_trait_cooperative = 5 --[[Predisposed--]] },
-                              character_being_lazy_in_owned_settlement_high_public_order = {
-                                   phar_main_trait_respectful = 2, --[[Predisposed--]]
-                                   phar_main_trait_hesitant = 3
-                              },
+                              character_beeing_reinforced = {phar_main_trait_cooperative = 5},
+                              character_being_lazy_in_owned_settlement_high_public_order = {phar_main_trait_respectful = 2, phar_main_trait_hesitant = 3},
                               character_being_lazy_in_owned_settlement_low_public_order = {phar_main_trait_irreverent = 3, phar_main_trait_hesitant = 3},
                               character_bodyguard_suffered_casualties_high = {phar_main_trait_reckless = 3},
                               character_bodyguard_suffered_casualties_low = {phar_main_trait_cautious = 5, phar_main_trait_brave = 3},
@@ -2306,15 +2299,15 @@ function event_listener_functions:modify_phar_campaign_traits()
                               character_fought_alone = {phar_main_trait_individualistic = 3},
                               character_fought_battle_far_from_capital = {phar_main_trait_individualistic = 3},
                               character_interacted_with_non_shrine_ers = {phar_main_trait_materialistic = 3},
-                              character_post_battle_release_generic = {phar_main_trait_merciful = 2, --[[Predisposed--]] phar_main_trait_materialistic = 3},
+                              character_post_battle_release_generic = {phar_main_trait_merciful = 2,phar_main_trait_materialistic = 3},
                               character_prayed_at_ers = {phar_main_trait_spiritual = 3},
-                              character_present_for_construction = {phar_main_trait_cultured = 1 --[[Predisposed--]] },
+                              character_present_for_construction = {phar_main_trait_cultured = 1},
                               character_razed_settlement = {phar_main_trait_barbaric = 3},
                               character_recruited_1h_melee_unit_spears = {phar_main_trait_cautious = 3},
                               character_recruited_2h_melee_unit_infantry = {phar_main_trait_reckless = 3},
                               character_recruited_khopeshi = {phar_main_trait_brave = 3},
                               character_recruited_swordmen = {phar_main_trait_brave = 3},
-                              character_reinforces_other_armies = {phar_main_trait_cooperative = 5 --[[Predisposed--]] },
+                              character_reinforces_other_armies = {phar_main_trait_cooperative = 5},
                               character_sacked_settlement = {phar_main_trait_barbaric = 3},
                               character_sacks_or_razes_ers_shrine = {phar_main_trait_underhanded = 3, phar_main_trait_barbaric = 3},
                               character_spent_turn_in_ambush_stance = {phar_main_trait_cowardly = 3, phar_main_trait_underhanded = 3},
@@ -2337,16 +2330,16 @@ function event_listener_functions:modify_phar_campaign_traits()
                               character_being_lazy_in_owned_settlement_high_public_order = {phar_main_trait_respectful = 3, phar_main_trait_hesitant = 3},
                               character_being_lazy_in_owned_settlement_low_public_order = {phar_main_trait_irreverent = 3, phar_main_trait_hesitant = 3},
                               character_bodyguard_suffered_casualties_high = {phar_main_trait_reckless = 3},
-                              character_bodyguard_suffered_casualties_low = {phar_main_trait_cautious = 2, --[[Predisposed--]] phar_main_trait_brave = 3},
+                              character_bodyguard_suffered_casualties_low = {phar_main_trait_cautious = 2,phar_main_trait_brave = 3},
                               character_executed_captives = {phar_main_trait_cruel = 3},
                               character_fought_alone = {phar_main_trait_individualistic = 3},
                               character_fought_battle_far_from_capital = {phar_main_trait_individualistic = 3},
                               character_interacted_with_non_shrine_ers = {phar_main_trait_materialistic = 3},
                               character_post_battle_release_generic = {phar_main_trait_merciful = 3, phar_main_trait_materialistic = 3},
                               character_prayed_at_ers = {phar_main_trait_spiritual = 3},
-                              character_present_for_construction = {phar_main_trait_cultured = 5 --[[Predisposed--]] },
+                              character_present_for_construction = {phar_main_trait_cultured = 5},
                               character_razed_settlement = {phar_main_trait_barbaric = 3},
-                              character_recruited_1h_melee_unit_spears = {phar_main_trait_cautious = 5 --[[Predisposed--]] },
+                              character_recruited_1h_melee_unit_spears = {phar_main_trait_cautious = 5},
                               character_recruited_2h_melee_unit_infantry = {phar_main_trait_reckless = 3},
                               character_recruited_khopeshi = {phar_main_trait_brave = 3},
                               character_recruited_swordmen = {phar_main_trait_brave = 3},
@@ -2354,12 +2347,12 @@ function event_listener_functions:modify_phar_campaign_traits()
                               character_sacked_settlement = {phar_main_trait_barbaric = 3},
                               character_sacks_or_razes_ers_shrine = {phar_main_trait_underhanded = 3, phar_main_trait_barbaric = 3},
                               character_spent_turn_in_ambush_stance = {phar_main_trait_cowardly = 3, phar_main_trait_underhanded = 3},
-                              character_spent_turn_in_enemy_region = {phar_main_trait_confident = 5 --[[Predisposed--]] },
+                              character_spent_turn_in_enemy_region = {phar_main_trait_confident = 5},
                               character_spent_turns_in_encamp_stance = {phar_main_trait_content = 3},
                               character_spent_turns_in_march_stance = {phar_main_trait_ambitious = 3},
-                              character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 5 --[[Predisposed--]] },
+                              character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 5},
                               character_suffered_attrition = {phar_main_trait_ambitious = 3},
-                              character_won_battle_cadmean_victory = {phar_main_trait_blunt = 5 --[[Predisposed--]] },
+                              character_won_battle_cadmean_victory = {phar_main_trait_blunt = 5},
                               character_won_defensive_battle = {phar_main_trait_hesitant = 1}
                          }
                     },
@@ -2372,8 +2365,8 @@ function event_listener_functions:modify_phar_campaign_traits()
                               character_beeing_reinforced = {phar_main_trait_cooperative = 3},
                               character_being_lazy_in_owned_settlement_high_public_order = {phar_main_trait_respectful = 3, phar_main_trait_hesitant = 3},
                               character_being_lazy_in_owned_settlement_low_public_order = {phar_main_trait_irreverent = 3, phar_main_trait_hesitant = 3},
-                              character_bodyguard_suffered_casualties_high = {phar_main_trait_reckless = 5 --[[Predisposed--]] },
-                              character_bodyguard_suffered_casualties_low = {phar_main_trait_cautious = 3, phar_main_trait_brave = 5 --[[Predisposed--]] },
+                              character_bodyguard_suffered_casualties_high = {phar_main_trait_reckless = 5},
+                              character_bodyguard_suffered_casualties_low = {phar_main_trait_cautious = 3, phar_main_trait_brave = 5},
                               character_executed_captives = {phar_main_trait_cruel = 3},
                               character_fought_alone = {phar_main_trait_individualistic = 3},
                               character_fought_battle_far_from_capital = {phar_main_trait_individualistic = 3},
@@ -2383,18 +2376,18 @@ function event_listener_functions:modify_phar_campaign_traits()
                               character_present_for_construction = {phar_main_trait_cultured = 3},
                               character_razed_settlement = {phar_main_trait_barbaric = 3},
                               character_recruited_1h_melee_unit_spears = {phar_main_trait_cautious = 3},
-                              character_recruited_2h_melee_unit_infantry = {phar_main_trait_reckless = 5 --[[Predisposed--]] },
-                              character_recruited_khopeshi = {phar_main_trait_brave = 5 --[[Predisposed--]] },
-                              character_recruited_swordmen = {phar_main_trait_brave = 5 --[[Predisposed--]] },
+                              character_recruited_2h_melee_unit_infantry = {phar_main_trait_reckless = 5},
+                              character_recruited_khopeshi = {phar_main_trait_brave = 5},
+                              character_recruited_swordmen = {phar_main_trait_brave = 5},
                               character_reinforces_other_armies = {phar_main_trait_cooperative = 3},
                               character_sacked_settlement = {phar_main_trait_barbaric = 3},
                               character_sacks_or_razes_ers_shrine = {phar_main_trait_underhanded = 3, phar_main_trait_barbaric = 3},
                               character_spent_turn_in_ambush_stance = {phar_main_trait_cowardly = 3, phar_main_trait_underhanded = 3},
-                              character_spent_turn_in_enemy_region = {phar_main_trait_confident = 5 --[[Predisposed--]] },
+                              character_spent_turn_in_enemy_region = {phar_main_trait_confident = 5},
                               character_spent_turns_in_encamp_stance = {phar_main_trait_content = 3},
-                              character_spent_turns_in_march_stance = {phar_main_trait_ambitious = 5 --[[Predisposed--]] },
+                              character_spent_turns_in_march_stance = {phar_main_trait_ambitious = 5},
                               character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 3},
-                              character_suffered_attrition = {phar_main_trait_ambitious = 5 --[[Predisposed--]] },
+                              character_suffered_attrition = {phar_main_trait_ambitious = 5},
                               character_won_battle_cadmean_victory = {phar_main_trait_blunt = 3},
                               character_won_defensive_battle = {phar_main_trait_hesitant = 1}
                          }
@@ -2402,10 +2395,10 @@ function event_listener_functions:modify_phar_campaign_traits()
                }
           end
 
-          if campaign_traits and campaign_config.modifiable_event_params then
-               campaign_config.modifiable_event_params = {
+          if campaign_traits and campaign_traits.config.modifiable_event_params then
+               campaign_traits.config.modifiable_event_params = {
                     character_fought_battle_far_from_capital = 1750,
-                    character_being_lazy_in_owned_settlement_high_public_order = 80,
+                    character_being_lazy_in_owned_settlement_high_public_order = 70,
                     character_being_lazy_in_owned_settlement_low_public_order = 30,
                     character_suffered_high_casualties_in_battle = 0.375,
                     character_recruited_2h_melee_unit_axes = "phar_main_2h_axes",
@@ -2418,9 +2411,8 @@ function event_listener_functions:modify_phar_campaign_traits()
                     character_recruited_chariots = "phar_main_chariots_all",
                     character_recruited_bowmen = "phar_main_ranged_bows",
                     character_bodyguard_unit_set = "phar_main_bodyguards",
-                    character_spent_turn_in_region_with_high_influence = 0.75,
-                    character_spent_turn_in_region_with_low_influence = 0.35,
-                    character_bodyguard_suffered_casualties_high = 25,
+                    character_spent_turn_in_region_with_low_influence = 0.60,
+                    character_bodyguard_suffered_casualties_high = 35,
                     character_bodyguard_suffered_casualties_low = 25,
                     character_shrine_occupation_allowed_options = {"occupation_decision_ers_raze_without_occupy", "occupation_decision_ers_sack"},
                     character_raze_port_decision_key = {"occupation_decision_raze_without_occupy", "occupation_decision_raze_and_exterminate"}
@@ -2456,7 +2448,7 @@ function event_listener_functions:modify_phar_campaign_traits()
           core:remove_listener("phar_personality_traits_character_sacks_or_razes_ers_shrine") -- barbaric and underhanded
           core:remove_listener("phar_personality_traits_character_suffered_attrition") -- ambitious
      end)
-end
+--end
 
 --------------------------------------------
 --- FIRE EVERY LISTENER WE HAVE!
