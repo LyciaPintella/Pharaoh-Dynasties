@@ -6,10 +6,10 @@
 -- *
 -- *
 --- @class trait_event_listener_table : table
-local event_listener_functions = {is_legacy_claimed = false}
+local event_listener_functions = {is_legacy_claimed = 0}
 
----@type boolean
-event_listener_functions.is_legacy_claimed = false
+---@type integer
+event_listener_functions.is_legacy_claimed = 0
 
 --- @class character_trait_manager : table
 event_listener_functions.character_traits = {coming_of_age_percent_chance = 5}
@@ -404,7 +404,7 @@ end
 -- Starts listeners unique to ancient legacty traits.
 
 function event_listener_functions:ancient_legacies()
-     if not event_listener_functions.is_legacy_claimed then
+     if event_listener_functions.is_legacy_claimed == 0 then
 
           local all_legacies = {
                "phar_ancient_legacy_khufu", "phar_ancient_legacy_akhenaten", "phar_ancient_legacy_hatshepsut", "phar_ancient_legacy_thutmose",
@@ -432,7 +432,7 @@ function event_listener_functions:ancient_legacies()
                          -- ! SELF_PERPETUATING_TRAITS[#SELF_PERPETUATING_TRAITS + 1] = "character_traits_expansion_trait_heretic"
                          cm:remove_faction_turn_start_listener_by_name("Character_Traits_Expansion_Ancient_Legacy_Listener")
 
-                         event_listener_functions.is_legacy_claimed = true
+                         event_listener_functions.is_legacy_claimed = 1
                          return
                     end
 
@@ -441,7 +441,7 @@ function event_listener_functions:ancient_legacies()
                          if ancient_legacy_common:faction_has_claimed_legacy(faction:name(), all_legacies[j]) then
                               out("Character_Traits_Expansion_Ancient_Legacy_Claimed_For_" .. faction_name .. "_REMOVING_LISTENER")
                               cm:remove_faction_turn_start_listener_by_name("Character_Traits_Expansion_Ancient_Legacy_Listener")
-                              event_listener_functions.is_legacy_claimed = true
+                              event_listener_functions.is_legacy_claimed = 1
                               return
                          end
                     end
@@ -449,7 +449,7 @@ function event_listener_functions:ancient_legacies()
                end, true)
           end
      else
-          out("HCP_ANCIENT_LEGACY_CLAIMED_IS_" .. event_listener_functions.is_legacy_claimed)
+          out("Character_Traits_Expansion_Ancient_Legacy_Claimed_is_" .. event_listener_functions.is_legacy_claimed)
      end
 
      -- Gives heretic to new faction leaders.
@@ -2462,5 +2462,5 @@ cm:add_first_tick_callback(function() event_listener_functions:start_all() end)
 cm:add_saving_game_callback(function(context) cm:save_named_value("is_legacy_claimed", event_listener_functions.is_legacy_claimed, context, false); end)
 
 cm:add_loading_game_callback(function(context)
-     if cm:is_new_game() == false then event_listener_functions.is_legacy_claimed = cm:load_named_value("is_legacy_claimed", false, context) or false end
+     if cm:is_new_game() == false then event_listener_functions.is_legacy_claimed = cm:load_named_value("is_legacy_claimed", 0, context) or 0 end
 end)
