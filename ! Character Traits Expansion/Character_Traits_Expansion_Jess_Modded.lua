@@ -6,10 +6,10 @@
 -- *
 -- *
 --- @class trait_event_listener_table : table
-local event_listener_functions = {is_akhenaten_legacy_claimed = false}
+local event_listener_functions = {is_legacy_claimed = false}
 
 ---@type boolean
-event_listener_functions.is_akhenaten_legacy_claimed = false
+event_listener_functions.is_legacy_claimed = false
 
 --- @class character_trait_manager : table
 event_listener_functions.character_traits = {coming_of_age_percent_chance = 5}
@@ -220,7 +220,7 @@ event_listener_functions.character_traits.self_perpetuating_traits = {
      "character_traits_expansion_trait_boring", "character_traits_expansion_trait_trusting", "character_traits_expansion_trait_paranoia",
      "character_traits_expansion_trait_superstitious", "character_traits_expansion_trait_prophetic", "character_traits_expansion_trait_anger",
      "phar_main_trait_respectful", "phar_main_trait_irreverent", "character_traits_expansion_trait_fertile", "character_traits_expansion_trait_barren",
-     "character_traits_expansion_trait_blind" 
+     "character_traits_expansion_trait_blind","character_traits_expansion_trait_heretic"
 }
 
 -- ! Removed "character_traits_expansion_trait_heretic" from self_perpetuating_traits because the ancient legacy funtion injects it.
@@ -370,7 +370,7 @@ event_listener_functions.character_traits.building_superchains.province_manageme
 --- @param _points number? #optional, default value=1 Trait points to add. The underlying force_add_trait function is called for each point added.
 --- @param _chance number? #optional, default value=100 Percentage chance for the trait to be applied. Value should be between 0 and 100.
 --- @param _show_message boolean? #optional, default value=false Show a message when the trait is applied to a general with an army.
-function event_listener_functions.character_traits:apply_trait_by_chance(character, trait, _points, _chance, _show_message)
+function self.character_traits:apply_trait_by_chance(character, trait, _points, _chance, _show_message)
      local points = _points or 1
      local chance = _chance or 100
      local show_message = _show_message or false
@@ -402,9 +402,76 @@ function event_listener_functions.character_traits:apply_trait_by_chance(charact
 end
 
 -- Starts listeners unique to ancient legacty traits.
+
+function event_listener_functions:ancient_legacies()
+     if not event_listener_functions.is_legacy_claimed then
+
+          local all_legacies = {
+               "phar_ancient_legacy_khufu", "phar_ancient_legacy_akhenaten", "phar_ancient_legacy_hatshepsut", "phar_ancient_legacy_thutmose",
+               "phar_ancient_legacy_tudhaliya", "phar_ancient_legacy_muwatalli", "phar_ancient_legacy_perseus", "phar_ancient_legacy_atreus",
+               "phar_ancient_legacy_hammurabi", "phar_ancient_legacy_sargon"
+          }
+          local human_factions = cm:get_human_factions()
+
+          for i = 1, #human_factions do
+               local faction_name = human_factions[i]
+               out("Character_Traits_Expansion_Ancient_Legacy_Listener_ADDED_FOR_" .. faction_name)
+
+               cm:add_faction_turn_start_listener_by_name("Character_Traits_Expansion_Ancient_Legacy_Listener", faction_name, function(context)
+                    local faction = context:faction()
+
+                    -- Apply Heretic trait if Akhenaten legacy is claimed
+                    if ancient_legacy_common:faction_has_claimed_legacy(faction:name(), "phar_ancient_legacy_akhenaten") then
+                         out("Character_Traits_Expansion_Ancient_Legacy_AKHENATEN_CLAIMED")
+
+                         self.character_traits:apply_trait_by_chance(faction:faction_leader(), "character_traits_expansion_trait_heretic", 20)
+
+					-- ^ COMMENTED OUT BECAUSE I MANUALLY ADDED HERETIC TO THE LIST OF SELF
+					-- ^ PERPETUATING TRAITS INSTEAD OF INJECTING IT VIA THE ANCIENT LEGACY FUNCTION
+                         -- add Heretic to the list of self-perpetuating traits
+                         --! SELF_PERPETUATING_TRAITS[#SELF_PERPETUATING_TRAITS + 1] = "character_traits_expansion_trait_heretic"
+                         cm:remove_faction_turn_start_listener_by_name("Character_Traits_Expansion_Ancient_Legacy_Listener")
+
+                         event_listener_functions.is_legacy_claimed = true
+                         return
+                    end
+
+                    -- Check if any legacy is claimed, and remove the listener
+                    for j = 1, #all_legacies do
+                         if ancient_legacy_common:faction_has_claimed_legacy(faction:name(), all_legacies[j]) then
+                              out("Character_Traits_Expansion_Ancient_Legacy_Claimed_For_" .. faction_name .. "_REMOVING_LISTENER")
+                              cm:remove_faction_turn_start_listener_by_name("Character_Traits_Expansion_Ancient_Legacy_Listener")
+                              event_listener_functions.is_legacy_claimed = true
+                              return
+                         end
+                    end
+                    out("Character_Traits_Expansion_Ancient_Legacy_No_Legacy_Claimed_This_Turn")
+               end, true)
+          end
+     else
+          out("HCP_ANCIENT_LEGACY_CLAIMED_IS_" .. event_listener_functions.is_legacy_claimed)
+     end
+
+-- Gives heretic to new faction leaders.
+core:add_listener("Character_Traits_Expansion_Apply_Heretic_To_New_Faction_Leader", "CharacterBecomesFactionLeader", function(context)
+     context:character():faction():is_human()
+     return true
+end, function(context)
+     local character = context:character()
+
+     if ancient_legacy_common:faction_has_claimed_legacy(character:faction():name(), "phar_ancient_legacy_akhenaten") then
+          -- local random_index = math.random(3)
+
+          -- out("HCP_RANDOM_NUMBER_IS_" .. random_index)
+          self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_heretic", 20)
+     end
+end, true)
+end
+
+--[[
 function event_listener_functions:ancient_legacies()
      cm:add_first_tick_callback(function()
-          if not self.is_akhenaten_legacy_claimed then
+          if not self.is_legacy_claimed then
                local all_legacies = {
                     "phar_ancient_legacy_khufu", "phar_ancient_legacy_akhenaten", "phar_ancient_legacy_hatshepsut", "phar_ancient_legacy_thutmose",
                     "phar_ancient_legacy_tudhaliya", "phar_ancient_legacy_muwatalli", "phar_ancient_legacy_perseus", "phar_ancient_legacy_atreus",
@@ -430,7 +497,7 @@ function event_listener_functions:ancient_legacies()
                               self.character_traits.self_perpetuating_traits[#self_perpetuating_traits + 1] = "character_traits_expansion_trait_heretic"
                               cm:remove_faction_turn_start_listener_by_name("character_traits_expansion_ancient_legacies")
 
-                              self.is_akhenaten_legacy_claimed = true
+                              self.is_legacy_claimed = true
                               return
                          end
 
@@ -439,7 +506,7 @@ function event_listener_functions:ancient_legacies()
                               if ancient_legacy_common:faction_has_claimed_legacy(faction:name(), all_legacies[j]) then
                                    out("Character Traits Expansion: ANCIENT_LEGACY_CLAIMED_FOR_" .. faction_name .. "_REMOVING")
                                    cm:remove_faction_turn_start_listener_by_name("character_traits_expansion_ancient_legacies")
-                                   self.is_akhenaten_legacy_claimed = true
+                                   self.is_legacy_claimed = true
                                    return
                               end
                          end
@@ -447,7 +514,7 @@ function event_listener_functions:ancient_legacies()
                     end, true)
                end
           else
-               out("Character Traits Expansion: ANCIENT_LEGACY_CLAIMED_IS_" .. self.is_akhenaten_legacy_claimed)
+               out("Character Traits Expansion: ANCIENT_LEGACY_CLAIMED_IS_" .. self.is_legacy_claimed)
           end
 
           -- Gives heretic to new faction leaders of factions following akhenaten's legacy.
@@ -468,6 +535,8 @@ function event_listener_functions:ancient_legacies()
           end, true)
      end)
 end
+--]]
+
 -- -Begin Trait Listeners
 function event_listener_functions:battle()
      -----------------------------------------
@@ -2526,7 +2595,16 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
           core:remove_listener("phar_personality_traits_character_suffered_attrition") -- ambitious
      end)
 end
-]] --
+]]--
+
+cm:add_saving_game_callback(
+     function(context) cm:save_named_value("is_legacy_claimed", event_listener_functions.is_legacy_claimed, context, false); end)
+
+cm:add_loading_game_callback(function(context)
+     if cm:is_new_game() == false then
+          event_listener_functions.is_legacy_claimed = cm:load_named_value("is_legacy_claimed", false, context) or false
+     end
+end)
 
 --------------------------------------------
 --- FIRE EVERY LISTENER WE HAVE!
@@ -2545,12 +2623,3 @@ function event_listener_functions:start_all()
      self:provincial_construction()
 end
 event_listener_functions:start_all()
-
-cm:add_saving_game_callback(
-     function(context) cm:save_named_value("is_akhenaten_legacy_claimed", event_listener_functions.is_akhenaten_legacy_claimed, context, false); end)
-
-cm:add_loading_game_callback(function(context)
-     if cm:is_new_game() == false then
-          event_listener_functions.is_akhenaten_legacy_claimed = cm:load_named_value("is_akhenaten_legacy_claimed", false, context) or false
-     end
-end)
