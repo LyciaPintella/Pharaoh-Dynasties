@@ -445,11 +445,11 @@ function event_listener_functions:ancient_legacies()
                               return
                          end
                     end
-                    out("Character_Traits_Expansion_Ancient_Legacy_No_Legacy_Claimed_This_Turn")
+                    out("Character_Traits_Expansion: Ancient_Legacy - No Legacy Claimed This Turn")
                end, true)
           end
      else
-          out("Character_Traits_Expansion_Ancient_Legacy_Claimed_is_" .. event_listener_functions.is_legacy_claimed)
+          out("Character_Traits_Expansion: is_legacy_claimed: " .. event_listener_functions.is_legacy_claimed)
      end
 
      -- Gives heretic to new faction leaders.
@@ -602,7 +602,7 @@ function event_listener_functions:battle()
                     local unit = unit_list:item_at(i)
                     if unit:belongs_to_unit_set("phar_main_bodyguards") then
                          local casualties_percent = 100 - unit:percentage_proportion_of_full_strength()
-                         local percent_loss_trigger_high = 35
+                         local percent_loss_trigger_high = 30
                          local percent_loss_trigger_low = 20
                          if character:fought_in_battle() and casualties_percent > percent_loss_trigger_high then
                               self.character_traits:apply_trait_by_chance(character, "phar_main_trait_brave", 20, 15)
