@@ -165,40 +165,42 @@ local merc_unit_tier_stage_table = {{10, 17.5, 25, 32.5, 40}, {0, 10, 13.34, 16.
 local function z_native_mercenary()
      local current_stage = 1
      if not cm:get_saved_value("zz_native_mercenary_5") then
-          core:add_listener("z_native_mercenary_listener", "RoundStart", function()
-               local turn_number = cm:turn_number()
+     core:add_listener("z_native_mercenary_listener", "RoundStart", function()
+          local turn_number = cm:turn_number()
 
-               if turn_number >= 60 then
-                    current_stage = 5
-               elseif turn_number >= 40 then
-                    current_stage = 4
-               elseif turn_number >= 25 then
-                    current_stage = 3
-               elseif turn_number >= 10 then
-                    current_stage = 2
-               else
-                    current_stage = 1
-               end
-               return not cm:get_saved_value("zz_native_mercenary_" .. current_stage)
-          end, function()
-               for num1, merc_unit in pairs(zNativeUnitData) do
-                    local merc_unit_key = merc_unit.unit
-                    local merc_unit_tier = merc_unit.tier
-                    if current_stage >= merc_unit_tier then
-                         for _, region_name in ipairs(zRealmRegionData[merc_unit.realm]) do
-                              local region = cm:model():world():region_manager():region_by_key(region_name)
+          if turn_number >= 60 then
+               current_stage = 5
+          elseif turn_number >= 40 then
+               current_stage = 4
+          elseif turn_number >= 25 then
+               current_stage = 3
+          elseif turn_number >= 10 then
+               current_stage = 2
+          else
+               current_stage = 1
+          end
+          return not cm:get_saved_value("zz_native_mercenary_" .. current_stage)
+     end, function()
+          for num1, merc_unit in pairs(zNativeUnitData) do
+               local merc_unit_key = merc_unit.unit
+               local merc_unit_tier = merc_unit.tier
+               if current_stage >= merc_unit_tier then
+                    for _, region_name in ipairs(zRealmRegionData[merc_unit.realm]) do
+                         local region = cm:model():world():region_manager():region_by_key(region_name)
 
-                              cm:add_unit_to_province_mercenary_pool(region, merc_unit_key, current_stage - merc_unit_tier,
-                                                                     merc_unit_tier_stage_table[merc_unit_tier][current_stage], current_stage - merc_unit_tier + 1, 1, 0,
-                                                                     "", "", "")
-                         end
+                         cm:add_unit_to_province_mercenary_pool(region, merc_unit_key, current_stage - merc_unit_tier,
+                         ---@diagnostic disable-next-line: param-type-mismatch
+                                                                merc_unit_tier_stage_table[merc_unit_tier][current_stage], current_stage - merc_unit_tier + 1, 1, 0,
+                         ---@diagnostic disable-next-line: redundant-parameter
+                                                                "", "", "")
                     end
                end
-               cm:set_saved_value("zz_native_mercenary_" .. current_stage, true);
-               if current_stage == 5 then core:remove_listener("z_native_mercenary_listener"); end
-          end, false);
+          end
+          cm:set_saved_value("zz_native_mercenary_" .. current_stage, true);
+          out("Native_Mercenaries - current_stage is " .. current_stage)
+          if current_stage == 5 then core:remove_listener("z_native_mercenary_listener"); end
+     end, false);
      end
 end
 
 cm:add_first_tick_callback(function() z_native_mercenary() end);
-
