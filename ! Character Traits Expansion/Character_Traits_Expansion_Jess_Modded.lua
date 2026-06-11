@@ -1468,13 +1468,12 @@ function event_listener_functions:characters_in_regions()
                          local bodyguard_health_low = 70
                          if casualties_percent > bodyguard_health_low then
                               bodyguard_heavy_casualties = true
-                         elseif casualties_percent > bodyguard_health_high then
-                              bodyguard_light_casualties = true
+                              bodyguard_light_casualties = false
                          end
-                    elseif casualties_percent > bodyguard_health_high then
-                         if casualties_percent < percent_loss_trigger_low then
-                              self.character_traits:apply_trait_by_chance(character, "phar_main_trait_cautious", 20, 3.75)
-                              out("Character Traits Expansion: low_bodyguard_casualties")
+                         if casualties_percent > bodyguard_health_high then
+                              bodyguard_light_casualties = true
+                              bodyguard_heavy_casualties = false
+                              break
                          end
                     end
                end
@@ -1483,74 +1482,68 @@ function event_listener_functions:characters_in_regions()
           -----------------------------------------------------
           ---- SPENT TURNS IN OWN UNCONTESTED SETTTLEMENTS ----
           -----------------------------------------------------
-          if faction:is_allowed_to_capture_territory() and cm:char_is_general_with_army(character) and character:has_region() and
-               region:owning_faction():command_queue_index() == character:faction():command_queue_index() then
-               if character:in_settlement() and not contested and not character:military_force():active_stance() == "military_force_active_stance_type_march" and
-                    not character:military_force():active_stance() == "military_force_active_stance_type_muster" then
-                    if character:turns_in_own_regions() >= 4 then
-                         out("Character Traits Expansion: slothful_character_is_eligible_for_slothful")
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_slothful", 20, 10)
-                    elseif character:turns_in_own_regions() >= 2 then
-                         local sober_chance = 1
-                         local drink_chance = 1
-                         out("Character Traits Expansion: character_" .. character:onscreen_name() .. " is governor of region: " .. region:name())
-                         if region:public_order() >= 40 then
-                              -- old characters are more likely to get lazy traits like in attila
-                              if character:age() > 50 then
-                                   drink_chance = drink_chance + 2
-                                   out("Character Traits Expansion: give_lazy_traits_character_is_old_so_drink_chance_is " .. drink_chance)
-                              end
-                              -- check if settlement has a military admin, temple, or beer building and increase chance if so
-                              local slot_list = character:region():settlement():slot_list()
-                              out("checking " .. slot_list:num_items() .. " slots in the settlement.")
-                              for i = 0, slot_list:num_items() - 1 do
-                                   if slot_list:item_at(i):has_building() then
-                                        local building_superchains = slot_list:item_at(i):building():superchain()
-                                        out("checking building with superchain: " .. building_superchain)
-                                        if self.character_traits.building_superchains.military_administration[building_superchain] then
-                                             sober_chance = sober_chance + 4
-                                             out("Character Traits Expansion: give_lazy_traits_found_military_admin_building_so_sober_chance_is " .. sober_chance)
-                                        end
-                                        if self.character_traits.building_superchains.drinking[building_superchain] then
-                                             drink_chance = drink_chance + 4
-                                             out("Character Traits Expansion: give_lazy_traits_found_drink_building_so_drink_chance_is " .. drink_chance)
-                                        end
-                                        if building_superchains == "phar_main_religion_temple" or building_superchains == "phar_map_religion_dwelling_all" then
-                                             sober_chance = sober_chance + 4
-                                             out("Character Traits Expansion: give_lazy_traits_found_temple_so_sober_chance_is " .. sober_chance)
+          if faction:is_allowed_to_capture_territory() and cm:char_is_general_with_army(character) and character:has_region() then
+               if region:owning_faction():command_queue_index() == character:faction():command_queue_index() then
+                    if character:in_settlement() and not contested and not character:military_force():active_stance() == "military_force_active_stance_type_march" and
+                         not character:military_force():active_stance() == "military_force_active_stance_type_muster" then
+                         if character:turns_in_own_regions() >= 4 then
+                              out("Character Traits Expansion: slothful_character_is_eligible_for_slothful")
+                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_slothful", 20, 10)
+                         elseif character:turns_in_own_regions() >= 2 then
+                              local sober_chance = 1
+                              local drink_chance = 1
+                              out("Character Traits Expansion: character_" .. character:onscreen_name() .. " is governor of region: " .. region:name())
+                              if region:public_order() >= 40 then
+                                   -- old characters are more likely to get lazy traits like in attila
+                                   if character:age() > 50 then
+                                        drink_chance = drink_chance + 2
+                                        out("Character Traits Expansion: give_lazy_traits_character_is_old_so_drink_chance_is " .. drink_chance)
+                                   end
+                                   -- check if settlement has a military admin, temple, or beer building and increase chance if so
+                                   local slot_list = character:region():settlement():slot_list()
+                                   out("checking " .. slot_list:num_items() .. " slots in the settlement.")
+                                   for i = 0, slot_list:num_items() - 1 do
+                                        if slot_list:item_at(i):has_building() then
+                                             local building_superchains = slot_list:item_at(i):building():superchain()
+                                             out("checking building with superchain: " .. building_superchain)
+                                             if self.character_traits.building_superchains.military_administration[building_superchain] then
+                                                  sober_chance = sober_chance + 4
+                                                  out("Character Traits Expansion: give_lazy_traits_found_military_admin_building_so_sober_chance_is " .. sober_chance)
+                                             end
+                                             if self.character_traits.building_superchains.drinking[building_superchain] then
+                                                  drink_chance = drink_chance + 4
+                                                  out("Character Traits Expansion: give_lazy_traits_found_drink_building_so_drink_chance_is " .. drink_chance)
+                                             end
+                                             if building_superchains == "phar_main_religion_temple" or building_superchains == "phar_map_religion_dwelling_all" then
+                                                  sober_chance = sober_chance + 4
+                                                  out("Character Traits Expansion: give_lazy_traits_found_temple_so_sober_chance_is " .. sober_chance)
+                                             end
                                         end
                                    end
-                              end
-                              out("Final sober_chance: " .. sober_chance)
-                              out("Final drink_chance: " .. drink_chance)
-                              -- Apply the traits after processing all the buildings
-                              local traits = {
-                                   {"character_traits_expansion_trait_sober", sober_chance}, {"character_traits_expansion_trait_drink", drink_chance},
-                                   {"character_traits_expansion_trait_girls", drink_chance}, {"character_traits_expansion_trait_arse", drink_chance},
-                                   {"character_traits_expansion_trait_degenerate", drink_chance}, {"character_traits_expansion_trait_gambler", drink_chance}
-                              }
-                              -- ^ Lycia Bookmark:
-                              -- ! This shows how to use a table to pair two values like a trait and its chance, and then loop through it to apply the  This is much cleaner than having separate if statements for each trait.
-                              for i = 1, #traits do
-                                   out("Applying trait: " .. traits[i][1] .. " with chance: " .. traits[i][2])
-                                   self.character_traits:apply_trait_by_chance(character, traits[i][1], 20, traits[i][2])
+                                   out("Final sober_chance: " .. sober_chance)
+                                   out("Final drink_chance: " .. drink_chance)
+                                   -- Apply the traits after processing all the buildings
+                                   local traits = {
+                                        {"character_traits_expansion_trait_sober", sober_chance}, {"character_traits_expansion_trait_drink", drink_chance},
+                                        {"character_traits_expansion_trait_girls", drink_chance}, {"character_traits_expansion_trait_arse", drink_chance},
+                                        {"character_traits_expansion_trait_degenerate", drink_chance}, {"character_traits_expansion_trait_gambler", drink_chance}
+                                   }
+                                   -- ^ Lycia Bookmark:
+                                   -- ! This shows how to use a table to pair two values like a trait and its chance, and then loop through it to apply the  This is much cleaner than having separate if statements for each trait.
+                                   for i = 1, #traits do
+                                        out("Applying trait: " .. traits[i][1] .. " with chance: " .. traits[i][2])
+                                        self.character_traits:apply_trait_by_chance(character, traits[i][1], 20, traits[i][2])
+                                   end
                               end
                          end
+                    elseif not contested then
+                         ------------------------------------------------
+                         ---- SPENT TURNS IN OWN UNCONTESTED REGIONS ----
+                         ------------------------------------------------
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_feck", 20, 10)
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 15, 10)
+                         out("Character Traits Expansion: character not in settlement with full action points, applying 'feck' and 'bad_disciplinarian' ")
                     end
-               end
-          elseif faction:at_war_with(region:owning_faction()) then
-               -------------------------------------
-               ---- SPENT TURNS IN ENEMY REGIONS ---
-               -------------------------------------
-               self.character_traits:apply_trait_by_chance(character, "phar_main_trait_confident", 20, 10)
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 15)
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_pragmatic", 20, 10)
-               out("Character Traits Expansion: character in enemy region, applying 'confident' and 'scout' ")
-
-               -- additional check for marriage and action points and applies cuckold.
-               if character:family_member():has_spouse() and character:turns_in_enemy_regions() >= 3 then
-                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_cuckold", 20, 7.5)
-                    out("Character Traits Expansion: character is married and has full action points, applying 'cuckold' trait.")
                end
           elseif contested then
                --------------------------------------------
@@ -1570,13 +1563,6 @@ function event_listener_functions:characters_in_regions()
                          self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 20)
                          self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 10)
                     elseif bodyguard_light_casualties then
-                         ------------------------------------------------
-                         ---- SPENT TURNS IN OWN UNCONTESTED REGIONS ----
-                         ------------------------------------------------
-                    else
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_feck", 20, 10)
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 15, 10)
-                         out("Character Traits Expansion: character not in settlement with full action points, applying 'feck' and 'bad_disciplinarian' ")
                     end
                end
           elseif region:is_abandoned() then
@@ -1584,7 +1570,23 @@ function event_listener_functions:characters_in_regions()
                ---- SPENT TURNS IN ABANDONED REGIONS ---
                -----------------------------------------
                self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 25)
+
+          elseif faction:at_war_with(region:owning_faction()) then
+               -------------------------------------
+               ---- SPENT TURNS IN ENEMY REGIONS ---
+               -------------------------------------
+               self.character_traits:apply_trait_by_chance(character, "phar_main_trait_confident", 20, 10)
+               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 15)
+               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_pragmatic", 20, 10)
+               out("Character Traits Expansion: character in enemy region, applying 'confident' and 'scout' ")
+
+               -- additional check for marriage and action points and applies cuckold.
+               if character:family_member():has_spouse() and character:turns_in_enemy_regions() >= 3 then
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_cuckold", 20, 7.5)
+                    out("Character Traits Expansion: character is married and has full action points, applying 'cuckold' trait.")
+               end
           end
+
           ------------------------------------
           ---- POPULAR/UNPOPULAR GOVERNOR ----
           ------------------------------------
