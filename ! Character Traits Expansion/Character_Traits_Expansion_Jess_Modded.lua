@@ -1493,12 +1493,15 @@ function event_listener_functions:characters_in_regions()
                          self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_cuckold", 20, 7.5)
                          out("Character Traits Expansion: character is married and is in enemy territory, applying 'cuckold' trait.")
                     end
-               elseif region:is_abandoned() then
+                if region:is_abandoned() then
                     -----------------------------------------
                     ---- SPENT TURNS IN ABANDONED REGIONS ---
                     -----------------------------------------
-                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 25)
-               elseif character:in_settlement() and not contested then
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20,
+                        25)
+                end
+			end
+               if character:in_settlement() and not contested then
                     if region:owning_faction():command_queue_index() == character:faction():command_queue_index() then
                          if not character:military_force():active_stance() == "military_force_active_stance_type_muster" then
                               -----------------------------------------------------
@@ -1557,9 +1560,9 @@ function event_listener_functions:characters_in_regions()
                               end
                          end
                     end
-               elseif character:in_settlement() and contested then
+               if character:in_settlement() and contested then
                     --------------------------------------------------------
-                    ---- SPENT TURNS IN CONTESTED PROVINCE SETTLEMENTS  ----
+                    ---- SPENT TURNS IN OWN CONTESTED PROVINCE SETTLEMENTS  ----
                     --------------------------------------------------------
                     if character:turns_in_own_regions() >= 3 and not character:military_force():active_stance() == "military_force_active_stance_type_muster" and
                          not character:military_force():active_stance() == "military_force_active_stance_type_march" then
@@ -1574,14 +1577,16 @@ function event_listener_functions:characters_in_regions()
                               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 10)
                          end
                     end
-               elseif not character:in_settlement() and contested then
+			end
+               if not character:in_settlement() and contested then
                     --------------------------------------------
                     ---- SPENT TURNS IN CONTESTED PROVINCES ----
                     --------------------------------------------	
                     self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_feck", 20, 15)
                     self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 10)
                     self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 10)
-               elseif not character:in_settlement() and not contested then
+			end
+               if not character:in_settlement() and not contested then
                     ------------------------------------------------
                     ---- SPENT TURNS IN OWN UNCONTESTED REGIONS ----
                     ------------------------------------------------
