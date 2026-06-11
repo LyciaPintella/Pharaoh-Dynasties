@@ -179,7 +179,8 @@ local function z_native_mercenary()
           else
                current_stage = 1
           end
-          return not cm:get_saved_value("zz_native_mercenary_" .. current_stage)
+          --return true
+		return not cm:get_saved_value("zz_native_mercenary_" .. current_stage)
      end, function()
           for num1, merc_unit in pairs(zNativeUnitData) do
                local merc_unit_key = merc_unit.unit
