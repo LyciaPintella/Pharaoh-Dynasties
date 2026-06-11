@@ -1567,8 +1567,8 @@ function event_listener_functions:characters_in_regions()
                     --------------------------------------------	
                elseif not character:in_settlement() and not contested then
                     self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_feck", 20, 15)
-                self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 10)
-			 self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 10)
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 10)
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 10)
                     ------------------------------------------------
                     ---- SPENT TURNS IN OWN UNCONTESTED REGIONS ----
                     ------------------------------------------------
@@ -1576,7 +1576,8 @@ function event_listener_functions:characters_in_regions()
                     self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 7.5)
                     self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 7.5)
                     out("Character Traits Expansion: character not in settlement with full action points, applying 'feck' and 'bad_disciplinarian' ")
-               elseif faction:at_war_with(region:owning_faction()) then
+               end
+               if faction:at_war_with(region:owning_faction()) then
                     -------------------------------------
                     ---- SPENT TURNS IN ENEMY REGIONS ---
                     -------------------------------------
