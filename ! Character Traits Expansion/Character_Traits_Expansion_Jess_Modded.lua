@@ -1725,7 +1725,7 @@ function event_listener_functions:provincial_construction()
                end
           end
           return false
-     end, function(context) self.character_traits:apply_trait_by_chance(character, "phar_main_trait_cultured", 20, 3) end, true)
+     end, function(context) self.character_traits:apply_trait_by_chance(character, "phar_main_trait_cultured", 20, 12.5) end, true)
 
      -- if slot:building_chain_key() == "phar_main_ers_shrine" then return true end
      -----------------------------
