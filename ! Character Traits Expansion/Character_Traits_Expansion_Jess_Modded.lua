@@ -1427,59 +1427,59 @@ end
 function event_listener_functions:characters_in_regions()
      core:add_listener("character_traits_expansion_characters_in_regions", "CharacterTurnEnd", true, function(context)
           local character = context:character()
-        if character:is_null_interface() then
-            out("Character Traits Expansion: character_turn_end_main character is_null_interface!")
-            return
-        end
-		
-        if character:character_type("colonel") or character:character_details():is_civilian() then
-            out("Character Traits Expansion: character_turn_end_main character is a colonel or is a civilian!")
-            return
-        end
-		
+          if character:is_null_interface() then
+               out("Character Traits Expansion: character_turn_end_main character is_null_interface!")
+               return
+          end
+
+          if character:character_type("colonel") or character:character_details():is_civilian() then
+               out("Character Traits Expansion: character_turn_end_main character is a colonel or is a civilian!")
+               return
+          end
+
           -----------------------------------------
           ---- SPENT TURN IN REGIONS OR SETTLEMENTS
           -----------------------------------------
           local faction = character:faction()
           local region = character:region()
-
           local province = character:region():province()
           local contested = false
-        for i = 0, province:region_list():num_items() - 1 do
-            if not character:region():is_null_interface() and not region:is_abandoned() and not character:region():owning_faction():command_queue_index() ==
-                character:faction():command_queue_index() then
-                contested = true
-                break
-            end
-        end
-		
+
+          for i = 0, province:region_list():num_items() - 1 do
+               if not character:region():is_null_interface() and not region:is_abandoned() and not character:region():owning_faction():command_queue_index() ==
+                    character:faction():command_queue_index() then
+                    contested = true
+                    break
+               end
+          end
+
           -------------------------------------------------------------------------
           ---- CALCULATE GENERAL BODYGUARD CASUALTIES FOR HESITANT CALCULATION ----
           -------------------------------------------------------------------------
           local bodyguard_light_casualties = false
           local bodyguard_heavy_casualties = false
-        if not character:is_null_interface() and cm:char_is_general_with_army(character) then
-            local unit_list = character:military_force():unit_list()
-            for i = 0, unit_list:num_items() - 1 do
-                local unit = unit_list:item_at(i)
-                if unit:belongs_to_unit_set("phar_main_bodyguards") then
-                    local casualties_percent = 100 - unit:percentage_proportion_of_full_strength()
-                    local bodyguard_health_high = 85
-                    local bodyguard_health_low = 70
-                    if casualties_percent > bodyguard_health_low then
-                        bodyguard_heavy_casualties = true
+          if not character:is_null_interface() and cm:char_is_general_with_army(character) then
+               local unit_list = character:military_force():unit_list()
+               for i = 0, unit_list:num_items() - 1 do
+                    local unit = unit_list:item_at(i)
+                    if unit:belongs_to_unit_set("phar_main_bodyguards") then
+                         local casualties_percent = 100 - unit:percentage_proportion_of_full_strength()
+                         local bodyguard_health_high = 85
+                         local bodyguard_health_low = 70
+                         if casualties_percent > bodyguard_health_low then
+                              bodyguard_heavy_casualties = true
+                         elseif casualties_percent > bodyguard_health_high then
+                              bodyguard_light_casualties = true
+                         end
                     elseif casualties_percent > bodyguard_health_high then
-                        bodyguard_light_casualties = true
+                         if casualties_percent < percent_loss_trigger_low then
+                              self.character_traits:apply_trait_by_chance(character, "phar_main_trait_cautious", 20, 3.75)
+                              out("Character Traits Expansion: low_bodyguard_casualties")
+                         end
                     end
-                elseif casualties_percent > bodyguard_health_high then
-                    if casualties_percent < percent_loss_trigger_low then
-                        self.character_traits:apply_trait_by_chance(character, "phar_main_trait_cautious", 20, 3.75)
-                        out("Character Traits Expansion: low_bodyguard_casualties")
-                    end
-                end
-            end
-        end
-		
+               end
+          end
+
           -----------------------------------------------------
           ---- SPENT TURNS IN OWN UNCONTESTED SETTTLEMENTS ----
           -----------------------------------------------------
@@ -1538,10 +1538,10 @@ function event_listener_functions:characters_in_regions()
                          end
                     end
                end
+          elseif faction:at_war_with(region:owning_faction()) then
                -------------------------------------
                ---- SPENT TURNS IN ENEMY REGIONS ---
                -------------------------------------
-          elseif faction:at_war_with(region:owning_faction()) then
                self.character_traits:apply_trait_by_chance(character, "phar_main_trait_confident", 20, 10)
                self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 15)
                self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_pragmatic", 20, 10)
@@ -1552,12 +1552,10 @@ function event_listener_functions:characters_in_regions()
                     self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_cuckold", 20, 7.5)
                     out("Character Traits Expansion: character is married and has full action points, applying 'cuckold' trait.")
                end
-          elseif region:is_abandoned() then
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 25)
+          elseif contested then
                --------------------------------------------
                ---- SPENT TURNS IN CONTESTED PROVINCES ----
                --------------------------------------------
-          elseif contested then
                if character:in_settlement() and not character:military_force():active_stance() == "military_force_active_stance_type_march" then
                     if character:turns_in_own_regions() >= 3 and not character:military_force():active_stance() == "military_force_active_stance_type_muster" then
                          if not bodyguard_heavy_casualties and not bodyguard_light_casualties then
@@ -1581,6 +1579,11 @@ function event_listener_functions:characters_in_regions()
                          out("Character Traits Expansion: character not in settlement with full action points, applying 'feck' and 'bad_disciplinarian' ")
                     end
                end
+          elseif region:is_abandoned() then
+               -----------------------------------------
+               ---- SPENT TURNS IN ABANDONED REGIONS ---
+               -----------------------------------------
+               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 25)
           end
           ------------------------------------
           ---- POPULAR/UNPOPULAR GOVERNOR ----
@@ -1628,7 +1631,7 @@ function event_listener_functions:characters_in_regions()
           local is_in_settlement = character:in_settlement() == true
 
           if cm:char_is_general_with_army(character) and character:has_region() and is_in_settlement and character:region():owning_faction():command_queue_index() ==
-		character:faction():command_queue_index() then
+               character:faction():command_queue_index() then
                if not character:turns_in_own_regions() < 3 and not character:military_force():active_stance() == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_MUSTER" then
                     if public_order >= 70 then
                          self.character_traits:apply_trait_by_chance(character, "phar_main_trait_content", 20, 7.5)
