@@ -3562,188 +3562,185 @@ ancient_legacy_hammurabi_config = {
 
 
 
+
 --Lycia Bookmark!
-          replenishment = {
-               level_requirement = 6,
+	   replenishment = {
+		level_requirement = 6,
 
-               parameters = {
-                    phar_main_1h_clubs = {
-                         level_requirement = 6,
-                         effect_key = "phar_map_replenishment_percentage_bonus_unit_sets_1h_clubs",
-                         scope_key = "faction_to_force_own_factionwide",
-                         is_positive_good = true,
-                         values = {
-                              create_value_config("positive_3", 6, 14, 6, 7, 4),
-                              create_value_config("positive_2", 4, 8, 4, 5, 8),
-                              create_value_config("positive_1", 2, 1, 2, 2, 5),
-                         }
-                    },
+		parameters = {
+			phar_main_1h_clubs = {
+				level_requirement = 6,
+				effect_key = "phar_map_replenishment_percentage_bonus_unit_sets_1h_clubs",
+				scope_key = "faction_to_force_own_factionwide",
+				is_positive_good = true,
+				values = {
+					create_value_config("positive_3", 6, 14, 9, 7, 4),
+					create_value_config("positive_2", 4, 8, 6, 5, 8),
+					create_value_config("positive_1", 2, 1, 3, 2, 5),
+				}
+			},
+			
+			phar_main_ranged_slings = {
+				level_requirement = 6,
+				effect_key = "phar_map_replenishment_percentage_bonus_unit_sets_ranged_slings",
+				scope_key = "faction_to_force_own_factionwide",
+				is_positive_good = true,
+				values = {
+					create_value_config("positive_3", 6, 14, 9, 7, 4),
+					create_value_config("positive_2", 4, 8, 6, 5, 8),
+					create_value_config("positive_1", 2, 1, 3, 2, 5),
+				}
+			},
+			
+			phar_main_2h_spears = {
+				level_requirement = 7,
+				effect_key = "phar_map_replenishment_percentage_bonus_unit_sets_2h_spears",
+				scope_key = "faction_to_force_own_factionwide",
+				is_positive_good = true,
+				values = {
+					create_value_config("positive_3", 6, 14, 9, 7, 4),
+					create_value_config("positive_2", 4, 8, 6, 5, 8),
+					create_value_config("positive_1", 2, 1, 3, 2, 5),
+				}
+			},
 
-                    phar_main_ranged_slings = {
-                         level_requirement = 6,
-                         effect_key = "phar_map_replenishment_percentage_bonus_unit_sets_ranged_slings",
-                         scope_key = "faction_to_force_own_factionwide",
-                         is_positive_good = true,
-                         values = {
-                              create_value_config("positive_3", 6, 14, 6, 7, 4),
-                              create_value_config("positive_2", 4, 8, 4, 5, 8),
-                              create_value_config("positive_1", 2, 1, 2, 2, 5),
-                         }
-                    },
+			phar_main_1h_swords = {
+				level_requirement = 7,
+				effect_key = "phar_map_replenishment_percentage_bonus_unit_sets_1h_swords",
+				scope_key = "faction_to_force_own_factionwide",
+				is_positive_good = true,
+				values = {
+					create_value_config("positive_3", 6, 14, 9, 7, 4),
+					create_value_config("positive_2", 4, 8, 6, 5, 8),
+					create_value_config("positive_1", 2, 1, 3, 2, 5),
+				}
+			},
+			
+			phar_main_ranged_bows = {
+				name = "ui_text_replacements_localised_text_hp_title_unit_bowmen",
+				level_requirement = 8,
+				effect_key = "phar_map_replenishment_percentage_bonus_unit_sets_ranged_bows",
+				scope_key = "faction_to_force_own_factionwide",
+				is_positive_good = true,
+				values = {
+					create_value_config("positive_3", 6, 14, 9, 7, 4),
+					create_value_config("positive_2", 4, 8, 6, 5, 8),
+					create_value_config("positive_1", 2, 1, 3, 2, 5),
+				}
+			},
+			
+			phar_main_2h_clubs = {
+				level_requirement = 8,
+				effect_key = "phar_map_replenishment_percentage_bonus_unit_sets_2h_clubs",
+				scope_key = "faction_to_force_own_factionwide",
+				is_positive_good = true,
+				values = {
+					create_value_config("positive_3", 6, 14, 9, 7, 4),
+					create_value_config("positive_2", 4, 8, 6, 5, 8),
+					create_value_config("positive_1", 2, 1, 3, 2, 5),
+				}
+			},
+			
+			phar_main_1h_axes = {
+				level_requirement = 9,
+				effect_key = "phar_map_replenishment_percentage_bonus_unit_sets_1h_axes",
+				scope_key = "faction_to_force_own_factionwide",
+				is_positive_good = true,
+				values = {
+					create_value_config("positive_3", 6, 14, 9, 7, 4),
+					create_value_config("positive_2", 4, 8, 6, 5, 8),
+					create_value_config("positive_1", 2, 1, 3, 2, 5),
+				}
+			},
+			
+			phar_main_bodyguards = {
+				level_requirement = 10,
+				effect_key = "phar_map_replenishment_percentage_bonus_unit_sets_bodyguards",
+				scope_key = "faction_to_force_own_factionwide",
+				is_positive_good = true,
+				values = {
+					create_value_config("positive_3", 6, 14, 9, 7, 4),
+					create_value_config("positive_2", 4, 8, 6, 5, 8),
+					create_value_config("positive_1", 2, 1, 3, 2, 5),
+				}
+			},
+			
+			phar_main_ranged_javelins = {
+				name = "ui_text_replacements_localised_text_hp_title_unit_javelin_throwers",
+				level_requirement = 9,
+				effect_key = "phar_map_replenishment_percentage_bonus_unit_sets_ranged_javelins",
+				scope_key = "faction_to_force_own_factionwide",
+				is_positive_good = true,
+				values = {
+					create_value_config("positive_3", 6, 14, 9, 7, 4),
+					create_value_config("positive_2", 4, 8, 6, 5, 8),
+					create_value_config("positive_1", 2, 1, 3, 2, 5),
+				}
+			},
+			
+			phar_main_1h_spears = {
+				level_requirement = 11,
+				effect_key = "phar_map_replenishment_percentage_bonus_unit_sets_1h_spears",
+				scope_key = "faction_to_force_own_factionwide",
+				is_positive_good = true,
+				values = {
+					create_value_config("positive_3", 6, 14, 9, 7, 4),
+					create_value_config("positive_2", 4, 8, 6, 5, 8),
+					create_value_config("positive_1", 2, 1, 3, 2, 5),
+				}
+			},
+			
+			phar_main_2h_axes = {
+				level_requirement = 11,
+				effect_key = "phar_map_replenishment_percentage_bonus_unit_sets_2h_axes",
+				scope_key = "faction_to_force_own_factionwide",
+				is_positive_good = true,
+				values = {
+					create_value_config("positive_3", 6, 14, 9, 7, 4),
+					create_value_config("positive_2", 4, 8, 6, 5, 8),
+					create_value_config("positive_1", 2, 1, 3, 2, 5),
+				}
+			},
 
-                    phar_main_2h_spears = {
-                         level_requirement = 7,
-                         effect_key = "phar_map_replenishment_percentage_bonus_unit_sets_2h_spears",
-                         scope_key = "faction_to_force_own_factionwide",
-                         is_positive_good = true,
-                         values = {
-                              create_value_config("positive_3", 6, 14, 6, 7, 4),
-                              create_value_config("positive_2", 4, 8, 4, 5, 8),
-                              create_value_config("positive_1", 2, 1, 2, 2, 5),
-                         }
-                    },
+			phar_main_1h_khopesh = {
+				level_requirement = 12,
+				effect_key = "phar_map_replenishment_percentage_bonus_unit_sets_1h_khopesh",
+				scope_key = "faction_to_force_own_factionwide",
+				is_positive_good = true,
+				values = {
+					create_value_config("positive_3", 6, 14, 9, 7, 4),
+					create_value_config("positive_2", 4, 8, 6, 5, 8),
+					create_value_config("positive_1", 2, 1, 3, 2, 5),
+				}
+			},
 
-                    phar_main_1h_swords = {
-                         level_requirement = 7,
-                         effect_key = "phar_map_replenishment_percentage_bonus_unit_sets_1h_swords",
-                         scope_key = "faction_to_force_own_factionwide",
-                         is_positive_good = true,
-                         values = {
-                              create_value_config("positive_3", 6, 14, 6, 7, 4),
-                              create_value_config("positive_2", 4, 8, 4, 5, 8),
-                              create_value_config("positive_1", 2, 1, 2, 2, 5),
-                         }
-                    },
-
-                    phar_main_ranged_bows = {
-                         name = "ui_text_replacements_localised_text_hp_title_unit_bowmen",
-                         level_requirement = 8,
-                         effect_key = "phar_map_replenishment_percentage_bonus_unit_sets_ranged_bows",
-                         scope_key = "faction_to_force_own_factionwide",
-                         is_positive_good = true,
-                         values = {
-                              create_value_config("positive_3", 6, 14, 6, 7, 4),
-                              create_value_config("positive_2", 4, 8, 4, 5, 8),
-                              create_value_config("positive_1", 2, 1, 2, 2, 5),
-                         }
-                    },
-
-                    phar_main_2h_clubs = {
-                         level_requirement = 8,
-                         effect_key = "phar_map_replenishment_percentage_bonus_unit_sets_2h_clubs",
-                         scope_key = "faction_to_force_own_factionwide",
-                         is_positive_good = true,
-                         values = {
-                              create_value_config("positive_3", 6, 14, 6, 7, 4),
-                              create_value_config("positive_2", 4, 8, 4, 5, 8),
-                              create_value_config("positive_1", 2, 1, 2, 2, 5),
-                         }
-                    },
-
-                    phar_main_1h_axes = {
-                         level_requirement = 9,
-                         effect_key = "phar_map_replenishment_percentage_bonus_unit_sets_1h_axes",
-                         scope_key = "faction_to_force_own_factionwide",
-                         is_positive_good = true,
-                         values = {
-                              create_value_config("positive_3", 6, 14, 6, 7, 4),
-                              create_value_config("positive_2", 4, 8, 4, 5, 8),
-                              create_value_config("positive_1", 2, 1, 2, 2, 5),
-                         }
-                    },
-
-                    phar_main_bodyguards = {
-                         level_requirement = 10,
-                         effect_key = "phar_map_replenishment_percentage_bonus_unit_sets_bodyguards",
-                         scope_key = "faction_to_force_own_factionwide",
-                         is_positive_good = true,
-                         values = {
-                              create_value_config("positive_3", 6, 14, 6, 7, 4),
-                              create_value_config("positive_2", 4, 8, 4, 5, 8),
-                              create_value_config("positive_1", 2, 1, 2, 2, 5),
-                         }
-                    },
-
-                    phar_main_ranged_javelins = {
-                         name = "ui_text_replacements_localised_text_hp_title_unit_javelin_throwers",
-                         level_requirement = 9,
-                         effect_key = "phar_map_replenishment_percentage_bonus_unit_sets_ranged_javelins",
-                         scope_key = "faction_to_force_own_factionwide",
-                         is_positive_good = true,
-                         values = {
-                              create_value_config("positive_3", 6, 14, 6, 7, 4),
-                              create_value_config("positive_2", 4, 8, 4, 5, 8),
-                              create_value_config("positive_1", 2, 1, 2, 2, 5),
-                         }
-                    },
-
-                    phar_main_1h_spears = {
-                         level_requirement = 11,
-                         effect_key = "phar_map_replenishment_percentage_bonus_unit_sets_1h_spears",
-                         scope_key = "faction_to_force_own_factionwide",
-                         is_positive_good = true,
-                         values = {
-                              create_value_config("positive_3", 6, 14, 6, 7, 4),
-                              create_value_config("positive_2", 4, 8, 4, 5, 8),
-                              create_value_config("positive_1", 2, 1, 2, 2, 5),
-                         }
-                    },
-
-                    phar_main_2h_axes = {
-                         level_requirement = 11,
-                         effect_key = "phar_map_replenishment_percentage_bonus_unit_sets_2h_axes",
-                         scope_key = "faction_to_force_own_factionwide",
-                         is_positive_good = true,
-                         values = {
-                              create_value_config("positive_3", 6, 14, 6, 7, 4),
-                              create_value_config("positive_2", 4, 8, 4, 5, 8),
-                              create_value_config("positive_1", 2, 1, 2, 2, 5),
-                         }
-                    },
-
-                    phar_main_1h_khopesh = {
-                         level_requirement = 12,
-                         effect_key = "phar_map_replenishment_percentage_bonus_unit_sets_1h_khopesh",
-                         scope_key = "faction_to_force_own_factionwide",
-                         is_positive_good = true,
-                         values = {
-                              create_value_config("positive_3", 6, 14, 6, 7, 4),
-                              create_value_config("positive_2", 4, 8, 4, 5, 8),
-                              create_value_config("positive_1", 2, 1, 2, 2, 5),
-                         }
-                    },
-
-                    phar_map_cavalry_all = {
-                         level_requirement = 12,
-                         effect_key = "phar_map_replenishment_percentage_bonus_unit_sets_cavalry_all",
-                         scope_key = "faction_to_force_own_factionwide",
-                         is_positive_good = true,
-                         values = {
-                              create_value_config("positive_3", 6, 14, 6, 7, 4),
-                              create_value_config("positive_2", 4, 8, 4, 5, 8),
-                              create_value_config("positive_1", 2, 1, 2, 2, 5),
-                         }
-                    },
-
-                    phar_main_chariots = {
-                         name = "ui_text_replacements_localised_text_hp_title_unit_chariots",
-                         level_requirement = 13,
-                         effect_key = "phar_map_replenishment_percentage_bonus_unit_sets_chariots",
-                         scope_key = "faction_to_force_own_factionwide",
-                         is_positive_good = true,
-                         values = {
-                              create_value_config("positive_3", 6, 14, 6, 7, 4),
-                              create_value_config("positive_2", 4, 8, 4, 5, 8),
-                              create_value_config("positive_1", 2, 1, 2, 2, 5),
-                         }
-                    },
-               },
-          },
-        --Lycia Bookmark - End Replenishment Section
-
-
-
-
+			phar_map_cavalry_all = {
+				level_requirement = 12,
+				effect_key = "phar_map_replenishment_percentage_bonus_unit_sets_cavalry_all",
+				scope_key = "faction_to_force_own_factionwide",
+				is_positive_good = true,
+				values = {
+					create_value_config("positive_3", 6, 14, 9, 7, 4),
+					create_value_config("positive_2", 4, 8, 6, 5, 8),
+					create_value_config("positive_1", 2, 1, 3, 2, 5),
+				}
+			},
+			
+			phar_main_chariots = {
+				name = "ui_text_replacements_localised_text_hp_title_unit_chariots",
+				level_requirement = 13,
+				effect_key = "phar_map_replenishment_percentage_bonus_unit_sets_chariots",
+				scope_key = "faction_to_force_own_factionwide",
+				is_positive_good = true,
+				values = {
+					create_value_config("positive_3", 6, 14, 9, 7, 4),
+					create_value_config("positive_2", 4, 8, 6, 5, 8),
+					create_value_config("positive_1", 2, 1, 3, 2, 5),
+				}
+			},
+		},
+	},
+--Lycia Bookmark - End Replenishment Section
 
 
 
