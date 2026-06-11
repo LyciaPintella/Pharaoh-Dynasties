@@ -1499,7 +1499,7 @@ function event_listener_functions:characters_in_regions()
                     -----------------------------------------
                     self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 25)
                elseif character:in_settlement() and not contested then
-                    if not contested and region:owning_faction():command_queue_index() == character:faction():command_queue_index() then
+                    if region:owning_faction():command_queue_index() == character:faction():command_queue_index() then
                          if not character:military_force():active_stance() == "military_force_active_stance_type_muster" then
                               -----------------------------------------------------
                               ---- SPENT TURNS IN OWN UNCONTESTED SETTTLEMENTS ----
