@@ -1322,42 +1322,45 @@ function event_listener_functions:misc()
                out("Character Traits Expansion: character_" .. character:onscreen_name() .. "_is_old")
           end
 
-          ----------------------------------
-          ---- SELF PERPETUATING TRAITS ---- <-------PUT THIS LAST!
-          ----------------------------------
-          for i = 1, #self_perpetuating_traits do
-               if character:has_trait(self_perpetuating_traits[i]) then
-                    self.character_traits:apply_trait_by_chance(character, self_perpetuating_traits[i], 20, 3.75)
-                    out("Character Traits Expansion: character_" .. character:onscreen_name() .. " has self perpetuating trait: " .. self_perpetuating_traits[i])
-               end
-          end
-
           -------------------------------
           ---- SPENT TURN IN STANCES ----
           -------------------------------
           local character = context:character();
 
-          if cm:char_is_general_with_army(character) then
-               local stance = character:military_force():active_stance();
+        if cm:char_is_general_with_army(character) then
+            local stance = character:military_force():active_stance();
 
-               -- RAIDING
-               if stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_LAND_RAID" then
-                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_blunt", 20, 5);
-                    -- AMBUSHING
-               elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_AMBUSH" then
-                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_underhanded", 20, 5);
-                    -- FORCED MARCH
-               elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_MARCH" then
-                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_ambitious", 20, 5);
-                    -- ENCAMP
-               elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_SET_CAMP" then
-                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_content", 20, 5);
-                    -- RECRUITING
-               elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_MUSTER" then
-                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_charismatic", 20, 2);
-                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_military_admin_good", 20, 1);
-               end
-          end
+            -- RAIDING
+            if stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_LAND_RAID" then
+                self.character_traits:apply_trait_by_chance(character, "phar_main_trait_blunt", 20, 5);
+                -- AMBUSHING
+            elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_AMBUSH" then
+                self.character_traits:apply_trait_by_chance(character, "phar_main_trait_underhanded", 20, 5);
+                -- FORCED MARCH
+            elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_MARCH" then
+                self.character_traits:apply_trait_by_chance(character, "phar_main_trait_ambitious", 20, 5);
+                -- ENCAMP
+            elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_SET_CAMP" then
+                self.character_traits:apply_trait_by_chance(character, "phar_main_trait_content", 20, 5);
+                -- RECRUITING
+            elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_MUSTER" then
+                self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_charismatic", 20,
+                    5);
+                self.character_traits:apply_trait_by_chance(character,
+                    "character_traits_expansion_trait_military_admin_good", 20, 5);
+            end
+        end
+	   
+	   ----------------------------------
+	   ---- SELF PERPETUATING TRAITS ---- <-------PUT THIS LAST!
+	   ----------------------------------
+        for i = 1, #self_perpetuating_traits do
+            if character:has_trait(self_perpetuating_traits[i]) then
+                self.character_traits:apply_trait_by_chance(character, self_perpetuating_traits[i], 20, 3.75)
+                out("Character Traits Expansion: character_" ..
+                character:onscreen_name() .. " has self perpetuating trait: " .. self_perpetuating_traits[i])
+            end
+        end
      end, true)
 
 end
@@ -2480,10 +2483,10 @@ function event_listener_functions:start_all()
      self:battle()
      self:emergent_traits()
      self:faction_leaders()
-     self:misc()
      self:pillage_and_conquest()
      self:weak_corrupt_governants()
-     self:provincial_construction()
+	self:provincial_construction()
+	self:misc()
 end
 cm:add_first_tick_callback(function() event_listener_functions:start_all() end)
 
