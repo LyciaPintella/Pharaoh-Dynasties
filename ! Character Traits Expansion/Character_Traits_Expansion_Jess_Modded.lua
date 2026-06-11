@@ -1478,6 +1478,7 @@ function event_listener_functions:characters_in_regions()
                     end
                end
           end
+
           if faction:is_allowed_to_capture_territory() and cm:char_is_general_with_army(character) and character:has_region() then
                if faction:at_war_with(region:owning_faction()) then
                     -------------------------------------
