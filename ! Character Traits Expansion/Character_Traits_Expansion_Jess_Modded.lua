@@ -1479,12 +1479,25 @@ function event_listener_functions:characters_in_regions()
                end
           end
           if faction:is_allowed_to_capture_territory() and cm:char_is_general_with_army(character) and character:has_region() then
-               if region:is_abandoned() then
+               if faction:at_war_with(region:owning_faction()) then
+                    -------------------------------------
+                    ---- SPENT TURNS IN ENEMY REGIONS ---
+                    -------------------------------------
+                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_confident", 20, 10)
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 15)
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_pragmatic", 20, 10)
+                    out("Character Traits Expansion: character in enemy region, applying 'confident' and 'scout' ")
+                    -- ^ additional check for marriage and action points and applies cuckold.
+                    if character:family_member():has_spouse() and character:turns_in_enemy_regions() >= 3 then
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_cuckold", 20, 7.5)
+                         out("Character Traits Expansion: character is married and is in enemy territory, applying 'cuckold' trait.")
+                    end
+               elseif region:is_abandoned() then
                     -----------------------------------------
                     ---- SPENT TURNS IN ABANDONED REGIONS ---
                     -----------------------------------------
                     self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 25)
-               elseif character:in_settlement() and region:owning_faction():command_queue_index() == character:faction():command_queue_index() then
+               elseif character:in_settlement() and not contested then
                     if not contested and region:owning_faction():command_queue_index() == character:faction():command_queue_index() then
                          if not character:military_force():active_stance() == "military_force_active_stance_type_muster" then
                               -----------------------------------------------------
@@ -1544,7 +1557,6 @@ function event_listener_functions:characters_in_regions()
                          end
                     end
                elseif character:in_settlement() and contested then
-                    -- ^ Lycia Bookmark: This is for characters that are in a settlement that is contested, meaning there are enemy regions in the province. I want this to be separate from characters that are in settlements that are not contested, as I want them to have different trait applications and flavor.
                     --------------------------------------------------------
                     ---- SPENT TURNS IN CONTESTED PROVINCE SETTLEMENTS  ----
                     --------------------------------------------------------
@@ -1565,10 +1577,10 @@ function event_listener_functions:characters_in_regions()
                     --------------------------------------------
                     ---- SPENT TURNS IN CONTESTED PROVINCES ----
                     --------------------------------------------	
-               elseif not character:in_settlement() and not contested then
                     self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_feck", 20, 15)
                     self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 10)
                     self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 10)
+               elseif not character:in_settlement() and not contested then
                     ------------------------------------------------
                     ---- SPENT TURNS IN OWN UNCONTESTED REGIONS ----
                     ------------------------------------------------
@@ -1576,20 +1588,6 @@ function event_listener_functions:characters_in_regions()
                     self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 7.5)
                     self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 7.5)
                     out("Character Traits Expansion: character not in settlement with full action points, applying 'feck' and 'bad_disciplinarian' ")
-               end
-               if faction:at_war_with(region:owning_faction()) then
-                    -------------------------------------
-                    ---- SPENT TURNS IN ENEMY REGIONS ---
-                    -------------------------------------
-                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_confident", 20, 10)
-                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 15)
-                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_pragmatic", 20, 10)
-                    out("Character Traits Expansion: character in enemy region, applying 'confident' and 'scout' ")
-                    -- ^ additional check for marriage and action points and applies cuckold.
-                    if character:family_member():has_spouse() and character:turns_in_enemy_regions() >= 3 then
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_cuckold", 20, 7.5)
-                         out("Character Traits Expansion: character is married and is in enemy territory, applying 'cuckold' trait.")
-                    end
                end
           end
 
