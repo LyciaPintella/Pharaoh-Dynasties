@@ -1552,7 +1552,7 @@ function event_listener_functions:characters_in_regions()
                          self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_cuckold", 20, 7.5)
                          out("Character Traits Expansion: character is married and is in enemy territory, applying 'cuckold' trait.")
                     end
-               elseif contested then
+               elseif contested and not faction:at_war_with(region:owning_faction()) then
                     --------------------------------------------
                     ---- SPENT TURNS IN CONTESTED PROVINCES ----
                     --------------------------------------------
@@ -1573,7 +1573,7 @@ function event_listener_functions:characters_in_regions()
                               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 10)
                          end
                     end
-               elseif not contested then
+               elseif not contested and not faction:at_war_with(region:owning_faction()) then
                     ------------------------------------------------
                     ---- SPENT TURNS IN OWN UNCONTESTED REGIONS ----
                     ------------------------------------------------
