@@ -189,8 +189,8 @@ local function z_native_mercenary()
                               local region = cm:model():world():region_manager():region_by_key(region_name)
 
                               cm:add_unit_to_province_mercenary_pool(region, merc_unit_key, current_stage - merc_unit_tier,
-                                                                     merc_unit_tier_stage_table[merc_unit_tier][current_stage], current_stage - merc_unit_tier + 1, 1, "",
-                                                                     "", "")
+                                                                     merc_unit_tier_stage_table[merc_unit_tier][current_stage], current_stage - merc_unit_tier + 1, 1, 0,
+                                                                     "", "", "")
                          end
                     end
                end
@@ -201,3 +201,4 @@ local function z_native_mercenary()
 end
 
 cm:add_first_tick_callback(function() z_native_mercenary() end);
+
