@@ -1535,54 +1535,54 @@ function event_listener_functions:characters_in_regions()
                               end
                          end
                     end
-               end
-          elseif not contested then
-               ------------------------------------------------
-               ---- SPENT TURNS IN OWN UNCONTESTED REGIONS ----
-               ------------------------------------------------
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_feck", 20, 10)
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 7.5)
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 7.5)
-               out("Character Traits Expansion: character not in settlement with full action points, applying 'feck' and 'bad_disciplinarian' ")
-          elseif contested then
-               --------------------------------------------
-               ---- SPENT TURNS IN CONTESTED PROVINCES ----
-               --------------------------------------------
-               if character:in_settlement() and not character:military_force():active_stance() == "military_force_active_stance_type_march" then
-                    --------------------------------------------------------
-                    ---- SPENT TURNS IN CONTESTED PROVINCE SETTLEMENTS  ----
-                    --------------------------------------------------------
-                    if character:turns_in_own_regions() >= 3 and not character:military_force():active_stance() == "military_force_active_stance_type_muster" then
-                         if not bodyguard_heavy_casualties and not bodyguard_light_casualties then
-                              self.character_traits:apply_trait_by_chance(character, "phar_main_trait_hesitant", 20, 20)
+               elseif not contested then
+                    ------------------------------------------------
+                    ---- SPENT TURNS IN OWN UNCONTESTED REGIONS ----
+                    ------------------------------------------------
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_feck", 20, 10)
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 7.5)
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 7.5)
+                    out("Character Traits Expansion: character not in settlement with full action points, applying 'feck' and 'bad_disciplinarian' ")
+               elseif contested then
+                    --------------------------------------------
+                    ---- SPENT TURNS IN CONTESTED PROVINCES ----
+                    --------------------------------------------
+                    if character:in_settlement() and not character:military_force():active_stance() == "military_force_active_stance_type_march" then
+                         --------------------------------------------------------
+                         ---- SPENT TURNS IN CONTESTED PROVINCE SETTLEMENTS  ----
+                         --------------------------------------------------------
+                         if character:turns_in_own_regions() >= 3 and not character:military_force():active_stance() == "military_force_active_stance_type_muster" then
+                              if not bodyguard_heavy_casualties and not bodyguard_light_casualties then
+                                   self.character_traits:apply_trait_by_chance(character, "phar_main_trait_hesitant", 20, 20)
+                                   self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 10)
+                              end
+                         elseif bodyguard_heavy_casualties then
+                              self.character_traits:apply_trait_by_chance(character, "phar_main_trait_hesitant", 20, 10)
+                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 10)
+                         elseif bodyguard_light_casualties then
+                              self.character_traits:apply_trait_by_chance(character, "phar_main_trait_hesitant", 20, 15)
                               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 10)
                          end
-                    elseif bodyguard_heavy_casualties then
-                         self.character_traits:apply_trait_by_chance(character, "phar_main_trait_hesitant", 20, 10)
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 10)
-                    elseif bodyguard_light_casualties then
-                         self.character_traits:apply_trait_by_chance(character, "phar_main_trait_hesitant", 20, 15)
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 10)
                     end
-               end
-          elseif region:is_abandoned() then
-               -----------------------------------------
-               ---- SPENT TURNS IN ABANDONED REGIONS ---
-               -----------------------------------------
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 25)
-          elseif faction:at_war_with(region:owning_faction()) then
-               -------------------------------------
-               ---- SPENT TURNS IN ENEMY REGIONS ---
-               -------------------------------------
-               self.character_traits:apply_trait_by_chance(character, "phar_main_trait_confident", 20, 10)
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 15)
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_pragmatic", 20, 10)
-               out("Character Traits Expansion: character in enemy region, applying 'confident' and 'scout' ")
+               elseif region:is_abandoned() then
+                    -----------------------------------------
+                    ---- SPENT TURNS IN ABANDONED REGIONS ---
+                    -----------------------------------------
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 25)
+               elseif faction:at_war_with(region:owning_faction()) then
+                    -------------------------------------
+                    ---- SPENT TURNS IN ENEMY REGIONS ---
+                    -------------------------------------
+                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_confident", 20, 10)
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 15)
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_pragmatic", 20, 10)
+                    out("Character Traits Expansion: character in enemy region, applying 'confident' and 'scout' ")
 
-               -- additional check for marriage and action points and applies cuckold.
-               if character:family_member():has_spouse() and character:turns_in_enemy_regions() >= 3 then
-                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_cuckold", 20, 7.5)
-                    out("Character Traits Expansion: character is married and is in enemy territory, applying 'cuckold' trait.")
+                    -- additional check for marriage and action points and applies cuckold.
+                    if character:family_member():has_spouse() and character:turns_in_enemy_regions() >= 3 then
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_cuckold", 20, 7.5)
+                         out("Character Traits Expansion: character is married and is in enemy territory, applying 'cuckold' trait.")
+                    end
                end
           end
 
