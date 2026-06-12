@@ -1616,12 +1616,12 @@ function event_listener_functions:characters_in_regions()
           ------------------------------------
           if character:age() < 35 then
                self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_energetic", 20, 3.5)
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_fertile", 20, 5)
+               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_fertile", 20, 4)
                out(" character_" .. character:onscreen_name() .. "_is_young")
           elseif character:age() > 50 then
                self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_slothful", 20, 3)
                self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_mad", 20, 3)
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_infertile", 20, 3)
+               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_infertile", 20, 5)
                self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_blind", 20, 3)
                out(" character_" .. character:onscreen_name() .. "_is_old")
           end
