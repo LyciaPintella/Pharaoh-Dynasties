@@ -1382,9 +1382,9 @@ function event_listener_functions:battle()
                end
           end
 
-          ------------------------------
+          --------------------------------
           ---- GENERAL BATTLE OUTCOME ----
-          ------------------------------
+          --------------------------------
           if not battle:siege_battle() then
                if attacker:won_battle() then
                     self.character_traits:apply_trait_by_chance(attacker, "character_traits_expansion_trait_attacking_victory", 20, 20)
@@ -1392,8 +1392,9 @@ function event_listener_functions:battle()
                     self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_military_admin_bad", 20, 15)
                     out("character_traits_expansion attacker won battle applying traits")
                else
-                    self.character_traits:apply_trait_by_chance(attacker, "character_traits_expansion_trait_attacking_defeat", 20, 25)
                     self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_defending_victory", 20, 25)
+                    self.character_traits:apply_trait_by_chance(defender, "phar_main_trait_hesitant", 20, 15)
+                    self.character_traits:apply_trait_by_chance(attacker, "character_traits_expansion_trait_attacking_defeat", 20, 25)
                     self.character_traits:apply_trait_by_chance(attacker, "character_traits_expansion_trait_military_admin_bad", 20, 15)
                     out("character_traits_expansion attacker lost battle applying traits")
                end
@@ -1722,12 +1723,14 @@ function event_listener_functions:characters_in_regions()
                               out(" character_" .. character:onscreen_name() .. " is governor of region: " .. region:name())
                               if region:public_order() == 100 then
                                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 30)
+                                   self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 7.5)
                                    out(" character_" .. character:onscreen_name() .. " ranked up in settlement with high public order. giving popular.")
                               elseif region:public_order() >= 80 then
                                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 17.5)
+                                   self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 5)
                                    out(" character_" .. character:onscreen_name() .. " ranked up in settlement with high public order. giving popular.")
                               elseif region:public_order() >= 65 then
-                                   self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 7.5)
+                                   self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 2.5)
                                    out(" character_" .. character:onscreen_name() .. " ranked up in settlement with high public order. giving popular.")
                               elseif region:public_order() >= 50 then
                                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 2.5)
@@ -1932,7 +1935,6 @@ function event_listener_functions:characters_in_regions()
                     elseif not character:in_settlement() and not contested then
                          self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_feck", 20, 12.5)
                          self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 10)
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 5)
                          out(" character not in settlement with full action points, applying 'feck' and 'bad_disciplinarian' ")
                     end
                     -----------------------------------------
@@ -1953,11 +1955,11 @@ function event_listener_functions:characters_in_regions()
                     character:faction():command_queue_index() then
                     -- fix precedence: `not character:turns_in_own_regions() < 3` causes a boolean-number compare error
                     if character:turns_in_own_regions() >= 3 and character:military_force():active_stance() ~= "military_force_active_stance_type_muster" then
-                         if public_order >= 70 then
-                              self.character_traits:apply_trait_by_chance(character, "phar_main_trait_content", 20, 7.5)
+                         if public_order >= 75 then
+                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_good", 20, 7.5)
                               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 3.75)
                               out(" character_is_garrisoned_in_settlement_with_high_public_order!")
-                         elseif public_order <= -70 then
+                         elseif public_order <= -60 then
                               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 7.5)
                               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_bad", 20, 5)
                               out(" character_is_garrisoned_in_settlement_with_low_public_order!")
@@ -2211,7 +2213,7 @@ function event_listener_functions:misc()
                out(" char_is_at_sea_applying_trait")
           end
      end, true)
---[[ -- ^ Lycia Bookmark
+     --[[ -- ^ Lycia Bookmark
      --------------------------------------------
      ---- MISC CHARACTER TURN END PROCESSING ----
      --------------------------------------------
@@ -2228,7 +2230,7 @@ function event_listener_functions:misc()
                return
           end
      end, true)
-]]--
+]] --
 end
 
 function event_listener_functions:pillage_and_conquest()
