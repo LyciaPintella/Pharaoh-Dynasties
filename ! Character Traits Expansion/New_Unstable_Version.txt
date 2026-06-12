@@ -1602,7 +1602,7 @@ function event_listener_functions:characters_in_regions()
      core:add_listener("character_traits_expansion_characters_in_regions", "CharacterTurnEnd", true, function(context)
           out("launched characters_in_regions() - character_turn_end listener triggered")
           local character = context:character()
-		
+
           if character:is_null_interface() then
                out(" characters_in_regions() character is_null_interface!")
                return
@@ -1612,7 +1612,7 @@ function event_listener_functions:characters_in_regions()
                out(" characters_in_regions() character is a colonel or is a civilian!")
                return
           end
-		
+
           ----------------------------------------------
           ---- SPENT TURN IN REGIONS OR SETTLEMENTS ----
           ----------------------------------------------
@@ -1627,16 +1627,18 @@ function event_listener_functions:characters_in_regions()
                out("characters_in_regions() - character province is: " .. tostring(province:name()))
                out("characters_in_regions() - initializing contested to false")
                local contested = false
-			
+
                out("characters_in_regions() - starting contested for loop")
                -- defensive checks: province or region_list may be nil in some edge cases
                -- if province ~= nil and not province:is_null_interface() and province:region_list() ~= nil then
 
                for _, current_region in model_pairs(province:regions()) do
                     if current_region then
-                         out("characters_in_regions() - inspecting region: " .. tostring(current_region:name()) .. ", owned by faction: " .. tostring(		current_region:owning_faction():name()))
+                         out("characters_in_regions() - inspecting region: " .. tostring(current_region:name()) .. ", owned by faction: " ..
+                                  tostring(current_region:owning_faction():name()))
                          if current_region:owning_faction():command_queue_index() ~= faction:command_queue_index() then
-                              out("characters_in_regions() - current_region:owning_faction():command_queue_index() ~= region_owner:command_queue_index() " .. tostring(owning_faction:command_queue_index()) .. " ~= " .. tostring(character:faction():command_queue_index()))
+                              out("characters_in_regions() - current_region:owning_faction():command_queue_index() ~= region_owner:command_queue_index() " ..
+                                       tostring(owning_faction:command_queue_index()) .. " ~= " .. tostring(character:faction():command_queue_index()))
                               contested = true
                               out("characters_in_regions() - contested set to: " .. tostring(contested) .. " — breaking")
                               break
@@ -1645,36 +1647,86 @@ function event_listener_functions:characters_in_regions()
                          out("characters_in_regions() - Error: current_region is nil in province:regions() iteration.")
                     end
                end
-			
                -------------------------------------------------------------------------
                ---- CALCULATE GENERAL BODYGUARD CASUALTIES FOR HESITANT CALCULATION ----
                -------------------------------------------------------------------------
                local bodyguard_light_casualties = false
                local bodyguard_heavy_casualties = false
-               if cm:char_is_general_with_army(character) then
-                    local unit_list = character:military_force():unit_list()
-                    for i = 0, unit_list:num_items() - 1 do
-                         local unit = unit_list:item_at(i)
-                         if unit:belongs_to_unit_set("phar_main_bodyguards") then
-                              local casualties_percent = 100 - unit:percentage_proportion_of_full_strength()
-                              local bodyguard_health_high = 85
-                              local bodyguard_health_low = 70
-                              if casualties_percent > bodyguard_health_low then
-                                   bodyguard_light_casualties = true
-                                   bodyguard_heavy_casualties = false
-                              end
-                              if casualties_percent > bodyguard_health_high then
-                                   bodyguard_light_casualties = false
-                                   bodyguard_heavy_casualties = true
-                                   break
-                              end
+               local unit_list = character:military_force():unit_list()
+               
+			for i = 0, unit_list:num_items() - 1 do
+                    local unit = unit_list:item_at(i)
+                    if unit:belongs_to_unit_set("phar_main_bodyguards") then
+                         local casualties_percent = 100 - unit:percentage_proportion_of_full_strength()
+                         local bodyguard_health_high = 85
+                         local bodyguard_health_low = 70
+                         if casualties_percent > bodyguard_health_low then
+                              bodyguard_light_casualties = true
+                              bodyguard_heavy_casualties = false
+                         end
+                         if casualties_percent > bodyguard_health_high then
+                              bodyguard_light_casualties = false
+                              bodyguard_heavy_casualties = true
+                              break
                          end
                     end
                end
-			
-               if faction:is_allowed_to_capture_territory() and cm:char_is_general_with_army(character) and character:has_region() and not region:is_abandoned() then
+
+               if faction:is_allowed_to_capture_territory() and character:has_region() and not region:is_abandoned() then
+                    -- ^ Lycia Boookmark
+				--[[
+				------------------------------------------------------
+                    ---- IN OWN SETTLEMENT WITH HIGH/LOW PUBLIC ORDER ----
+                    ------------------------------------------------------
+                    local public_order = region:public_order()
+                    if character:in_settlement() and character:turns_in_own_regions() >= 3 and character:military_force():active_stance() ~=
+                         "military_force_active_stance_type_muster" then
+                         if public_order >= 70 then
+                              self.character_traits:apply_trait_by_chance(character, "phar_main_trait_content", 20, 7.5)
+                              out(" character_is_garrisoned_in_settlement_with_high_public_order!")
+                         elseif public_order <= -70 then
+                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 7.5)
+                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_bad", 20, 5)
+                              out(" character_is_garrisoned_in_settlement_with_low_public_order!")
+                         end
+                    end
+                    ------------------------------------
+                    ---- POPULAR/UNPOPULAR GOVERNOR ----
+                    ------------------------------------
+                    if character:region():owning_faction():command_queue_index() == character:faction():command_queue_index() then
+                         local region = character:region()
+                         out(" character_" .. character:onscreen_name() .. " is governor of region: " .. region:name())
+                         if region:public_order() == 100 then
+                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 30)
+                              out(" character_" .. character:onscreen_name() .. " ranked up in settlement with high public order. giving popular.")
+                         elseif region:public_order() >= 80 then
+                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 17.5)
+                              out(" character_" .. character:onscreen_name() .. " ranked up in settlement with high public order. giving popular.")
+                         elseif region:public_order() >= 65 then
+                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 7.5)
+                              out(" character_" .. character:onscreen_name() .. " ranked up in settlement with high public order. giving popular.")
+                         elseif region:public_order() >= 50 then
+                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 2.5)
+                              out(" character_" .. character:onscreen_name() .. " ranked up in settlement with high public order. giving popular.")
+                         elseif region:public_order() <= -25 then
+                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 5)
+                              out(" character_" .. character:onscreen_name() .. " ranked up in settlement with low public order. giving unpopular.")
+                         elseif region:public_order() <= -40 then
+                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 15)
+                              out(" character_" .. character:onscreen_name() .. " ranked up in settlement with low public order. giving unpopular.")
+                         elseif region:public_order() <= -60 then
+                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 22.5)
+                              out(" character_" .. character:onscreen_name() .. " ranked up in settlement with low public order. giving unpopular.")
+                         elseif region:public_order() <= -80 then
+                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 30)
+                              out(" character_" .. character:onscreen_name() .. " ranked up in settlement with low public order. giving unpopular.")
+                         elseif region:public_order() == -100 then
+                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 40)
+                              out(" character_" .. character:onscreen_name() .. " ranked up in settlement with low public order. giving unpopular.")
+                         end
+                    end
+				]]--
                     if character:in_settlement() and not contested then
-					
                          if character:military_force():active_stance() ~= "military_force_active_stance_type_muster" then
                               -----------------------------------------------------
                               ---- SPENT TURNS IN OWN UNCONTESTED SETTTLEMENTS ----
@@ -1729,6 +1781,9 @@ function event_listener_functions:characters_in_regions()
                                              self.character_traits:apply_trait_by_chance(character, traits[i][1], 20, traits[i][2])
                                         end
                                    end
+                                   if region:public_order() >= 80 and character:turns_in_own_regions() >= 5 then
+                                        self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 5)
+                                   end
                               end
                          end
                     elseif character:in_settlement() and contested then
@@ -1771,12 +1826,11 @@ function event_listener_functions:characters_in_regions()
                          self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 20)
                          self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 15)
                     elseif not character:in_settlement() and not contested then
-                         ------------------------------------------------
-                         ---- SPENT TURNS IN OWN UNCONTESTED REGIONS ----
-                         ------------------------------------------------
+                         --------------------------------------------------
+                         ---- SPENT TURNS IN OWN UNCONTESTED PROVINCES ----
+                         --------------------------------------------------
                          self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_feck", 20, 12.5)
                          self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 10)
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 5)
                          out(" character not in settlement with full action points, applying 'feck' and 'bad_disciplinarian' ")
                     end
                elseif region:is_abandoned() then
@@ -1785,133 +1839,114 @@ function event_listener_functions:characters_in_regions()
                     -----------------------------------------
                     self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 25)
                end
-			
-               ------------------------------------
-               ---- POPULAR/UNPOPULAR GOVERNOR ----
-               ------------------------------------
-               if cm:char_is_general_with_army(character) and character:has_region() and character:region():owning_faction():command_queue_index() ==
-                    character:faction():command_queue_index() then
-                    local region = character:region()
-                    out(" character_" .. character:onscreen_name() .. " is governor of region: " .. region:name())
-                    if region:public_order() == 100 then
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 30)
-                         out(" character_" .. character:onscreen_name() .. " ranked up in settlement with high public order. giving popular.")
-                    elseif region:public_order() >= 80 then
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 17.5)
-                         out(" character_" .. character:onscreen_name() .. " ranked up in settlement with high public order. giving popular.")
-                    elseif region:public_order() >= 65 then
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 7.5)
-                         out(" character_" .. character:onscreen_name() .. " ranked up in settlement with high public order. giving popular.")
-                    elseif region:public_order() >= 50 then
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 2.5)
-                         out(" character_" .. character:onscreen_name() .. " ranked up in settlement with high public order. giving popular.")
-                    elseif region:public_order() <= -25 then
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 5)
-                         out(" character_" .. character:onscreen_name() .. " ranked up in settlement with low public order. giving unpopular.")
-                    elseif region:public_order() <= -40 then
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 15)
-                         out(" character_" .. character:onscreen_name() .. " ranked up in settlement with low public order. giving unpopular.")
-                    elseif region:public_order() <= -60 then
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 22.5)
-                         out(" character_" .. character:onscreen_name() .. " ranked up in settlement with low public order. giving unpopular.")
-                    elseif region:public_order() <= -80 then
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 30)
-                         out(" character_" .. character:onscreen_name() .. " ranked up in settlement with low public order. giving unpopular.")
-                    elseif region:public_order() == -100 then
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 40)
-                         out(" character_" .. character:onscreen_name() .. " ranked up in settlement with low public order. giving unpopular.")
+			--[[
+               -- ^ Lycia Bookmark 
+               -------------------------------
+               ---- SPENT TURN IN STANCES ----
+               -------------------------------
+               local stance = character:military_force():active_stance();
+
+               -- RAIDING
+               if stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_LAND_RAID" then
+                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_blunt", 20, 25);
+                    -- AMBUSHING
+               elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_AMBUSH" then
+                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_underhanded", 20, 25);
+                    -- FORCED MARCH
+               elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_MARCH" then
+                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_ambitious", 20, 7.5);
+                    -- ENCAMP
+               elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_SET_CAMP" then
+                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_content", 20, 100);
+                    -- RECRUITING
+               elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_MUSTER" then
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_charismatic", 20, 20);
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_military_admin_good", 20, 20);
+               end
+
+               ----------------------------
+               ---- SUFFERED ATTRITION ----
+               ----------------------------
+               local military_force = character:military_force()
+               if not military_force:is_null_interface() then
+                    if military_force:will_suffer_any_attrition() then
+                         self.character_traits:apply_trait_by_chance(character, "phar_main_trait_ambitious", 20, 15);
+                         out(" character_suffered_attrition")
                     end
                end
 
-               -------------------------------------------------------------
-               ---- PRESENT IN REGION WITH HIGH/LOW PUBLIC ORDER ----
-               -------------------------------------------------------------
-               local region = character:region()
-               local public_order = region:public_order()
-               local faction_name = region:owning_faction():name()
-               local is_in_settlement = character:in_settlement() == true
+               -------------------------------
+               ---- CHARACTER UNDER SIEGE ----
+               -------------------------------
+               if character:has_garrison_residence() and character:garrison_residence():is_under_siege() then
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_blighted", 20, 20)
+                    out(" character_under_siege")
+               end
 
-               if cm:char_is_general_with_army(character) and character:has_region() and is_in_settlement and character:region():owning_faction():command_queue_index() ==
-                    character:faction():command_queue_index() then
-                    -- fix precedence: `not character:turns_in_own_regions() < 3` causes a boolean-number compare error
-                    if character:turns_in_own_regions() >= 3 and character:military_force():active_stance() ~= "military_force_active_stance_type_muster" then
-                         if public_order >= 70 then
-                              self.character_traits:apply_trait_by_chance(character, "phar_main_trait_content", 20, 7.5)
-                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 3.75)
-                              out(" character_is_garrisoned_in_settlement_with_high_public_order!")
-                         elseif public_order <= -70 then
-                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 7.5)
-                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_bad", 20, 5)
-                              out(" character_is_garrisoned_in_settlement_with_low_public_order!")
+               ---------------------------------------
+               ---- REGION HAS SMUGGLERS' DEN ----
+               ---------------------------------------
+               if character:region():owning_faction():command_queue_index() == character:faction():command_queue_index() then
+                    local building_list = region:settlement():building_list()
+                    out(" character_" .. character:onscreen_name() .. " is in region: " .. region:name() .. " checking for smugglers' den")
+
+                    -- check for smugglers' den
+                    for i = 0, building_list:num_items() - 1 do
+                         local building = building_list:item_at(i)
+                         if not building:is_null_interface() then
+                              local superchain = building:superchain()
+                              if superchain == "phar_main_port_coast_derivative_type_a" or superchain == "phar_main_irsu_resource_production_port_coast_derivative_type_a" then
+                                   self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_criminal", 20, 25)
+                                   out(" smugglers' den found!")
+                                   break
+                              end
                          end
                     end
                end
+
+               ------------------------------------------------
+               ---- SETTLEMENT HAS MILITARY ADMIN BUILDING ----
+               ------------------------------------------------
+               if character:region():owning_faction():command_queue_index() == character:faction():command_queue_index() then
+                    local region = character:region()
+                    local building_list = region:settlement():building_list()
+
+                    out(" character_" .. character:onscreen_name() .. " is in region: " .. region:name() .. " checking for military admin buildings")
+                    for i = 0, building_list:num_items() - 1 do
+                         if building_list:item_at(i):is_null_interface() == false then
+                              local building_superchains = building_list:item_at(i):superchain()
+                              if self.character_traits.building_superchains.military_administration[building_superchain] then
+                                   self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_military_admin_good", 20, 7.5)
+                                   out(" character_" .. character:onscreen_name() .. " found military admin building: " .. building_superchain)
+                              end
+                         end
+                    end
+               end
+               ---------------------------------------
+               ---- SETTLEMENT HAS ADMIN BUILDING ----
+               ---------------------------------------
+               if character:region():owning_faction():command_queue_index() == character:faction():command_queue_index() then
+                    local region = character:region()
+                    local building_list = region:settlement():building_list()
+
+                    out(" character_" .. character:onscreen_name() .. " is in region: " .. region:name() .. " checking for management buildings")
+                    for i = 0, building_list:num_items() - 1 do
+                         if building_list:item_at(i):is_null_interface() == false then
+                              local building_superchains = building_list:item_at(i):superchain()
+                              if self.character_traits.building_superchains.province_management[building_superchain] then
+                                   self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_good", 20, 10)
+                                   out(" character_" .. character:onscreen_name() .. " found management building: " .. building_superchain)
+                              end
+                         end
+                    end
+               end
+
+               -- ^ Lycia Bookmark 
+			]]--
           end
      end, true)
 end
 
-function event_listener_functions:emergent_traits()
-     ---------------------------------------------------
-     ---- RANDOM TRAITS WHEN CHARACTER COMES OF AGE ----
-     ---------------------------------------------------
-     core:add_listener("character_traits_expansion_character_comes_of_age", "CharacterComesOfAge", true, function(context)
-          local character = context:character()
-          local father = character:has_father() and character:father() or nil
-          local mother = character:has_mother() and character:mother() or nil
-
-          if father then
-               out(" character_comes_of_age_father_is_" .. tostring(father))
-          else
-               out(" character_comes_of_age_no_father_found!")
-          end
-
-          if mother then
-               out(" character_comes_of_age_mother_is_" .. tostring(mother))
-          else
-               out(" character_comes_of_age_no_mother_found!")
-          end
-
-          -- Create a temporary table to hold the adjusted chances for this specific character
-          local trait_chances = {}
-
-          -- initialize the temporary table with the default trait chances
-          for trait, base_chance in pairs(self.character_traits.coming_of_age_traits) do trait_chances[trait] = base_chance end
-
-          -- adjust trait chances based on parent's traits
-          for trait in pairs(coming_of_age_traits) do
-               if father and father:has_trait(trait) then
-                    trait_chances[trait] = trait_chances[trait] + 20
-                    out(" character_comes_of_age_father_has_trait_" .. trait .. "_increased_chance_to_" .. tostring(20))
-               end
-               if mother and mother:has_trait(trait) then
-                    trait_chances[trait] = trait_chances[trait] + 20
-                    out(" character_comes_of_age_mother_has_trait_" .. trait .. "_increased_chance_to_" .. tostring(20))
-               end
-          end
-
-          -- apply the traits with their respective chances for this character
-          for trait, chance in pairs(trait_chances) do
-               self.character_traits:apply_trait_by_chance(character, trait, 20, chance)
-               out(" character_comes_of_age_applied_trait_" .. trait .. "_with_chance_" .. tostring(chance))
-          end
-     end, true)
-
-     --------------------------------------------------
-     ---- RANDOM TRAITS WHEN CHARACTER IS CREATED ----
-     --------------------------------------------------
-     core:add_listener("character_traits_expansion_character_created", "CharacterCreated", true, function(context)
-          local character = context:character()
-          out(" character_created")
-
-          if character:age() >= 16 and cm:char_is_general_with_army(character) and not character:character_type("colonel") then
-               -- ! Lycia Bookmark good use of a table
-               for i = 1, #self.character_traits.character_creation_traits do
-                    self.character_traits:apply_trait_by_chance(character, self.character_traits.character_creation_traits[i], 20, 1)
-                    out(" character_created_IS_APPLYING_" .. tostring(self.character_creation_traits.character_creation_traits[i]))
-               end
-          end
-     end, true)
-end
 function event_listener_functions:faction_leaders()
      -----------------------------------------------
      ----
@@ -2000,6 +2035,96 @@ function event_listener_functions:faction_leaders()
                     end
                end
           end
+     end, true)
+end
+
+function event_listener_functions:misc_traits()
+     ----------------------------------------
+     ---- PRAYED AT SHRINE OR NON-SHRINE ----
+     ----------------------------------------
+     core:add_listener("character_traits_expansion_character_prayed_at_shrine", "CharacterPerformedSuccessfulAgentAction", true, function(context)
+          local unique_id = context:unique_id()
+
+          if string.find(unique_id, "phar_ers_interaction_shrine_pray") then
+               self.character_traits:apply_trait_by_chance(context:character(), "phar_main_trait_spiritual", 20, 20)
+               out("character_traits_expansion prayed at shrine")
+          elseif string.find(unique_id, "phar_ers_interaction") then
+               self.character_traits:apply_trait_by_chance(context:character(), "phar_main_trait_materialistic", 20, 20)
+               out("character_traits_expansion prayed at non-shrine")
+          end
+     end, true)
+
+     ----------------------------------------------
+     ---- MAIN CHARACTER TURN START PROCESSING ----
+     ----------------------------------------------
+     core:add_listener("character_traits_expansion_character_turn_start", "CharacterTurnStart", true, function(context)
+          local character = context:character()
+
+          if character:is_null_interface() then
+               out("hcp_character_turn_end_main character is_null_interface!")
+               return
+          end
+
+          if character:character_type("colonel") or character:character_details():is_civilian() then
+               out("hcp_character_turn_end_main character is a colonel or is a civilian!")
+               return
+          end
+
+          if character:has_region() then
+               -------------------------------------------------------------
+               ---- LOW/HIGH INFLUENCE REGION FOR RESPECTFUL/IRREVERENT ----
+               -------------------------------------------------------------
+               local character = context:character()
+               local influence_threshold_high = 0.70
+               local influence_threshold_low = 0.6
+               local religion = character:faction():state_religion()
+
+               if cm:char_is_general_with_army(character) and not character:region():is_null_interface() then
+                    local region_influence = character:region():religion_proportion(religion)
+
+                    if region_influence >= influence_threshold_high then
+                         self.character_traits:apply_trait_by_chance(character, "phar_main_trait_irreverent", 20, 3)
+                         out(" char_in_high_influence_region!")
+                    elseif region_influence <= influence_threshold_low then
+                         self.character_traits:apply_trait_by_chance(character, "phar_main_trait_respectful", 20, 5)
+                         out(" char_in_low_influence_region!")
+                    end
+               else
+                    -------------------------------------------------------
+                    ---- PLAGUE, EARTHQUAKE, FLOOD, DROUGHT, DISASTERS ----
+                    -------------------------------------------------------
+                    local faction_key = character:faction():name()
+                    local province = character:region():province()
+                    local province_name = character:region():province_name()
+                    out(" TEST_BLIGHTED_PASSED_CHECK_CHARACTER_IS_IN_PROVINCE_" .. tostring(province_name))
+
+                    local disaster_traits = {
+                         {"phar_main_effect_bundle_incident_disaster_plague_recruitment_slots", "character_traits_expansion_trait_blighted"},
+                         {"phar_main_effect_bundle_incident_disaster_flood", "character_traits_expansion_trait_unpopular"},
+                         {"phar_main_effect_bundle_incident_disaster_drought_food_production", "character_traits_expansion_trait_farmer_bad"},
+                         {"phar_main_effect_bundle_incident_disaster_earthquake", "character_traits_expansion_trait_unpopular"}
+                    }
+
+                    -- Loop through the table
+                    for i = 1, #disaster_traits do
+                         local effect_bundle_key = disaster_traits[i][1]
+                         local trait_key = disaster_traits[i][2]
+
+                         if province:has_effect_bundle(effect_bundle_key, faction_key) then
+                              self.character_traits:apply_trait_by_chance(character, trait_key, 20, 20)
+                              out("Applied " .. trait_key .. " due to effect bundle " .. effect_bundle_key)
+                         end
+                    end
+               end
+          end
+          ----------------
+          ---- at sea ----
+          ----------------
+          if character:is_at_sea() then
+               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_sea_legs", 20, 25)
+               out(" char_is_at_sea_applying_trait")
+          end
+
      end, true)
 end
 
@@ -2224,215 +2349,81 @@ function event_listener_functions:provincial_construction()
      end, true)
 end
 
-function event_listener_functions:misc()
-     ----------------------------------------
-     ---- PRAYED AT SHRINE OR NON-SHRINE ----
-     ----------------------------------------
-     core:add_listener("character_traits_expansion_character_prayed_at_shrine", "CharacterPerformedSuccessfulAgentAction", true, function(context)
-          local unique_id = context:unique_id()
+function event_listener_functions:random_traits()
+     ---------------------------------------------------
+     ---- RANDOM TRAITS WHEN CHARACTER COMES OF AGE ----
+     ---------------------------------------------------
+     core:add_listener("character_traits_expansion_character_comes_of_age", "CharacterComesOfAge", true, function(context)
+          local character = context:character()
+          local father = character:has_father() and character:father() or nil
+          local mother = character:has_mother() and character:mother() or nil
 
-          if string.find(unique_id, "phar_ers_interaction_shrine_pray") then
-               self.character_traits:apply_trait_by_chance(context:character(), "phar_main_trait_spiritual", 20, 20)
-               out("character_traits_expansion prayed at shrine")
-          elseif string.find(unique_id, "phar_ers_interaction") then
-               self.character_traits:apply_trait_by_chance(context:character(), "phar_main_trait_materialistic", 20, 20)
-               out("character_traits_expansion prayed at non-shrine")
+          if father then
+               out(" character_comes_of_age_father_is_" .. tostring(father))
+          else
+               out(" character_comes_of_age_no_father_found!")
+          end
+
+          if mother then
+               out(" character_comes_of_age_mother_is_" .. tostring(mother))
+          else
+               out(" character_comes_of_age_no_mother_found!")
+          end
+
+          -- Create a temporary table to hold the adjusted chances for this specific character
+          local trait_chances = {}
+
+          -- initialize the temporary table with the default trait chances
+          for trait, base_chance in pairs(self.character_traits.coming_of_age_traits) do trait_chances[trait] = base_chance end
+
+          -- adjust trait chances based on parent's traits
+          for trait in pairs(coming_of_age_traits) do
+               if father and father:has_trait(trait) then
+                    trait_chances[trait] = trait_chances[trait] + 20
+                    out(" character_comes_of_age_father_has_trait_" .. trait .. "_increased_chance_to_" .. tostring(20))
+               end
+               if mother and mother:has_trait(trait) then
+                    trait_chances[trait] = trait_chances[trait] + 20
+                    out(" character_comes_of_age_mother_has_trait_" .. trait .. "_increased_chance_to_" .. tostring(20))
+               end
+          end
+
+          -- apply the traits with their respective chances for this character
+          for trait, chance in pairs(trait_chances) do
+               self.character_traits:apply_trait_by_chance(character, trait, 20, chance)
+               out(" character_comes_of_age_applied_trait_" .. trait .. "_with_chance_" .. tostring(chance))
           end
      end, true)
 
-     ----------------------------------------------
-     ---- MAIN CHARACTER TURN START PROCESSING ----
-     ----------------------------------------------
-     core:add_listener("character_traits_expansion_character_turn_start", "CharacterTurnStart", true, function(context)
+     --------------------------------------------------
+     ---- RANDOM TRAITS WHEN CHARACTER IS CREATED ----
+     --------------------------------------------------
+     core:add_listener("character_traits_expansion_character_created", "CharacterCreated", true, function(context)
           local character = context:character()
+          out(" character_created")
 
-		if character:is_null_interface() then
-			out("hcp_character_turn_end_main character is_null_interface!")
-			return
-		end
-	
-		if character:character_type("colonel") or character:character_details():is_civilian() then
-			out("hcp_character_turn_end_main character is a colonel or is a civilian!")
-			return
-		end
-
-          if character:has_region() then
-               -------------------------------------------------------------
-               ---- LOW/HIGH INFLUENCE REGION FOR RESPECTFUL/IRREVERENT ----
-               -------------------------------------------------------------
-               local character = context:character()
-               local influence_threshold_high = 0.70
-               local influence_threshold_low = 0.6
-               local religion = character:faction():state_religion()
-
-               if cm:char_is_general_with_army(character) and not character:region():is_null_interface() then
-                    local region_influence = character:region():religion_proportion(religion)
-
-                    if region_influence >= influence_threshold_high then
-                         self.character_traits:apply_trait_by_chance(character, "phar_main_trait_irreverent", 20, 3)
-                         out(" char_in_high_influence_region!")
-                    elseif region_influence <= influence_threshold_low then
-                         self.character_traits:apply_trait_by_chance(character, "phar_main_trait_respectful", 20, 5)
-                         out(" char_in_low_influence_region!")
-                    end
-               else
-                    -------------------------------------------------------
-                    ---- PLAGUE, EARTHQUAKE, FLOOD, DROUGHT, DISASTERS ----
-                    -------------------------------------------------------
-                    local faction_key = character:faction():name()
-                    local province = character:region():province()
-                    local province_name = character:region():province_name()
-                    out(" TEST_BLIGHTED_PASSED_CHECK_CHARACTER_IS_IN_PROVINCE_" .. tostring(province_name))
-
-                    local disaster_traits = {
-                         {"phar_main_effect_bundle_incident_disaster_plague_recruitment_slots", "character_traits_expansion_trait_blighted"},
-                         {"phar_main_effect_bundle_incident_disaster_flood", "character_traits_expansion_trait_unpopular"},
-                         {"phar_main_effect_bundle_incident_disaster_drought_food_production", "character_traits_expansion_trait_farmer_bad"},
-                         {"phar_main_effect_bundle_incident_disaster_earthquake", "character_traits_expansion_trait_unpopular"}
-                    }
-
-                    -- Loop through the table
-                    for i = 1, #disaster_traits do
-                         local effect_bundle_key = disaster_traits[i][1]
-                         local trait_key = disaster_traits[i][2]
-
-                         if province:has_effect_bundle(effect_bundle_key, faction_key) then
-                              self.character_traits:apply_trait_by_chance(character, trait_key, 20, 20)
-                              out("Applied " .. trait_key .. " due to effect bundle " .. effect_bundle_key)
-                         end
-                    end
-
+          if character:age() >= 16 and cm:char_is_general_with_army(character) and not character:character_type("colonel") then
+               -- ! Lycia Bookmark good use of a table
+               for i = 1, #self.character_traits.character_creation_traits do
+                    self.character_traits:apply_trait_by_chance(character, self.character_traits.character_creation_traits[i], 20, 1)
+                    out(" character_created_IS_APPLYING_" .. tostring(self.character_creation_traits.character_creation_traits[i]))
                end
-
           end
-          ---------------------------------------------------------
-          ---- WARS AND ALLIES CHECK FOR RESPECTFUL/IRREVERENT ----
-          ---------------------------------------------------------
-          -- local character = context:character()
-          -- local faction = character:faction()
-
-          -- if faction:num_allies() == 0 and faction:at_war() then
-          --     self.character_traits:apply_trait_by_chance(character, "phar_main_trait_irreverent", 20, 1)
-          -- elseif faction:num_allies() > 1 then
-          --     self.character_traits:apply_trait_by_chance(character, "phar_main_trait_respectful", 20, 1)
-          -- end
-
-          ----------------
-          ---- at sea ----
-          ----------------
-          if character:is_at_sea() then
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_sea_legs", 20, 25)
-               out(" char_is_at_sea_applying_trait")
-          end
-
-          ---------------------------------------------
-          ---- RANDOM CHANCE FOR TRAITS EVERY TURN ----
-          ---------------------------------------------
-          -- if cm:model():random_percent(0) then
-          --     local random_index = math.random(#character_created_traits)
-          --     local selected_trait = character_created_traits[random_index]
-
-          --     out(" random_number_is_" .. random_index)
-
-          --     self.character_traits:apply_trait_by_chance(character, selected_trait, 4)
-          --     out(" add_random_trait_to_character_passed_random_check_and_is_applying_" .. tostring(selected_trait))
-          -- end
      end, true)
 
-     --------------------------------------------
-     ---- MISC CHARACTER TURN END PROCESSING ----
-     --------------------------------------------
-     core:add_listener("character_traits_expansion_character_turn_end_misc", "CharacterTurnEnd", true, function(context)
+     core:add_listener("character_traits_expansion_character_age_traits", "CharacterTurnEnd", true, function(context)
+          out("launched characters_in_regions() - character_turn_end listener triggered")
           local character = context:character()
 
-		if character:is_null_interface() then
-			out("hcp_character_turn_end_main character is_null_interface!")
-			return
-		end
-	
-		if character:character_type("colonel") or character:character_details():is_civilian() then
-			out("hcp_character_turn_end_main character is a colonel or is a civilian!")
-			return
-		end
-		
-          ----------------------------
-          ---- SUFFERED ATTRITION ----
-          ----------------------------
-          local military_force = character:military_force()
-          if not military_force:is_null_interface() then
-               if military_force:will_suffer_any_attrition() then
-                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_ambitious", 20, 15);
-                    out(" character_suffered_attrition")
-               end
+          if character:is_null_interface() then
+               out(" characters_in_regions() character is_null_interface!")
+               return
           end
 
-          -------------------------------
-          ---- CHARACTER UNDER SIEGE ----
-          -------------------------------
-          if cm:char_is_general_with_army(character) and character:has_garrison_residence() and character:garrison_residence():is_under_siege() then
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_blighted", 20, 20)
-               out(" character_under_siege")
-          end
-
-          ---------------------------------------
-          ---- REGION HAS SMUGGLERS' DEN ----
-          ---------------------------------------
-          if cm:char_is_general_with_army(character) and character:has_region() and character:region():owning_faction():command_queue_index() ==
-               character:faction():command_queue_index() then
-               local building_list = region:settlement():building_list()
-               out(" character_" .. character:onscreen_name() .. " is in region: " .. region:name() .. " checking for smugglers' den")
-
-               -- check for smugglers' den
-               for i = 0, building_list:num_items() - 1 do
-                    local building = building_list:item_at(i)
-                    if not building:is_null_interface() then
-                         local superchain = building:superchain()
-                         if superchain == "phar_main_port_coast_derivative_type_a" or superchain == "phar_main_irsu_resource_production_port_coast_derivative_type_a" then
-                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_criminal", 20, 25)
-                              out(" smugglers' den found!")
-                              break
-                         end
-                    end
-               end
-          end
-
-          ------------------------------------------------
-          ---- SETTLEMENT HAS MILITARY ADMIN BUILDING ----
-          ------------------------------------------------
-          if cm:char_is_general_with_army(character) and character:has_region() and character:region():owning_faction():command_queue_index() ==
-               character:faction():command_queue_index() then
-               local region = character:region()
-               local building_list = region:settlement():building_list()
-
-               out(" character_" .. character:onscreen_name() .. " is in region: " .. region:name() .. " checking for military admin buildings")
-               for i = 0, building_list:num_items() - 1 do
-                    if building_list:item_at(i):is_null_interface() == false then
-                         local building_superchains = building_list:item_at(i):superchain()
-                         if self.character_traits.building_superchains.military_administration[building_superchain] then
-                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_military_admin_good", 20, 7.5)
-                              out(" character_" .. character:onscreen_name() .. " found military admin building: " .. building_superchain)
-                         end
-                    end
-               end
-          end
-          ---------------------------------------
-          ---- SETTLEMENT HAS ADMIN BUILDING ----
-          ---------------------------------------
-          if cm:char_is_general_with_army(character) and character:has_region() and character:region():owning_faction():command_queue_index() ==
-               character:faction():command_queue_index() then
-               local region = character:region()
-               local building_list = region:settlement():building_list()
-
-               out(" character_" .. character:onscreen_name() .. " is in region: " .. region:name() .. " checking for management buildings")
-               for i = 0, building_list:num_items() - 1 do
-                    if building_list:item_at(i):is_null_interface() == false then
-                         local building_superchains = building_list:item_at(i):superchain()
-                         if self.character_traits.building_superchains.province_management[building_superchain] then
-                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_good", 20, 10)
-                              out(" character_" .. character:onscreen_name() .. " found management building: " .. building_superchain)
-                         end
-                    end
-               end
+          out("characters_in_regions() - character is " .. character:onscreen_name())
+          if character:character_type("colonel") or character:character_details():is_civilian() then
+               out(" characters_in_regions() character is a colonel or is a civilian!")
+               return
           end
 
           ------------------------------------
@@ -2449,30 +2440,24 @@ function event_listener_functions:misc()
                self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_blind", 20, 3)
                out(" character_" .. character:onscreen_name() .. "_is_old")
           end
+     end, true)
+end
 
-          -------------------------------
-          ---- SPENT TURN IN STANCES ----
-          -------------------------------
-          if cm:char_is_general_with_army(character) then
-               local stance = character:military_force():active_stance();
+function event_listener_functions:self_perpetuating_traits()
+     -------------------------------------------
+     --- SELF PERPETUATING TRAITS PROCESSING ---
+     -------------------------------------------
+     core:add_listener("character_traits_expansion_self_perpetuating_traits", "CharacterTurnEnd", true, function(context)
+          local character = context:character()
 
-               -- RAIDING
-               if stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_LAND_RAID" then
-                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_blunt", 20, 25);
-                    -- AMBUSHING
-               elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_AMBUSH" then
-                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_underhanded", 20, 25);
-                    -- FORCED MARCH
-               elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_MARCH" then
-                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_ambitious", 20, 7.5);
-                    -- ENCAMP
-               elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_SET_CAMP" then
-                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_content", 20, 100);
-                    -- RECRUITING
-               elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_MUSTER" then
-                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_charismatic", 20, 20);
-                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_military_admin_good", 20, 20);
-               end
+          if character:is_null_interface() then
+               out("hcp_character_turn_end_main character is_null_interface!")
+               return
+          end
+
+          if character:character_type("colonel") or character:character_details():is_civilian() then
+               out("hcp_character_turn_end_main character is a colonel or is a civilian!")
+               return
           end
 
           ----------------------------------
@@ -2480,13 +2465,12 @@ function event_listener_functions:misc()
           ----------------------------------
           for i = 1, #self_perpetuating_traits do
                if character:has_trait(self_perpetuating_traits[i]) then
-                    self.character_traits:apply_trait_by_chance(character, self_perpetuating_traits[i], 20, 3.75)
+                    self.character_traits:apply_trait_by_chance(character, self_perpetuating_traits[i], 20, 5)
                     out(" character_" .. character:onscreen_name() .. " has self perpetuating trait: " .. self_perpetuating_traits[i])
                end
           end
      end, true)
 end
-
 --------------------------------------------
 --- FIRE EVERY LISTENER WE HAVE!
 --------------------------------------------
@@ -2498,10 +2482,12 @@ function event_listener_functions:start_all()
      self:characters_in_regions()
      self:emergent_traits()
      self:faction_leaders()
+     self:misc_traits()
      self:pillage_and_conquest()
      self:weak_corrupt_governments()
      self:provincial_construction()
-     self:misc()
+     self:random_traits()
+     self:self_perpetuating_traits()
 end
 cm:add_first_tick_callback(function() event_listener_functions:start_all() end)
 
