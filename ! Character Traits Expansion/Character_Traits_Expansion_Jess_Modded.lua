@@ -1615,303 +1615,304 @@ function event_listener_functions:characters_in_regions()
 
           ----------------------------------------------
           ---- SPENT TURN IN REGIONS OR SETTLEMENTS ----
-        ----------------------------------------------
-		----- removed character:has_faction() and 
-		if character:has_region() then
-          local faction = character:faction()
-          local region = character:region()
-          local province = character:region():province()
-          local contested = false
+          ----------------------------------------------
+          ----- removed character:has_faction() and
+          out("characters_in_regions: character:has_region() is " .. tostring(character:has_region()))
+          if character:has_region() then
+               local faction = character:faction()
+               out("characters_in_regions() - character is in a region, starting checks. Faction is: " .. tostring(faction:name()))
+               local region = character:region()
+               out("characters_in_regions(): character region is: " .. tostring(region:name()))
+               local province = character:region():province()
+               out("characters_in_regions() - initializing contested to false")
+               local contested = false
 
-          out("characters_in_regions() - starting contested for loop.")
-          -- defensive checks: province or region_list may be nil in some edge cases
-		--if province ~= nil and not province:is_null_interface() and province:region_list() ~= nil then
-			for i = 0, province:region_list():num_items() - 1 do
-				local region_in_province = province:region_list():item_at(i)
-				-- removed region_in_province ~= nil and owning_faction ~= nil and not region_in_province:is_null_interface() and
-				if not region_in_province:is_abandoned() then
-					local owning_faction = region_in_province:owning_faction()
-					if owning_faction:command_queue_index() ~= character:faction():command_queue_index() then
-					contested = true
-					out("characters_in_regions() - contested set to: " .. tostring(contested) .. " — breaking")
-					break
-					end
-				end
-				out("characters_in_regions() - checked region " .. tostring(i))
-			end
-		--end
-
-          -- debug check after loop
-          out("after contested for loop. contested is set to: " .. tostring(contested))
-
-
-          -------------------------------------------------------------------------
-          ---- CALCULATE GENERAL BODYGUARD CASUALTIES FOR HESITANT CALCULATION ----
-          -------------------------------------------------------------------------
-          local bodyguard_light_casualties = false
-          local bodyguard_heavy_casualties = false
-        if cm:char_is_general_with_army(character) then
-            local unit_list = character:military_force():unit_list()
-            for i = 0, unit_list:num_items() - 1 do
-                local unit = unit_list:item_at(i)
-                if unit:belongs_to_unit_set("phar_main_bodyguards") then
-                    local casualties_percent = 100 - unit:percentage_proportion_of_full_strength()
-                    local bodyguard_health_high = 85
-                    local bodyguard_health_low = 70
-                    if casualties_percent > bodyguard_health_low then
-                        bodyguard_light_casualties = true
-                        bodyguard_heavy_casualties = false
+               out("characters_in_regions() - starting contested for loop.")
+               -- defensive checks: province or region_list may be nil in some edge cases
+               -- if province ~= nil and not province:is_null_interface() and province:region_list() ~= nil then
+               for i = 0, province:region_list():num_items() - 1 do
+                    local region_in_province = province:region_list():item_at(i)
+                    -- removed region_in_province ~= nil and owning_faction ~= nil and not region_in_province:is_null_interface() and
+                    if not region_in_province:is_abandoned() then
+                         local owning_faction = region_in_province:owning_faction()
+                         if owning_faction:command_queue_index() ~= character:faction():command_queue_index() then
+                              contested = true
+                              out("characters_in_regions() - contested set to: " .. tostring(contested) .. " — breaking")
+                              break
+                         end
                     end
-                    if casualties_percent > bodyguard_health_high then
-                        bodyguard_light_casualties = false
-                        bodyguard_heavy_casualties = true
-                        break
-                    end
-                end
-            end
-        end
-	   
-		
-          if faction:is_allowed_to_capture_territory() and cm:char_is_general_with_army(character) and character:has_region() and not region:is_abandoned() then
-               if character:in_settlement() and not contested then
-				
-                    if character:military_force():active_stance() ~= "military_force_active_stance_type_muster" then
-                         -----------------------------------------------------
-                         ---- SPENT TURNS IN OWN UNCONTESTED SETTTLEMENTS ----
-                         -----------------------------------------------------
-                         if character:turns_in_own_regions() >= 4 then
-                              out(" slothful_character_is_eligible_for_slothful")
-                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_slothful", 20, 10)
-                         elseif character:turns_in_own_regions() >= 2 then
-                              local sober_chance = 1
-                              local drink_chance = 1
-                              out(" character_" .. character:onscreen_name() .. " is governor of region: " .. region:name())
-                              if region:public_order() >= 40 then
-                                   -- old characters are more likely to get lazy traits like in attila
-                                   if character:age() > 50 then
-                                        drink_chance = drink_chance + 2
-                                        out(" give_lazy_traits_character_is_old_so_drink_chance_is " .. drink_chance)
-                                   end
-                                   -- check if settlement has a military admin, temple, or beer building and increase chance if so
-                                   local slot_list = character:region():settlement():slot_list()
-                                   out("checking " .. slot_list:num_items() .. " slots in the settlement.")
-                                   for i = 0, slot_list:num_items() - 1 do
-                                        if slot_list:item_at(i):has_building() then
-                                             local building_superchain = slot_list:item_at(i):building():superchain()
-                                             out("checking building with superchain: " .. tostring(building_superchain))
-                                             if building_superchain ~= nil and self.character_traits.building_superchains.military_administration[building_superchain] then
-                                                  sober_chance = sober_chance + 4
-                                                  out(" give_lazy_traits_found_military_admin_building_so_sober_chance_is " .. sober_chance)
-                                             end
-                                             if building_superchain ~= nil and self.character_traits.building_superchains.drinking[building_superchain] then
-                                                  drink_chance = drink_chance + 4
-                                                  out(" give_lazy_traits_found_drink_building_so_drink_chance_is " .. drink_chance)
-                                             end
-                                             if building_superchain == "phar_main_religion_temple" or building_superchain == "phar_map_religion_dwelling_all" then
-                                                  sober_chance = sober_chance + 4
-                                                  out(" give_lazy_traits_found_temple_so_sober_chance_is " .. sober_chance)
-                                             end
-                                        end
-                                   end
-                                   out("Final sober_chance: " .. sober_chance)
-                                   out("Final drink_chance: " .. drink_chance)
-                                   -- Apply the traits after processing all the buildings
-                                   local traits = {
-                                        {"character_traits_expansion_trait_sober", sober_chance}, {"character_traits_expansion_trait_drink", drink_chance},
-                                        {"character_traits_expansion_trait_girls", drink_chance}, {"character_traits_expansion_trait_arse", drink_chance},
-                                        {"character_traits_expansion_trait_degenerate", drink_chance}, {"character_traits_expansion_trait_gambler", drink_chance}
-                                   }
-                                   -- ^ Lycia Bookmark:
-                                   -- ! This shows how to use a table to pair two values like a trait and its chance, and then loop through it to apply the  This is much cleaner than having separate if statements for each trait.
-                                   for i = 1, #traits do
-                                        out("Applying trait: " .. traits[i][1] .. " with chance: " .. traits[i][2])
-                                        self.character_traits:apply_trait_by_chance(character, traits[i][1], 20, traits[i][2])
-                                   end
+                    out("characters_in_regions() - checked region " .. tostring(i))
+               end
+               -- end
+
+               -- debug check after loop
+               out("after contested for loop. contested is set to: " .. tostring(contested))
+
+               -------------------------------------------------------------------------
+               ---- CALCULATE GENERAL BODYGUARD CASUALTIES FOR HESITANT CALCULATION ----
+               -------------------------------------------------------------------------
+               local bodyguard_light_casualties = false
+               local bodyguard_heavy_casualties = false
+               if cm:char_is_general_with_army(character) then
+                    local unit_list = character:military_force():unit_list()
+                    for i = 0, unit_list:num_items() - 1 do
+                         local unit = unit_list:item_at(i)
+                         if unit:belongs_to_unit_set("phar_main_bodyguards") then
+                              local casualties_percent = 100 - unit:percentage_proportion_of_full_strength()
+                              local bodyguard_health_high = 85
+                              local bodyguard_health_low = 70
+                              if casualties_percent > bodyguard_health_low then
+                                   bodyguard_light_casualties = true
+                                   bodyguard_heavy_casualties = false
+                              end
+                              if casualties_percent > bodyguard_health_high then
+                                   bodyguard_light_casualties = false
+                                   bodyguard_heavy_casualties = true
+                                   break
                               end
                          end
                     end
-               elseif character:in_settlement() and contested then
-                    --------------------------------------------------------
-                    ---- SPENT TURNS IN CONTESTED PROVINCE SETTLEMENTS  ----
-                    --------------------------------------------------------
-                    if character:turns_in_own_regions() >= 3 and character:military_force():active_stance() ~= "military_force_active_stance_type_muster" and
-                         character:military_force():active_stance() ~= "military_force_active_stance_type_march" then
-                         if not bodyguard_heavy_casualties and not bodyguard_light_casualties then
-                              self.character_traits:apply_trait_by_chance(character, "phar_main_trait_hesitant", 20, 20)
-                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 10)
-                         elseif bodyguard_heavy_casualties then
-                              self.character_traits:apply_trait_by_chance(character, "phar_main_trait_hesitant", 20, 10)
-                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 10)
-                         elseif bodyguard_light_casualties then
-                              self.character_traits:apply_trait_by_chance(character, "phar_main_trait_hesitant", 20, 15)
-                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 10)
+               end
+
+               if faction:is_allowed_to_capture_territory() and cm:char_is_general_with_army(character) and character:has_region() and not region:is_abandoned() then
+                    if character:in_settlement() and not contested then
+
+                         if character:military_force():active_stance() ~= "military_force_active_stance_type_muster" then
+                              -----------------------------------------------------
+                              ---- SPENT TURNS IN OWN UNCONTESTED SETTTLEMENTS ----
+                              -----------------------------------------------------
+                              if character:turns_in_own_regions() >= 4 then
+                                   out(" slothful_character_is_eligible_for_slothful")
+                                   self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_slothful", 20, 10)
+                              elseif character:turns_in_own_regions() >= 2 then
+                                   local sober_chance = 1
+                                   local drink_chance = 1
+                                   out(" character_" .. character:onscreen_name() .. " is governor of region: " .. region:name())
+                                   if region:public_order() >= 40 then
+                                        -- old characters are more likely to get lazy traits like in attila
+                                        if character:age() > 50 then
+                                             drink_chance = drink_chance + 2
+                                             out(" give_lazy_traits_character_is_old_so_drink_chance_is " .. drink_chance)
+                                        end
+                                        -- check if settlement has a military admin, temple, or beer building and increase chance if so
+                                        local slot_list = character:region():settlement():slot_list()
+                                        out("checking " .. slot_list:num_items() .. " slots in the settlement.")
+                                        for i = 0, slot_list:num_items() - 1 do
+                                             if slot_list:item_at(i):has_building() then
+                                                  local building_superchain = slot_list:item_at(i):building():superchain()
+                                                  out("checking building with superchain: " .. tostring(building_superchain))
+                                                  if building_superchain ~= nil and
+                                                       self.character_traits.building_superchains.military_administration[building_superchain] then
+                                                       sober_chance = sober_chance + 4
+                                                       out(" give_lazy_traits_found_military_admin_building_so_sober_chance_is " .. sober_chance)
+                                                  end
+                                                  if building_superchain ~= nil and self.character_traits.building_superchains.drinking[building_superchain] then
+                                                       drink_chance = drink_chance + 4
+                                                       out(" give_lazy_traits_found_drink_building_so_drink_chance_is " .. drink_chance)
+                                                  end
+                                                  if building_superchain == "phar_main_religion_temple" or building_superchain == "phar_map_religion_dwelling_all" then
+                                                       sober_chance = sober_chance + 4
+                                                       out(" give_lazy_traits_found_temple_so_sober_chance_is " .. sober_chance)
+                                                  end
+                                             end
+                                        end
+                                        out("Final sober_chance: " .. sober_chance)
+                                        out("Final drink_chance: " .. drink_chance)
+                                        -- Apply the traits after processing all the buildings
+                                        local traits = {
+                                             {"character_traits_expansion_trait_sober", sober_chance}, {"character_traits_expansion_trait_drink", drink_chance},
+                                             {"character_traits_expansion_trait_girls", drink_chance}, {"character_traits_expansion_trait_arse", drink_chance},
+                                             {"character_traits_expansion_trait_degenerate", drink_chance}, {"character_traits_expansion_trait_gambler", drink_chance}
+                                        }
+                                        -- ^ Lycia Bookmark:
+                                        -- ! This shows how to use a table to pair two values like a trait and its chance, and then loop through it to apply the  This is much cleaner than having separate if statements for each trait.
+                                        for i = 1, #traits do
+                                             out("Applying trait: " .. traits[i][1] .. " with chance: " .. traits[i][2])
+                                             self.character_traits:apply_trait_by_chance(character, traits[i][1], 20, traits[i][2])
+                                        end
+                                   end
+                              end
+                         end
+                    elseif character:in_settlement() and contested then
+                         --------------------------------------------------------
+                         ---- SPENT TURNS IN CONTESTED PROVINCE SETTLEMENTS  ----
+                         --------------------------------------------------------
+                         if character:turns_in_own_regions() >= 3 and character:military_force():active_stance() ~= "military_force_active_stance_type_muster" and
+                              character:military_force():active_stance() ~= "military_force_active_stance_type_march" then
+                              if not bodyguard_heavy_casualties and not bodyguard_light_casualties then
+                                   self.character_traits:apply_trait_by_chance(character, "phar_main_trait_hesitant", 20, 20)
+                                   self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 10)
+                              elseif bodyguard_heavy_casualties then
+                                   self.character_traits:apply_trait_by_chance(character, "phar_main_trait_hesitant", 20, 10)
+                                   self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 10)
+                              elseif bodyguard_light_casualties then
+                                   self.character_traits:apply_trait_by_chance(character, "phar_main_trait_hesitant", 20, 15)
+                                   self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 10)
+                              end
+                         end
+                         out("faction:at_war_with(region:owning_faction()) " .. faction:at_war_with(region:owning_faction()))
+                    elseif faction:at_war_with(region:owning_faction()) then
+                         -------------------------------------
+                         ---- SPENT TURNS IN ENEMY REGIONS ---
+                         -------------------------------------
+                         self.character_traits:apply_trait_by_chance(character, "phar_main_trait_confident", 20, 10)
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 15)
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_pragmatic", 20, 10)
+                         out(" character in enemy region, applying 'confident' and 'scout' ")
+                         -- ^ additional check for marriage and action points and applies cuckold.
+                         if character:family_member():has_spouse() and character:turns_in_enemy_regions() >= 3 then
+                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_cuckold", 20, 7.5)
+                              out(" character is married and is in enemy territory, applying 'cuckold' trait.")
+                         end
+                         out("not character:in_settlement() and contested: " .. tostring((not character:in_settlement()) and contested))
+                    elseif not character:in_settlement() and contested then
+                         --------------------------------------------
+                         ---- SPENT TURNS IN CONTESTED PROVINCES ----
+                         --------------------------------------------	
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_feck", 20, 100)
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 100)
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 100)
+                    elseif not character:in_settlement() and not contested then
+                         ------------------------------------------------
+                         ---- SPENT TURNS IN OWN UNCONTESTED REGIONS ----
+                         ------------------------------------------------
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_feck", 20, 100)
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 100)
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 100)
+                         out(" character not in settlement with full action points, applying 'feck' and 'bad_disciplinarian' ")
+                    end
+               elseif region:is_abandoned() then
+                    -----------------------------------------
+                    ---- SPENT TURNS IN ABANDONED REGIONS ---
+                    -----------------------------------------
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 25)
+               end
+
+               ------------------------------------
+               ---- POPULAR/UNPOPULAR GOVERNOR ----
+               ------------------------------------
+               if cm:char_is_general_with_army(character) and character:has_region() and character:region():owning_faction():command_queue_index() ==
+                    character:faction():command_queue_index() then
+                    local region = character:region()
+                    out(" character_" .. character:onscreen_name() .. " is governor of region: " .. region:name())
+                    if region:public_order() == 100 then
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 30)
+                         out(" character_" .. character:onscreen_name() .. " ranked up in settlement with high public order. giving popular.")
+                    elseif region:public_order() >= 80 then
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 17.5)
+                         out(" character_" .. character:onscreen_name() .. " ranked up in settlement with high public order. giving popular.")
+                    elseif region:public_order() >= 65 then
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 7.5)
+                         out(" character_" .. character:onscreen_name() .. " ranked up in settlement with high public order. giving popular.")
+                    elseif region:public_order() >= 50 then
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 2.5)
+                         out(" character_" .. character:onscreen_name() .. " ranked up in settlement with high public order. giving popular.")
+                    elseif region:public_order() <= -25 then
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 5)
+                         out(" character_" .. character:onscreen_name() .. " ranked up in settlement with low public order. giving unpopular.")
+                    elseif region:public_order() <= -40 then
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 15)
+                         out(" character_" .. character:onscreen_name() .. " ranked up in settlement with low public order. giving unpopular.")
+                    elseif region:public_order() <= -60 then
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 22.5)
+                         out(" character_" .. character:onscreen_name() .. " ranked up in settlement with low public order. giving unpopular.")
+                    elseif region:public_order() <= -80 then
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 30)
+                         out(" character_" .. character:onscreen_name() .. " ranked up in settlement with low public order. giving unpopular.")
+                    elseif region:public_order() == -100 then
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 40)
+                         out(" character_" .. character:onscreen_name() .. " ranked up in settlement with low public order. giving unpopular.")
+                    end
+               end
+
+               -------------------------------------------------------------
+               ---- PRESENT IN REGION WITH HIGH/LOW PUBLIC ORDER ----
+               -------------------------------------------------------------
+               local region = character:region()
+               local public_order = region:public_order()
+               local faction_name = region:owning_faction():name()
+               local is_in_settlement = character:in_settlement() == true
+
+               if cm:char_is_general_with_army(character) and character:has_region() and is_in_settlement and character:region():owning_faction():command_queue_index() ==
+                    character:faction():command_queue_index() then
+                    -- fix precedence: `not character:turns_in_own_regions() < 3` causes a boolean-number compare error
+                    if character:turns_in_own_regions() >= 3 and character:military_force():active_stance() ~= "military_force_active_stance_type_muster" then
+                         if public_order >= 70 then
+                              self.character_traits:apply_trait_by_chance(character, "phar_main_trait_content", 20, 7.5)
+                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 3.75)
+                              out(" character_is_garrisoned_in_settlement_with_high_public_order!")
+                         elseif public_order <= -70 then
+                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 7.5)
+                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_bad", 20, 5)
+                              out(" character_is_garrisoned_in_settlement_with_low_public_order!")
                          end
                     end
-                    out("faction:at_war_with(region:owning_faction()) " .. faction:at_war_with(region:owning_faction()))
-               elseif faction:at_war_with(region:owning_faction()) then
-                    -------------------------------------
-                    ---- SPENT TURNS IN ENEMY REGIONS ---
-                    -------------------------------------
-                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_confident", 20, 10)
-                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 15)
-                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_pragmatic", 20, 10)
-                    out(" character in enemy region, applying 'confident' and 'scout' ")
-                    -- ^ additional check for marriage and action points and applies cuckold.
-                    if character:family_member():has_spouse() and character:turns_in_enemy_regions() >= 3 then
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_cuckold", 20, 7.5)
-                         out(" character is married and is in enemy territory, applying 'cuckold' trait.")
-                    end
-                    out("not character:in_settlement() and contested: " .. tostring((not character:in_settlement()) and contested))
-               elseif not character:in_settlement() and contested then
-                    --------------------------------------------
-                    ---- SPENT TURNS IN CONTESTED PROVINCES ----
-                    --------------------------------------------	
-                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_feck", 20, 100)
-                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 100)
-                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 100)
-               elseif not character:in_settlement() and not contested then
-                    ------------------------------------------------
-                    ---- SPENT TURNS IN OWN UNCONTESTED REGIONS ----
-                    ------------------------------------------------
-                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_feck", 20, 100)
-                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 100)
-                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 100)
-                    out(" character not in settlement with full action points, applying 'feck' and 'bad_disciplinarian' ")
-               end
-          elseif region:is_abandoned() then
-               -----------------------------------------
-               ---- SPENT TURNS IN ABANDONED REGIONS ---
-               -----------------------------------------
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 25)
-          end
-
-          ------------------------------------
-          ---- POPULAR/UNPOPULAR GOVERNOR ----
-          ------------------------------------
-          if cm:char_is_general_with_army(character) and character:has_region() and character:region():owning_faction():command_queue_index() ==
-               character:faction():command_queue_index() then
-               local region = character:region()
-               out(" character_" .. character:onscreen_name() .. " is governor of region: " .. region:name())
-               if region:public_order() == 100 then
-                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 30)
-                    out(" character_" .. character:onscreen_name() .. " ranked up in settlement with high public order. giving popular.")
-               elseif region:public_order() >= 80 then
-                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 17.5)
-                    out(" character_" .. character:onscreen_name() .. " ranked up in settlement with high public order. giving popular.")
-               elseif region:public_order() >= 65 then
-                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 7.5)
-                    out(" character_" .. character:onscreen_name() .. " ranked up in settlement with high public order. giving popular.")
-               elseif region:public_order() >= 50 then
-                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 2.5)
-                    out(" character_" .. character:onscreen_name() .. " ranked up in settlement with high public order. giving popular.")
-               elseif region:public_order() <= -25 then
-                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 5)
-                    out(" character_" .. character:onscreen_name() .. " ranked up in settlement with low public order. giving unpopular.")
-               elseif region:public_order() <= -40 then
-                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 15)
-                    out(" character_" .. character:onscreen_name() .. " ranked up in settlement with low public order. giving unpopular.")
-               elseif region:public_order() <= -60 then
-                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 22.5)
-                    out(" character_" .. character:onscreen_name() .. " ranked up in settlement with low public order. giving unpopular.")
-               elseif region:public_order() <= -80 then
-                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 30)
-                    out(" character_" .. character:onscreen_name() .. " ranked up in settlement with low public order. giving unpopular.")
-               elseif region:public_order() == -100 then
-                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 40)
-                    out(" character_" .. character:onscreen_name() .. " ranked up in settlement with low public order. giving unpopular.")
                end
           end
-
-          -------------------------------------------------------------
-          ---- PRESENT IN REGION WITH HIGH/LOW PUBLIC ORDER ----
-          -------------------------------------------------------------
-          local region = character:region()
-          local public_order = region:public_order()
-          local faction_name = region:owning_faction():name()
-          local is_in_settlement = character:in_settlement() == true
-
-          if cm:char_is_general_with_army(character) and character:has_region() and is_in_settlement and character:region():owning_faction():command_queue_index() ==
-               character:faction():command_queue_index() then
-               -- fix precedence: `not character:turns_in_own_regions() < 3` causes a boolean-number compare error
-               if character:turns_in_own_regions() >= 3 and character:military_force():active_stance() ~= "military_force_active_stance_type_muster" then
-                    if public_order >= 70 then
-                         self.character_traits:apply_trait_by_chance(character, "phar_main_trait_content", 20, 7.5)
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 3.75)
-                         out(" character_is_garrisoned_in_settlement_with_high_public_order!")
-                    elseif public_order <= -70 then
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 7.5)
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_bad", 20, 5)
-                         out(" character_is_garrisoned_in_settlement_with_low_public_order!")
-                    end
-               end
-          end
-	end
      end, true)
 end
 
 function event_listener_functions:emergent_traits()
-    ---------------------------------------------------
-    ---- RANDOM TRAITS WHEN CHARACTER COMES OF AGE ----
-    ---------------------------------------------------
-    core:add_listener("character_traits_expansion_character_comes_of_age", "CharacterComesOfAge", true, function(context)
-        local character = context:character()
-        local father = character:has_father() and character:father() or nil
-        local mother = character:has_mother() and character:mother() or nil
+     ---------------------------------------------------
+     ---- RANDOM TRAITS WHEN CHARACTER COMES OF AGE ----
+     ---------------------------------------------------
+     core:add_listener("character_traits_expansion_character_comes_of_age", "CharacterComesOfAge", true, function(context)
+          local character = context:character()
+          local father = character:has_father() and character:father() or nil
+          local mother = character:has_mother() and character:mother() or nil
 
-        if father then
-            out(" character_comes_of_age_father_is_" .. tostring(father))
-        else
-            out(" character_comes_of_age_no_father_found!")
-        end
+          if father then
+               out(" character_comes_of_age_father_is_" .. tostring(father))
+          else
+               out(" character_comes_of_age_no_father_found!")
+          end
 
-        if mother then
-            out(" character_comes_of_age_mother_is_" .. tostring(mother))
-        else
-            out(" character_comes_of_age_no_mother_found!")
-        end
+          if mother then
+               out(" character_comes_of_age_mother_is_" .. tostring(mother))
+          else
+               out(" character_comes_of_age_no_mother_found!")
+          end
 
-        -- Create a temporary table to hold the adjusted chances for this specific character
-        local trait_chances = {}
+          -- Create a temporary table to hold the adjusted chances for this specific character
+          local trait_chances = {}
 
-        -- initialize the temporary table with the default trait chances
-        for trait, base_chance in pairs(self.character_traits.coming_of_age_traits) do trait_chances[trait] = base_chance end
+          -- initialize the temporary table with the default trait chances
+          for trait, base_chance in pairs(self.character_traits.coming_of_age_traits) do trait_chances[trait] = base_chance end
 
-        -- adjust trait chances based on parent's traits
-        for trait in pairs(coming_of_age_traits) do
-            if father and father:has_trait(trait) then
-                trait_chances[trait] = trait_chances[trait] + 20
-                out(" character_comes_of_age_father_has_trait_" .. trait .. "_increased_chance_to_" .. tostring(20))
-            end
-            if mother and mother:has_trait(trait) then
-                trait_chances[trait] = trait_chances[trait] + 20
-                out(" character_comes_of_age_mother_has_trait_" .. trait .. "_increased_chance_to_" .. tostring(20))
-            end
-        end
+          -- adjust trait chances based on parent's traits
+          for trait in pairs(coming_of_age_traits) do
+               if father and father:has_trait(trait) then
+                    trait_chances[trait] = trait_chances[trait] + 20
+                    out(" character_comes_of_age_father_has_trait_" .. trait .. "_increased_chance_to_" .. tostring(20))
+               end
+               if mother and mother:has_trait(trait) then
+                    trait_chances[trait] = trait_chances[trait] + 20
+                    out(" character_comes_of_age_mother_has_trait_" .. trait .. "_increased_chance_to_" .. tostring(20))
+               end
+          end
 
-        -- apply the traits with their respective chances for this character
-        for trait, chance in pairs(trait_chances) do
-            self.character_traits:apply_trait_by_chance(character, trait, 20, chance)
-            out(" character_comes_of_age_applied_trait_" .. trait .. "_with_chance_" .. tostring(chance))
-        end
-    end, true)
+          -- apply the traits with their respective chances for this character
+          for trait, chance in pairs(trait_chances) do
+               self.character_traits:apply_trait_by_chance(character, trait, 20, chance)
+               out(" character_comes_of_age_applied_trait_" .. trait .. "_with_chance_" .. tostring(chance))
+          end
+     end, true)
 
-    --------------------------------------------------
-    ---- RANDOM TRAITS WHEN CHARACTER IS CREATED ----
-    --------------------------------------------------
-    core:add_listener("character_traits_expansion_character_created", "CharacterCreated", true, function(context)
-        local character = context:character()
-        out(" character_created")
+     --------------------------------------------------
+     ---- RANDOM TRAITS WHEN CHARACTER IS CREATED ----
+     --------------------------------------------------
+     core:add_listener("character_traits_expansion_character_created", "CharacterCreated", true, function(context)
+          local character = context:character()
+          out(" character_created")
 
-        if character:age() >= 16 and cm:char_is_general_with_army(character) and not character:character_type("colonel") then
-            -- ! Lycia Bookmark good use of a table
-            for i = 1, #self.character_traits.character_creation_traits do
-                self.character_traits:apply_trait_by_chance(character, self.character_traits.character_creation_traits
-                [i], 20, 1)
-                out(" character_created_IS_APPLYING_" ..
-                tostring(self.character_creation_traits.character_creation_traits[i]))
-            end
-        end
-    end, true)
+          if character:age() >= 16 and cm:char_is_general_with_army(character) and not character:character_type("colonel") then
+               -- ! Lycia Bookmark good use of a table
+               for i = 1, #self.character_traits.character_creation_traits do
+                    self.character_traits:apply_trait_by_chance(character, self.character_traits.character_creation_traits[i], 20, 1)
+                    out(" character_created_IS_APPLYING_" .. tostring(self.character_creation_traits.character_creation_traits[i]))
+               end
+          end
+     end, true)
 end
 function event_listener_functions:faction_leaders()
      -----------------------------------------------
@@ -2059,170 +2060,170 @@ function event_listener_functions:pillage_and_conquest()
 end
 
 function event_listener_functions:weak_corrupt_governments()
-	--------------------
-	---- REBELLIONS ----
-	--------------------
-	core:add_listener("character_traits_expansion_rebellion", "RegionRebels", true, function(context)
-		local province = context:region():province()
+     --------------------
+     ---- REBELLIONS ----
+     --------------------
+     core:add_listener("character_traits_expansion_rebellion", "RegionRebels", true, function(context)
+          local province = context:region():province()
 
-		for i = 0, province:region_list():num_items() - 1 do
-			if region:has_settlement() and region:settlement():has_commander() then
-				local character = region:settlement():commander()
-				self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 20)
-				self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_authoritarian", 20, 15)
-				self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_bad", 20, 12.5)
+          for i = 0, province:region_list():num_items() - 1 do
+               if region:has_settlement() and region:settlement():has_commander() then
+                    local character = region:settlement():commander()
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 20)
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_authoritarian", 20, 15)
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_bad", 20, 12.5)
 
-				out(" region_in_province_rebelled_and_attempted_to_give_trait_to_" .. tostring(cm:char_lookup_str(character:command_queue_index())))
-			end
-		end
-	end, true)
+                    out(" region_in_province_rebelled_and_attempted_to_give_trait_to_" .. tostring(cm:char_lookup_str(character:command_queue_index())))
+               end
+          end
+     end, true)
 
-	core:add_listener("character_traits_expansion_corrupt_governance", "CharacterTurnEnd", true, function(context)
-		-------------------------------
-		--- TEMPTED BY CORRUPTION
-		-------------------------------
-		if cm:char_is_general_with_army(character) and character:has_region() and character:region():owning_faction():command_queue_index() ==
-			character:faction():command_queue_index() then
-			local building_list = character:region():settlement():building_list()
-			out(" character_" .. character:onscreen_name() .. " is in region: " .. region:name() .. " checking for treasury, palace of pleasure and gold mine")
+     core:add_listener("character_traits_expansion_corrupt_governance", "CharacterTurnEnd", true, function(context)
+          -------------------------------
+          --- TEMPTED BY CORRUPTION
+          -------------------------------
+          if cm:char_is_general_with_army(character) and character:has_region() and character:region():owning_faction():command_queue_index() ==
+               character:faction():command_queue_index() then
+               local building_list = character:region():settlement():building_list()
+               out(" character_" .. character:onscreen_name() .. " is in region: " .. region:name() .. " checking for treasury, palace of pleasure and gold mine")
 
-			-- check for palace of pleasures
-			for i = 0, building_list:num_items() - 1 do
-				local building = building_list:item_at(i)
-				if not building:is_null_interface() then
-					local superchain = building:superchain()
-					if superchain == "phar_map_bab_province_management_happiness_growth_type_a" then
-						self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_corrupt", 20, 5)
-						self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_degenerate", 20, 5)
-						out(" corrupt pleasure palace found!")
-						break
-					end
+               -- check for palace of pleasures
+               for i = 0, building_list:num_items() - 1 do
+                    local building = building_list:item_at(i)
+                    if not building:is_null_interface() then
+                         local superchain = building:superchain()
+                         if superchain == "phar_map_bab_province_management_happiness_growth_type_a" then
+                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_corrupt", 20, 5)
+                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_degenerate", 20, 5)
+                              out(" corrupt pleasure palace found!")
+                              break
+                         end
 
-					-- check for gold mine
-					if self.character_traits.building_superchains.gold[superchain] then
-						self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_corrupt", 20, 5)
-						out(" corrupt gold mine found!")
-						break
-					end
-				end
-			end
-		end
+                         -- check for gold mine
+                         if self.character_traits.building_superchains.gold[superchain] then
+                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_corrupt", 20, 5)
+                              out(" corrupt gold mine found!")
+                              break
+                         end
+                    end
+               end
+          end
 
-	end, true)
+     end, true)
 end
 
 function event_listener_functions:provincial_construction()
-	--------------------------------
-	---- PROVINCE UNDER CONSTRUCTION
-	--------------------------------
-	core:add_listener("character_traits_expansion_provoncial_construction", "CharacterEndTurn", function(context)
-		local character = context:character()
-		local province = character:region():province()
-		for i = 0, province:region_list():num_items() - 1 do
-			if character:has_region() and character:region():owning_faction():command_queue_index() == character:faction():command_queue_index() then
-				for i = 0, region:slot_list():num_items() - 1 do
-					local slot = region:slot_list():item_at(i)
-					if slot:is_there_construction() then return true end
-				end
-			end
-		end
-		return false
-	end, function(context) self.character_traits:apply_trait_by_chance(character, "phar_main_trait_cultured", 20, 12.5) end, true)
+     --------------------------------
+     ---- PROVINCE UNDER CONSTRUCTION
+     --------------------------------
+     core:add_listener("character_traits_expansion_provoncial_construction", "CharacterEndTurn", function(context)
+          local character = context:character()
+          local province = character:region():province()
+          for i = 0, province:region_list():num_items() - 1 do
+               if character:has_region() and character:region():owning_faction():command_queue_index() == character:faction():command_queue_index() then
+                    for i = 0, region:slot_list():num_items() - 1 do
+                         local slot = region:slot_list():item_at(i)
+                         if slot:is_there_construction() then return true end
+                    end
+               end
+          end
+          return false
+     end, function(context) self.character_traits:apply_trait_by_chance(character, "phar_main_trait_cultured", 20, 12.5) end, true)
 
-	-- if slot:building_chain_key() == "phar_main_ers_shrine" then return true end
-	-----------------------------
-	---- BUILDING COMPLETED ----
-	-----------------------------
-	core:add_listener("character_traits_expansion_BUILDING_COMPLETED", "BuildingCompleted", true, function(context)
-		local building = context:building()
-		local province = building:region():province()
-		local settlement = building:region():settlement()
-		local building_superchain_key = building:superchain()
-		for i = 0, province:region_list():num_items() - 1 do
-			if settlement:has_commander() then
-				local character = settlement:commander()
+     -- if slot:building_chain_key() == "phar_main_ers_shrine" then return true end
+     -----------------------------
+     ---- BUILDING COMPLETED ----
+     -----------------------------
+     core:add_listener("character_traits_expansion_BUILDING_COMPLETED", "BuildingCompleted", true, function(context)
+          local building = context:building()
+          local province = building:region():province()
+          local settlement = building:region():settlement()
+          local building_superchain_key = building:superchain()
+          for i = 0, province:region_list():num_items() - 1 do
+               if settlement:has_commander() then
+                    local character = settlement:commander()
 
-				----------------------------
-				---- BUILT ANY BUILDING ----
-				----------------------------
-				self.character_traits:apply_trait_by_chance(character, "phar_main_trait_cultured", 20, 4.5)
+                    ----------------------------
+                    ---- BUILT ANY BUILDING ----
+                    ----------------------------
+                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_cultured", 20, 4.5)
 
-				--------------------------
-				---- BUILT FARMS ----
-				--------------------------
-				if self.character_traits.building_superchains.food[building_superchain_key] then
-					self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_farmer_good", 20, 15)
-					out(" farmer: Applied character_traits_expansion_trait_farmer_good to " .. character:onscreen_name())
-				else
-					self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_farmer_bad", 20, 5)
-					out(" farmer: Building superchain not in character_traits.building_superchains.food")
-				end
+                    --------------------------
+                    ---- BUILT FARMS ----
+                    --------------------------
+                    if self.character_traits.building_superchains.food[building_superchain_key] then
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_farmer_good", 20, 15)
+                         out(" farmer: Applied character_traits_expansion_trait_farmer_good to " .. character:onscreen_name())
+                    else
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_farmer_bad", 20, 5)
+                         out(" farmer: Building superchain not in character_traits.building_superchains.food")
+                    end
 
-				--------------------------
-				---- BUILT MINES ----
-				--------------------------
-				if self.character_traits.building_superchains.mines[building_superchain_key] then
-					self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_miner", 20, 15)
-					out(" miner: Applied character_traits_expansion_trait_miner to " .. character:onscreen_name())
-				else
-					out(" miner: Building superchain not in character_traits.building_superchains.mines")
-				end
+                    --------------------------
+                    ---- BUILT MINES ----
+                    --------------------------
+                    if self.character_traits.building_superchains.mines[building_superchain_key] then
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_miner", 20, 15)
+                         out(" miner: Applied character_traits_expansion_trait_miner to " .. character:onscreen_name())
+                    else
+                         out(" miner: Building superchain not in character_traits.building_superchains.mines")
+                    end
 
-				-------------------------
-				---- BUILT GOLD MINES ----
-				-------------------------
-				if self.character_traits.building_superchains.gold[building_superchain_key] then
-					self.character_traits:apply_trait_by_chance(character, "phar_main_trait_materialistic", 20, 15)
-					out(" builder: Applied phar_main_trait_materialistic to " .. character:onscreen_name())
-				end
+                    -------------------------
+                    ---- BUILT GOLD MINES ----
+                    -------------------------
+                    if self.character_traits.building_superchains.gold[building_superchain_key] then
+                         self.character_traits:apply_trait_by_chance(character, "phar_main_trait_materialistic", 20, 15)
+                         out(" builder: Applied phar_main_trait_materialistic to " .. character:onscreen_name())
+                    end
 
-				-------------------------------------
-				--- BUILT MILITARY ADMINISTRATION ---
-				-------------------------------------
-				if self.character_traits.building_superchains.military_administration[building_superchain_key] then
-					self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_military_admin_good", 20, 15)
-					out(" builder: Applied character_traits_expansion_trait_admin_good to " .. character:onscreen_name())
-				end
+                    -------------------------------------
+                    --- BUILT MILITARY ADMINISTRATION ---
+                    -------------------------------------
+                    if self.character_traits.building_superchains.military_administration[building_superchain_key] then
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_military_admin_good", 20, 15)
+                         out(" builder: Applied character_traits_expansion_trait_admin_good to " .. character:onscreen_name())
+                    end
 
-				-------------------------------
-				-- BUILT PROVINCE MANAGEMENT --
-				------------------------------
-				if self.character_traits.building_superchains.province_management[building_superchain_key] then
-					self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_good", 20, 15)
-					out(" builder: Applied character_traits_expansion_trait_admin_good to " .. character:onscreen_name())
-				end
+                    -------------------------------
+                    -- BUILT PROVINCE MANAGEMENT --
+                    ------------------------------
+                    if self.character_traits.building_superchains.province_management[building_superchain_key] then
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_good", 20, 15)
+                         out(" builder: Applied character_traits_expansion_trait_admin_good to " .. character:onscreen_name())
+                    end
 
-				----------------------
-				---- BUILT SHRINE ----
-				----------------------
-				if building_superchain_key == "phar_main_ers_shrine" then
-					self.character_traits:apply_trait_by_chance(character, "phar_main_trait_spiritual", 20, 15)
-					out(" builder: character_traits_character_present_for_construction_of_shrine")
-				end
+                    ----------------------
+                    ---- BUILT SHRINE ----
+                    ----------------------
+                    if building_superchain_key == "phar_main_ers_shrine" then
+                         self.character_traits:apply_trait_by_chance(character, "phar_main_trait_spiritual", 20, 15)
+                         out(" builder: character_traits_character_present_for_construction_of_shrine")
+                    end
 
-				------------------------------
-				---- BUILT SMUGGLERS' DEN ----
-				------------------------------
-				if building_superchain_key == "phar_main_port_coast_derivative_type_a" or building_superchain_key ==
-					"phar_main_irsu_resource_production_port_coast_derivative_type_a" then
-					self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_criminal", 20, 25)
-					out(" smuggler: built smugglers' den and applying trait to " .. character:onscreen_name())
-				else
-					out(" smuggler: smugglers' den not found")
-				end
+                    ------------------------------
+                    ---- BUILT SMUGGLERS' DEN ----
+                    ------------------------------
+                    if building_superchain_key == "phar_main_port_coast_derivative_type_a" or building_superchain_key ==
+                         "phar_main_irsu_resource_production_port_coast_derivative_type_a" then
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_criminal", 20, 25)
+                         out(" smuggler: built smugglers' den and applying trait to " .. character:onscreen_name())
+                    else
+                         out(" smuggler: smugglers' den not found")
+                    end
 
-				----------------------
-				---- BUILT TEMPLE ----
-				----------------------
-				if building_superchain_key == "phar_main_religion_temple" or building_superchain_key == "phar_map_religion_dwelling_all" then
-					self.character_traits:apply_trait_by_chance(character, "phar_main_trait_spiritual", 20, 15)
-					out(" builder: character_traits_character_present_for_construction_of_temple")
-				end
-			else
-				out("No commander found in settlement")
-			end
-		end
-	end, true)
+                    ----------------------
+                    ---- BUILT TEMPLE ----
+                    ----------------------
+                    if building_superchain_key == "phar_main_religion_temple" or building_superchain_key == "phar_map_religion_dwelling_all" then
+                         self.character_traits:apply_trait_by_chance(character, "phar_main_trait_spiritual", 20, 15)
+                         out(" builder: character_traits_character_present_for_construction_of_temple")
+                    end
+               else
+                    out("No commander found in settlement")
+               end
+          end
+     end, true)
 end
 
 function event_listener_functions:misc()
