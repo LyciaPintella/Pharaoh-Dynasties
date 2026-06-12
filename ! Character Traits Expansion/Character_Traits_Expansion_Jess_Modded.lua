@@ -2345,6 +2345,16 @@ function event_listener_functions:misc()
      core:add_listener("character_traits_expansion_character_turn_end_misc", "CharacterTurnEnd", true, function(context)
           local character = context:character()
 
+		if character:is_null_interface() then
+			out("hcp_character_turn_end_main character is_null_interface!")
+			return
+		end
+	
+		if character:character_type("colonel") or character:character_details():is_civilian() then
+			out("hcp_character_turn_end_main character is a colonel or is a civilian!")
+			return
+		end
+		
           ----------------------------
           ---- SUFFERED ATTRITION ----
           ----------------------------
@@ -2363,25 +2373,6 @@ function event_listener_functions:misc()
                self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_blighted", 20, 20)
                out(" character_under_siege")
           end
-
-          -- ----------------------
-          -- ---- LOSING MONEY ----
-          -- ----------------------
-          -- if cm:char_is_general_with_army(character)
-          --     and character:faction():losing_money()
-          --     and character:model():turn_number() > 5 then
-          --     self.character_traits:apply_trait_by_chance(character, "PLACEHOLDER_LOSING_MONEY", 20, 5)
-          --     out(" faction_losing_money_" .. tostring(character:faction():name()))
-          -- end
-
-          -- ----------------------
-          -- ---- LOW TAXES ----
-          -- ----------------------
-          -- if cm:char_is_general_with_army(character)
-          --     and character:faction():tax_level() < 80 then
-          --     self.character_traits:apply_trait_by_chance(character, "PLACEHOLDER_BAD_TAXMAN", 20, 5)
-          --     out(" faction_taxes_less_than_80_percent_" .. tostring(character:faction():name()))
-          -- end
 
           ---------------------------------------
           ---- REGION HAS SMUGGLERS' DEN ----
