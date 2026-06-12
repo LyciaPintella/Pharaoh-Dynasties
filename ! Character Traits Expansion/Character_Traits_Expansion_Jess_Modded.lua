@@ -1108,12 +1108,12 @@ function event_listener_functions:misc()
           local character = context:character()
 
           if character:is_null_interface() then
-               out(" character_turn_start character is_null_interface!")
+               -- out(" character_turn_start character is_null_interface!")
                return
           end
 
           if not character:character_type("general") or character:character_details():is_civilian() then
-               out(" character_turn_start character is not a general or is a civilian!")
+               -- out(" character_turn_start character is not a general or is a civilian!")
                return
           end
 
@@ -1201,9 +1201,9 @@ function event_listener_functions:misc()
      end, true)
 
      --------------------------------------------
-     ---- MAIN CHARACTER TURN END PROCESSING ----
+     ---- MISC CHARACTER TURN END PROCESSING ----
      --------------------------------------------
-     core:add_listener("character_traits_expansion_character_turn_end_main", "CharacterTurnEnd", true, function(context)
+     core:add_listener("character_traits_expansion_character_turn_end_misc", "CharacterTurnEnd", true, function(context)
           local character = context:character()
 
           ----------------------------
@@ -1258,7 +1258,7 @@ function event_listener_functions:misc()
                     if not building:is_null_interface() then
                          local superchain = building:superchain()
                          if superchain == "phar_main_port_coast_derivative_type_a" or superchain == "phar_main_irsu_resource_production_port_coast_derivative_type_a" then
-                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_criminal", 20, 12.5)
+                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_criminal", 20, 25)
                               out(" smugglers' den found!")
                               break
                          end
@@ -1298,7 +1298,7 @@ function event_listener_functions:misc()
                     if building_list:item_at(i):is_null_interface() == false then
                          local building_superchains = building_list:item_at(i):superchain()
                          if self.character_traits.building_superchains.province_management[building_superchain] then
-                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_good", 20, 7.5)
+                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_good", 20, 10)
                               out(" character_" .. character:onscreen_name() .. " found management building: " .. building_superchain)
                          end
                     end
@@ -1309,8 +1309,8 @@ function event_listener_functions:misc()
           ---- IS CHARACTER YOUNG OR OLD? ----
           ------------------------------------
           if character:age() < 35 then
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_energetic", 20, 2)
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_fertile", 20, 3)
+               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_energetic", 20, 3.5)
+               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_fertile", 20, 5)
                out(" character_" .. character:onscreen_name() .. "_is_young")
           elseif character:age() > 50 then
                self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_slothful", 20, 3)
@@ -1418,17 +1418,19 @@ function event_listener_functions:emergent_traits()
           end
      end, true)
 end
-
 function event_listener_functions:characters_in_regions()
+     out("launched characters_in_regions()")
      core:add_listener("character_traits_expansion_characters_in_regions", "CharacterTurnEnd", true, function(context)
+          out("launched characters_in_regions() - character_turn_end listener triggered")
           local character = context:character()
+
           if character:is_null_interface() then
-               out(" character_turn_end_main character is_null_interface!")
+               out(" characters_in_regions() character is_null_interface!")
                return
           end
-
+          out("characters_in_regions() - character is " .. character:onscreen_name())
           if character:character_type("colonel") or character:character_details():is_civilian() then
-               out(" character_turn_end_main character is a colonel or is a civilian!")
+               out(" characters_in_regions() character is a colonel or is a civilian!")
                return
           end
 
@@ -1439,23 +1441,27 @@ function event_listener_functions:characters_in_regions()
           local region = character:region()
           local province = character:region():province()
           local contested = false
-
+          out("characters_in_regions() - starting contested for loop")
           for i = 0, province:region_list():num_items() - 1 do
                local region_in_province = province:region_list():item_at(i)
-               if not region_in_province:is_null_interface() and not region_in_province:is_abandoned() then
-                    if not region_in_province:owning_faction():command_queue_index() == character:faction():command_queue_index() then
-                         contested = true
-                         break
-                    end
+               if not region_in_province:is_null_interface() and not region_in_province:is_abandoned() and region_in_province:owning_faction():command_queue_index() ~=
+                    character:faction():command_queue_index() then
+                    contested = true
+                    out("characters_in_regions() - contested set to: " .. tostring(contested) .. " — breaking")
+                    break
                end
+               out("characters_in_regions() - checked region " .. tostring(i))
           end
+
+          -- debug check after loop
+          out("contested: " .. tostring(contested))
 
           -------------------------------------------------------------------------
           ---- CALCULATE GENERAL BODYGUARD CASUALTIES FOR HESITANT CALCULATION ----
           -------------------------------------------------------------------------
           local bodyguard_light_casualties = false
           local bodyguard_heavy_casualties = false
-          if not character:is_null_interface() and cm:char_is_general_with_army(character) then
+          if cm:char_is_general_with_army(character) then
                local unit_list = character:military_force():unit_list()
                for i = 0, unit_list:num_items() - 1 do
                     local unit = unit_list:item_at(i)
@@ -1464,147 +1470,137 @@ function event_listener_functions:characters_in_regions()
                          local bodyguard_health_high = 85
                          local bodyguard_health_low = 70
                          if casualties_percent > bodyguard_health_low then
-                              bodyguard_heavy_casualties = true
-                              bodyguard_light_casualties = false
-                         end
-                         if casualties_percent > bodyguard_health_high then
                               bodyguard_light_casualties = true
                               bodyguard_heavy_casualties = false
+                         end
+                         if casualties_percent > bodyguard_health_high then
+                              bodyguard_light_casualties = false
+                              bodyguard_heavy_casualties = true
                               break
                          end
                     end
                end
-		end
-          
-		out("faction:is_allowed_to_capture_territory() " .. faction:is_allowed_to_capture_territory() .. " cm:char_is_general_with_army(character): " ..
-            cm:char_is_general_with_army(character) ..
-            " character:has_region() " .. character:has_region() .. " region:is_abandoned() " .. region:is_abandoned())
-		
-		out("character:in_settlement(): " .. character:in_settlement() .. " contested: " .. contested)
-		
-		out("character:military_force():active_stance() " .. character:military_force():active_stance())
-        if faction:is_allowed_to_capture_territory() and cm:char_is_general_with_army(character) and character:has_region() and not region:is_abandoned() then
-            if character:in_settlement() and not contested then
-                
-                if not character:military_force():active_stance() == "military_force_active_stance_type_muster" then
-                    -----------------------------------------------------
-                    ---- SPENT TURNS IN OWN UNCONTESTED SETTTLEMENTS ----
-                    -----------------------------------------------------
-                    if character:turns_in_own_regions() >= 4 then
-                        out(" slothful_character_is_eligible_for_slothful")
-                        self.character_traits:apply_trait_by_chance(character,
-                            "character_traits_expansion_trait_slothful", 20, 10)
-                    elseif character:turns_in_own_regions() >= 2 then
-                        local sober_chance = 1
-                        local drink_chance = 1
-                        out(" character_" .. character:onscreen_name() .. " is governor of region: " .. region:name())
-                        if region:public_order() >= 40 then
-                            -- old characters are more likely to get lazy traits like in attila
-                            if character:age() > 50 then
-                                drink_chance = drink_chance + 2
-                                out(" give_lazy_traits_character_is_old_so_drink_chance_is " .. drink_chance)
-                            end
-                            -- check if settlement has a military admin, temple, or beer building and increase chance if so
-                            local slot_list = character:region():settlement():slot_list()
-                            out("checking " .. slot_list:num_items() .. " slots in the settlement.")
-                            for i = 0, slot_list:num_items() - 1 do
-                                if slot_list:item_at(i):has_building() then
-                                    local building_superchains = slot_list:item_at(i):building():superchain()
-                                    out("checking building with superchain: " .. building_superchain)
-                                    if self.character_traits.building_superchains.military_administration[building_superchain] then
-                                        sober_chance = sober_chance + 4
-                                        out(" give_lazy_traits_found_military_admin_building_so_sober_chance_is " ..
-                                        sober_chance)
-                                    end
-                                    if self.character_traits.building_superchains.drinking[building_superchain] then
-                                        drink_chance = drink_chance + 4
-                                        out(" give_lazy_traits_found_drink_building_so_drink_chance_is " .. drink_chance)
-                                    end
-                                    if building_superchains == "phar_main_religion_temple" or building_superchains == "phar_map_religion_dwelling_all" then
-                                        sober_chance = sober_chance + 4
-                                        out(" give_lazy_traits_found_temple_so_sober_chance_is " .. sober_chance)
-                                    end
-                                end
-                            end
-                            out("Final sober_chance: " .. sober_chance)
-                            out("Final drink_chance: " .. drink_chance)
-                            -- Apply the traits after processing all the buildings
-                            local traits = {
-                                { "character_traits_expansion_trait_sober", sober_chance }, { "character_traits_expansion_trait_drink", drink_chance },
-                                { "character_traits_expansion_trait_girls", drink_chance }, { "character_traits_expansion_trait_arse", drink_chance },
-                                { "character_traits_expansion_trait_degenerate", drink_chance }, { "character_traits_expansion_trait_gambler", drink_chance }
-                            }
-                            -- ^ Lycia Bookmark:
-                            -- ! This shows how to use a table to pair two values like a trait and its chance, and then loop through it to apply the  This is much cleaner than having separate if statements for each trait.
-                            for i = 1, #traits do
-                                out("Applying trait: " .. traits[i][1] .. " with chance: " .. traits[i][2])
-                                self.character_traits:apply_trait_by_chance(character, traits[i][1], 20, traits[i][2])
-                            end
-                        end
+          end
+
+          out("faction:is_allowed_to_capture_territory() " .. faction:is_allowed_to_capture_territory() .. " cm:char_is_general_with_army(character): " ..
+                   cm:char_is_general_with_army(character) .. " character:has_region() " .. character:has_region() .. " region:is_abandoned() " .. region:is_abandoned())
+
+          out("character:in_settlement(): " .. character:in_settlement() .. " contested: " .. contested)
+
+          out("character:military_force():active_stance() " .. character:military_force():active_stance())
+          if faction:is_allowed_to_capture_territory() and cm:char_is_general_with_army(character) and character:has_region() and not region:is_abandoned() then
+               if character:in_settlement() and not contested then
+
+                    if character:military_force():active_stance() ~= "military_force_active_stance_type_muster" then
+                         -----------------------------------------------------
+                         ---- SPENT TURNS IN OWN UNCONTESTED SETTTLEMENTS ----
+                         -----------------------------------------------------
+                         if character:turns_in_own_regions() >= 4 then
+                              out(" slothful_character_is_eligible_for_slothful")
+                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_slothful", 20, 10)
+                         elseif character:turns_in_own_regions() >= 2 then
+                              local sober_chance = 1
+                              local drink_chance = 1
+                              out(" character_" .. character:onscreen_name() .. " is governor of region: " .. region:name())
+                              if region:public_order() >= 40 then
+                                   -- old characters are more likely to get lazy traits like in attila
+                                   if character:age() > 50 then
+                                        drink_chance = drink_chance + 2
+                                        out(" give_lazy_traits_character_is_old_so_drink_chance_is " .. drink_chance)
+                                   end
+                                   -- check if settlement has a military admin, temple, or beer building and increase chance if so
+                                   local slot_list = character:region():settlement():slot_list()
+                                   out("checking " .. slot_list:num_items() .. " slots in the settlement.")
+                                   for i = 0, slot_list:num_items() - 1 do
+                                        if slot_list:item_at(i):has_building() then
+                                             local building_superchains = slot_list:item_at(i):building():superchain()
+                                             out("checking building with superchain: " .. building_superchain)
+                                             if self.character_traits.building_superchains.military_administration[building_superchain] then
+                                                  sober_chance = sober_chance + 4
+                                                  out(" give_lazy_traits_found_military_admin_building_so_sober_chance_is " .. sober_chance)
+                                             end
+                                             if self.character_traits.building_superchains.drinking[building_superchain] then
+                                                  drink_chance = drink_chance + 4
+                                                  out(" give_lazy_traits_found_drink_building_so_drink_chance_is " .. drink_chance)
+                                             end
+                                             if building_superchains == "phar_main_religion_temple" or building_superchains == "phar_map_religion_dwelling_all" then
+                                                  sober_chance = sober_chance + 4
+                                                  out(" give_lazy_traits_found_temple_so_sober_chance_is " .. sober_chance)
+                                             end
+                                        end
+                                   end
+                                   out("Final sober_chance: " .. sober_chance)
+                                   out("Final drink_chance: " .. drink_chance)
+                                   -- Apply the traits after processing all the buildings
+                                   local traits = {
+                                        {"character_traits_expansion_trait_sober", sober_chance}, {"character_traits_expansion_trait_drink", drink_chance},
+                                        {"character_traits_expansion_trait_girls", drink_chance}, {"character_traits_expansion_trait_arse", drink_chance},
+                                        {"character_traits_expansion_trait_degenerate", drink_chance}, {"character_traits_expansion_trait_gambler", drink_chance}
+                                   }
+                                   -- ^ Lycia Bookmark:
+                                   -- ! This shows how to use a table to pair two values like a trait and its chance, and then loop through it to apply the  This is much cleaner than having separate if statements for each trait.
+                                   for i = 1, #traits do
+                                        out("Applying trait: " .. traits[i][1] .. " with chance: " .. traits[i][2])
+                                        self.character_traits:apply_trait_by_chance(character, traits[i][1], 20, traits[i][2])
+                                   end
+                              end
+                         end
                     end
-                end
-            elseif character:in_settlement() and contested then
-                --------------------------------------------------------
-                ---- SPENT TURNS IN CONTESTED PROVINCE SETTLEMENTS  ----
-                --------------------------------------------------------
-                if character:turns_in_own_regions() >= 3 and not character:military_force():active_stance() == "military_force_active_stance_type_muster" and
-                    not character:military_force():active_stance() == "military_force_active_stance_type_march" then
-                    if not bodyguard_heavy_casualties and not bodyguard_light_casualties then
-                        self.character_traits:apply_trait_by_chance(character, "phar_main_trait_hesitant", 20, 20)
-                        self.character_traits:apply_trait_by_chance(character,
-                            "character_traits_expansion_trait_disciplinarian", 20, 10)
-                    elseif bodyguard_heavy_casualties then
-                        self.character_traits:apply_trait_by_chance(character, "phar_main_trait_hesitant", 20, 10)
-                        self.character_traits:apply_trait_by_chance(character,
-                            "character_traits_expansion_trait_disciplinarian", 20, 10)
-                    elseif bodyguard_light_casualties then
-                        self.character_traits:apply_trait_by_chance(character, "phar_main_trait_hesitant", 20, 15)
-                        self.character_traits:apply_trait_by_chance(character,
-                            "character_traits_expansion_trait_disciplinarian", 20, 10)
+               elseif character:in_settlement() and contested then
+                    --------------------------------------------------------
+                    ---- SPENT TURNS IN CONTESTED PROVINCE SETTLEMENTS  ----
+                    --------------------------------------------------------
+                    if character:turns_in_own_regions() >= 3 and character:military_force():active_stance() ~= "military_force_active_stance_type_muster" and
+                         character:military_force():active_stance() ~= "military_force_active_stance_type_march" then
+                         if not bodyguard_heavy_casualties and not bodyguard_light_casualties then
+                              self.character_traits:apply_trait_by_chance(character, "phar_main_trait_hesitant", 20, 20)
+                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 10)
+                         elseif bodyguard_heavy_casualties then
+                              self.character_traits:apply_trait_by_chance(character, "phar_main_trait_hesitant", 20, 10)
+                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 10)
+                         elseif bodyguard_light_casualties then
+                              self.character_traits:apply_trait_by_chance(character, "phar_main_trait_hesitant", 20, 15)
+                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 10)
+                         end
                     end
-                end
-                out("faction:at_war_with(region:owning_faction()) " .. faction:at_war_with(region:owning_faction()))
-            elseif faction:at_war_with(region:owning_faction()) then
-                -------------------------------------
-                ---- SPENT TURNS IN ENEMY REGIONS ---
-                -------------------------------------
-                self.character_traits:apply_trait_by_chance(character, "phar_main_trait_confident", 20, 10)
-                self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 15)
-                self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_pragmatic", 20,
-                    10)
-                out(" character in enemy region, applying 'confident' and 'scout' ")
-                -- ^ additional check for marriage and action points and applies cuckold.
-                if character:family_member():has_spouse() and character:turns_in_enemy_regions() >= 3 then
-                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_cuckold", 20,
-                        7.5)
-                    out(" character is married and is in enemy territory, applying 'cuckold' trait.")
-                end
-                out("not character:in_settlement() and contested: " .. not character:in_settlement() and contested)
-            elseif not character:in_settlement() and contested then
-                --------------------------------------------
-                ---- SPENT TURNS IN CONTESTED PROVINCES ----
-                --------------------------------------------	
-                self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_feck", 20, 100)
-                self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 100)
-                self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian",
-                    20, 100)
-            elseif not character:in_settlement() and not contested then
-                ------------------------------------------------
-                ---- SPENT TURNS IN OWN UNCONTESTED REGIONS ----
-                ------------------------------------------------
-                self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_feck", 20, 100)
-                self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 100)
-                self.character_traits:apply_trait_by_chance(character,
-                    "character_traits_expansion_trait_bad_disciplinarian", 20, 100)
-                out(" character not in settlement with full action points, applying 'feck' and 'bad_disciplinarian' ")
-            end
-        elseif region:is_abandoned() then
-            -----------------------------------------
-            ---- SPENT TURNS IN ABANDONED REGIONS ---
-            -----------------------------------------
-            self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 25)
-        end
-		
+                    out("faction:at_war_with(region:owning_faction()) " .. faction:at_war_with(region:owning_faction()))
+               elseif faction:at_war_with(region:owning_faction()) then
+                    -------------------------------------
+                    ---- SPENT TURNS IN ENEMY REGIONS ---
+                    -------------------------------------
+                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_confident", 20, 10)
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 15)
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_pragmatic", 20, 10)
+                    out(" character in enemy region, applying 'confident' and 'scout' ")
+                    -- ^ additional check for marriage and action points and applies cuckold.
+                    if character:family_member():has_spouse() and character:turns_in_enemy_regions() >= 3 then
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_cuckold", 20, 7.5)
+                         out(" character is married and is in enemy territory, applying 'cuckold' trait.")
+                    end
+                    out("not character:in_settlement() and contested: " .. not character:in_settlement() and contested)
+               elseif not character:in_settlement() and contested then
+                    --------------------------------------------
+                    ---- SPENT TURNS IN CONTESTED PROVINCES ----
+                    --------------------------------------------	
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_feck", 20, 100)
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 100)
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 100)
+               elseif not character:in_settlement() and not contested then
+                    ------------------------------------------------
+                    ---- SPENT TURNS IN OWN UNCONTESTED REGIONS ----
+                    ------------------------------------------------
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_feck", 20, 100)
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 100)
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 100)
+                    out(" character not in settlement with full action points, applying 'feck' and 'bad_disciplinarian' ")
+               end
+          elseif region:is_abandoned() then
+               -----------------------------------------
+               ---- SPENT TURNS IN ABANDONED REGIONS ---
+               -----------------------------------------
+               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 25)
+          end
+
           ------------------------------------
           ---- POPULAR/UNPOPULAR GOVERNOR ----
           ------------------------------------
@@ -1655,11 +1651,11 @@ function event_listener_functions:characters_in_regions()
                if not character:turns_in_own_regions() < 3 and not character:military_force():active_stance() == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_MUSTER" then
                     if public_order >= 70 then
                          self.character_traits:apply_trait_by_chance(character, "phar_main_trait_content", 20, 7.5)
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 3.5)
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 3.75)
                          out(" character_is_garrisoned_in_settlement_with_high_public_order!")
                     elseif public_order <= -70 then
                          self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 7.5)
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_bad", 20, 3.5)
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_bad", 20, 5)
                          out(" character_is_garrisoned_in_settlement_with_low_public_order!")
                     end
                end
@@ -1674,7 +1670,6 @@ function event_listener_functions:weak_corrupt_governants()
           local province = context:region():province()
 
           for i = 0, province:region_list():num_items() - 1 do
-               local region = province:region_list():item_at(i)
                if region:has_settlement() and region:settlement():has_commander() then
                     local character = region:settlement():commander()
                     self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 20)
@@ -1764,7 +1759,7 @@ function event_listener_functions:provincial_construction()
                          out(" farmer: Applied character_traits_expansion_trait_farmer_good to " .. character:onscreen_name())
                     else
                          self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_farmer_bad", 20, 5)
-                         out(" farmer: Building superchain not in  self. character_traits.building_superchains.food")
+                         out(" farmer: Building superchain not in character_traits.building_superchains.food")
                     end
 
                     --------------------------
@@ -1774,7 +1769,7 @@ function event_listener_functions:provincial_construction()
                          self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_miner", 20, 15)
                          out(" miner: Applied character_traits_expansion_trait_miner to " .. character:onscreen_name())
                     else
-                         out(" miner: Building superchain not in  self. character_traits.building_superchains.mines")
+                         out(" miner: Building superchain not in character_traits.building_superchains.mines")
                     end
 
                     -------------------------
@@ -1943,10 +1938,9 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
                          character_spent_turns_in_encamp_stance = {phar_main_trait_content = 3},
                          character_spent_turns_in_march_stance = {phar_main_trait_ambitious = 5},
                          character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 3},
-                         character_suffered_attrition = {phar_main_trait_ambitious = 4},
+                         character_suffered_attrition = {phar_main_trait_ambitious = 5},
                          character_won_battle_cadmean_victory = {phar_main_trait_blunt = 3},
-                         character_won_defensive_battle = {phar_main_trait_hesitant = 3},
-                         character_won_battle = {phar_main_trait_ramesses = 2}
+                         character_won_defensive_battle = {phar_main_trait_hesitant = 1}
                     }
                },
                -- AMENMESSE--
@@ -1973,18 +1967,18 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
                          character_sacked_settlement = {phar_main_trait_barbaric = 3},
                          character_being_lazy_in_owned_settlement_high_public_order = {phar_main_trait_respectful = 3, phar_main_trait_hesitant = 3},
                          character_being_lazy_in_owned_settlement_low_public_order = {phar_main_trait_irreverent = 2, phar_main_trait_hesitant = 3},
-                         character_present_for_construction = {phar_main_trait_cultured = 3},
+                         character_present_for_construction = {phar_main_trait_cultured = 5},
                          character_won_battle_cadmean_victory = {phar_main_trait_blunt = 3},
                          character_spent_turn_in_ambush_stance = {phar_main_trait_cowardly = 3, phar_main_trait_underhanded = 3},
-                         character_spent_turns_in_march_stance = {phar_main_trait_ambitious = 5},
+                         character_spent_turns_in_march_stance = {phar_main_trait_ambitious = 3},
                          character_razed_settlement = {phar_main_trait_barbaric = 3},
-                         character_executed_captives = {phar_main_trait_cruel = 3},
-                         character_beeing_reinforced = {phar_main_trait_cooperative = 5},
+                         character_executed_captives = {phar_main_trait_cruel = 5},
                          character_fought_battle_far_from_capital = {phar_main_trait_individualistic = 3},
                          character_reinforces_other_armies = {phar_main_trait_cooperative = 5},
+                         character_beeing_reinforced = {phar_main_trait_cooperative = 5},
                          character_spent_turn_in_enemy_region = {phar_main_trait_confident = 3},
                          character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 3},
-                         character_won_defensive_battle = {phar_main_trait_hesitant = 3}
+                         character_won_defensive_battle = {phar_main_trait_hesitant = 3},
                     }
                },
                -- BAY--
@@ -2002,23 +1996,22 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
                          character_suffered_attrition = {phar_main_trait_ambitious = 3},
                          character_interacted_with_non_shrine_ers = {phar_main_trait_materialistic = 5},
                          character_prayed_at_ers = {phar_main_trait_spiritual = 3},
-
                          character_fought_alone = {phar_main_trait_individualistic = 3},
                          character_bodyguard_suffered_casualties_high = {phar_main_trait_reckless = 3},
                          character_recruited_2h_melee_unit_infantry = {phar_main_trait_reckless = 3},
                          character_post_battle_release_generic = {phar_main_trait_merciful = 3, phar_main_trait_materialistic = 5},
-                         character_sacked_settlement = {phar_main_trait_barbaric = 3},
+                         character_sacked_settlement = {phar_main_trait_barbaric = 5},
                          character_being_lazy_in_owned_settlement_high_public_order = {phar_main_trait_respectful = 3, phar_main_trait_hesitant = 3},
                          character_being_lazy_in_owned_settlement_low_public_order = {phar_main_trait_irreverent = 3, phar_main_trait_hesitant = 3},
                          character_present_for_construction = {phar_main_trait_cultured = 5},
                          character_won_battle_cadmean_victory = {phar_main_trait_blunt = 3},
                          character_spent_turn_in_ambush_stance = {phar_main_trait_cowardly = 3, phar_main_trait_underhanded = 3},
                          character_spent_turns_in_march_stance = {phar_main_trait_ambitious = 3},
-                         character_razed_settlement = {phar_main_trait_barbaric = 3},
-                         character_executed_captives = {phar_main_trait_cruel = 3},
-                         character_beeing_reinforced = {phar_main_trait_cooperative = 5},
+                         character_razed_settlement = {phar_main_trait_barbaric = 5},
+                         character_executed_captives = {phar_main_trait_cruel = 5},
                          character_fought_battle_far_from_capital = {phar_main_trait_individualistic = 3},
                          character_reinforces_other_armies = {phar_main_trait_cooperative = 5},
+                         character_beeing_reinforced = {phar_main_trait_cooperative = 5},
                          character_spent_turn_in_enemy_region = {phar_main_trait_confident = 3},
                          character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 3},
                          character_won_defensive_battle = {phar_main_trait_hesitant = 3},
@@ -2040,14 +2033,13 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
                          character_suffered_attrition = {phar_main_trait_ambitious = 3},
                          character_interacted_with_non_shrine_ers = {phar_main_trait_materialistic = 5},
                          character_prayed_at_ers = {phar_main_trait_spiritual = 3},
-
                          character_fought_alone = {phar_main_trait_individualistic = 3},
                          character_bodyguard_suffered_casualties_high = {phar_main_trait_reckless = 3},
                          character_recruited_2h_melee_unit_infantry = {phar_main_trait_reckless = 3},
                          character_post_battle_release_generic = {phar_main_trait_merciful = 3, phar_main_trait_materialistic = 5},
                          character_sacked_settlement = {phar_main_trait_barbaric = 5},
                          character_being_lazy_in_owned_settlement_high_public_order = {phar_main_trait_respectful = 3, phar_main_trait_hesitant = 3},
-                         character_being_lazy_in_owned_settlement_low_public_order = {phar_main_trait_irreverent = 2, phar_main_trait_hesitant = 3},
+                         character_being_lazy_in_owned_settlement_low_public_order = {phar_main_trait_irreverent = 3, phar_main_trait_hesitant = 3},
                          character_present_for_construction = {phar_main_trait_cultured = 3},
                          character_won_battle_cadmean_victory = {phar_main_trait_blunt = 3},
                          character_spent_turn_in_ambush_stance = {phar_main_trait_cowardly = 3, phar_main_trait_underhanded = 3},
@@ -2078,7 +2070,6 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
                          character_suffered_attrition = {phar_main_trait_ambitious = 3},
                          character_interacted_with_non_shrine_ers = {phar_main_trait_materialistic = 3},
                          character_prayed_at_ers = {phar_main_trait_spiritual = 5},
-
                          character_fought_alone = {phar_main_trait_individualistic = 3},
                          character_bodyguard_suffered_casualties_high = {phar_main_trait_reckless = 3},
                          character_recruited_2h_melee_unit_infantry = {phar_main_trait_reckless = 3},
@@ -2116,7 +2107,6 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
                          character_suffered_attrition = {phar_main_trait_ambitious = 4},
                          character_interacted_with_non_shrine_ers = {phar_main_trait_materialistic = 3},
                          character_prayed_at_ers = {phar_main_trait_spiritual = 3},
-
                          character_fought_alone = {phar_main_trait_individualistic = 3},
                          character_bodyguard_suffered_casualties_high = {phar_main_trait_reckless = 3},
                          character_recruited_2h_melee_unit_infantry = {phar_main_trait_reckless = 3},
@@ -2132,8 +2122,9 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
                          character_executed_captives = {phar_main_trait_cruel = 5},
                          character_fought_battle_far_from_capital = {phar_main_trait_individualistic = 3},
                          character_reinforces_other_armies = {phar_main_trait_cooperative = 3},
+                         character_beeing_reinforced = {phar_main_trait_cooperative = 3},
                          character_spent_turn_in_enemy_region = {phar_main_trait_confident = 5},
-                         character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 5},
+                         character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 3},
                          character_won_defensive_battle = {phar_main_trait_hesitant = 3},
                          character_won_battle = {phar_main_trait_seti = 2}
                     }
@@ -2153,7 +2144,6 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
                          character_suffered_attrition = {phar_main_trait_ambitious = 3},
                          character_interacted_with_non_shrine_ers = {phar_main_trait_materialistic = 3},
                          character_prayed_at_ers = {phar_main_trait_spiritual = 5},
-
                          character_fought_alone = {phar_main_trait_individualistic = 3},
                          character_bodyguard_suffered_casualties_high = {phar_main_trait_reckless = 3},
                          character_recruited_2h_melee_unit_infantry = {phar_main_trait_reckless = 3},
@@ -2167,9 +2157,9 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
                          character_spent_turns_in_march_stance = {phar_main_trait_ambitious = 3},
                          character_razed_settlement = {phar_main_trait_barbaric = 3},
                          character_executed_captives = {phar_main_trait_cruel = 3},
-                         character_beeing_reinforced = {phar_main_trait_cooperative = 5},
                          character_fought_battle_far_from_capital = {phar_main_trait_individualistic = 3},
-                         character_reinforces_other_armies = {phar_main_trait_cooperative = 5},
+                         character_reinforces_other_armies = {phar_main_trait_cooperative = 3},
+                         character_beeing_reinforced = {phar_main_trait_cooperative = 3},
                          character_spent_turn_in_enemy_region = {phar_main_trait_confident = 3},
                          character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 3},
                          character_won_defensive_battle = {phar_main_trait_hesitant = 3},
@@ -2204,9 +2194,9 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
                          character_spent_turns_in_march_stance = {phar_main_trait_ambitious = 3},
                          character_razed_settlement = {phar_main_trait_barbaric = 3},
                          character_executed_captives = {phar_main_trait_cruel = 3},
-                         character_beeing_reinforced = {phar_main_trait_cooperative = 5},
                          character_fought_battle_far_from_capital = {phar_main_trait_individualistic = 3},
-                         character_reinforces_other_armies = {phar_main_trait_cooperative = 5},
+                         character_reinforces_other_armies = {phar_main_trait_cooperative = 3},
+                         character_beeing_reinforced = {phar_main_trait_cooperative = 3},
                          character_spent_turn_in_enemy_region = {phar_main_trait_confident = 3},
                          character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 3},
                          character_won_defensive_battle = {phar_main_trait_hesitant = 3},
@@ -2233,7 +2223,7 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
                          character_reinforces_other_armies = {phar_main_trait_cooperative = 5},
                          character_recruited_swordmen = {phar_main_trait_brave = 5},
                          character_recruited_khopeshi = {phar_main_trait_brave = 5},
-                         character_recruited_2h_melee_unit_infantry = {phar_main_trait_reckless = 3},
+                         character_recruited_2h_melee_unit_infantry = {phar_main_trait_reckless = 5},
                          character_recruited_1h_melee_unit_spears = {phar_main_trait_cautious = 3},
                          character_razed_settlement = {phar_main_trait_barbaric = 5},
                          character_present_for_construction = {phar_main_trait_cultured = 3},
@@ -2242,12 +2232,12 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
                          character_interacted_with_non_shrine_ers = {phar_main_trait_materialistic = 5},
                          character_fought_battle_far_from_capital = {phar_main_trait_individualistic = 3},
                          character_fought_alone = {phar_main_trait_individualistic = 3},
-                         character_executed_captives = {phar_main_trait_cruel = 3},
-                         character_bodyguard_suffered_casualties_low = {phar_main_trait_cautious = 3, phar_main_trait_brave = 5},
-                         character_bodyguard_suffered_casualties_high = {phar_main_trait_reckless = 3},
+                         character_executed_captives = {phar_main_trait_cruel = 5},
+                         character_bodyguard_suffered_casualties_low = {phar_main_trait_cautious = 5, phar_main_trait_brave = 5},
+                         character_bodyguard_suffered_casualties_high = {phar_main_trait_reckless = 5},
                          character_being_lazy_in_owned_settlement_low_public_order = {phar_main_trait_irreverent = 3, phar_main_trait_hesitant = 3},
                          character_being_lazy_in_owned_settlement_high_public_order = {phar_main_trait_respectful = 3, phar_main_trait_hesitant = 3},
-                         character_beeing_reinforced = {phar_main_trait_cooperative = 5}
+                         character_beeing_reinforced = {phar_main_trait_cooperative = 3}
                     }
                },
                -- IOLAOS--
@@ -2280,7 +2270,7 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
                          character_fought_battle_far_from_capital = {phar_main_trait_individualistic = 3},
                          character_fought_alone = {phar_main_trait_individualistic = 3},
                          character_executed_captives = {phar_main_trait_cruel = 5},
-                         character_bodyguard_suffered_casualties_low = {phar_main_trait_cautious = 5, phar_main_trait_brave = 3},
+                         character_bodyguard_suffered_casualties_low = {phar_main_trait_cautious = 5, phar_main_trait_brave = 5},
                          character_bodyguard_suffered_casualties_high = {phar_main_trait_reckless = 5},
                          character_being_lazy_in_owned_settlement_low_public_order = {phar_main_trait_irreverent = 3, phar_main_trait_hesitant = 3},
                          character_being_lazy_in_owned_settlement_high_public_order = {phar_main_trait_respectful = 3, phar_main_trait_hesitant = 3},
@@ -2486,6 +2476,7 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
      core:remove_listener("phar_personality_traits_character_fought_battle_far_from_capital") -- individualistic
      core:remove_listener("phar_personality_traits_character_sacks_or_razes_ers_shrine") -- barbaric and underhanded
      core:remove_listener("phar_personality_traits_character_suffered_attrition") -- ambitious
+     core:remove_listener("phar_personality_traits_character_spent_turn_in_region_with_low_influence")
 end
 
 --------------------------------------------
@@ -2495,6 +2486,7 @@ end
 function event_listener_functions:start_all()
      self.character_traits:modify_phar_campaign_traits()
      self:ancient_legacies()
+     out("launching characters_in_regions()")
      self:characters_in_regions()
      self:battle()
      self:emergent_traits()
