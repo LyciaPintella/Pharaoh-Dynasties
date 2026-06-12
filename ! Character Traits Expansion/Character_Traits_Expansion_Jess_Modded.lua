@@ -1259,7 +1259,7 @@ function event_listener_functions:battle()
                          local percent_loss_trigger_low = 20
                          if character:fought_in_battle() and casualties_percent > percent_loss_trigger_high then
                               self.character_traits:apply_trait_by_chance(character, "phar_main_trait_brave", 20, 15)
-                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scarred", 20, 12.5)
+                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scarred", 20, 15)
                               out(" high_bodyguard_casualties_applying_brave_and_scarred")
                          end
                          if casualties_percent < percent_loss_trigger_low then
