@@ -1699,13 +1699,13 @@ function event_listener_functions:characters_in_regions()
                               self.character_traits:apply_trait_by_chance(character, "phar_main_trait_blunt", 20, 25);
                               -- AMBUSHING
                          elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_AMBUSH" then
-                              self.character_traits:apply_trait_by_chance(character, "phar_main_trait_underhanded", 20, 25);
+                              self.character_traits:apply_trait_by_chance(character, "phar_main_trait_underhanded", 20, 20);
                               -- FORCED MARCH
                          elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_MARCH" then
                               self.character_traits:apply_trait_by_chance(character, "phar_main_trait_ambitious", 20, 7.5);
                               -- ENCAMP
                          elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_SET_CAMP" then
-                              self.character_traits:apply_trait_by_chance(character, "phar_main_trait_content", 20, 25);
+                              self.character_traits:apply_trait_by_chance(character, "phar_main_trait_content", 20, 15);
                               -- RECRUITING
                          elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_MUSTER" then
                               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_charismatic", 20, 20);
