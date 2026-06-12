@@ -1624,6 +1624,7 @@ function event_listener_functions:characters_in_regions()
                local region = character:region()
                out("characters_in_regions(): character region is: " .. tostring(region:name()))
                local province = character:region():province()
+               out("characters_in_regions() - character province is: " .. tostring(province:name()))
                out("characters_in_regions() - initializing contested to false")
                local contested = false
 
@@ -1632,18 +1633,21 @@ function event_listener_functions:characters_in_regions()
                -- if province ~= nil and not province:is_null_interface() and province:region_list() ~= nil then
                for i = 0, province:region_list():num_items() - 1 do
                     local region_in_province = province:region_list():item_at(i)
+                    out("characters_in_regions() - checking region " .. tostring(region_in_province:name()) ..
+                             " for contested status. region_in_province:is_abandoned() is: " .. tostring(region_in_province:is_abandoned()))
                     -- removed region_in_province ~= nil and owning_faction ~= nil and not region_in_province:is_null_interface() and
                     if not region_in_province:is_abandoned() then
                          local owning_faction = region_in_province:owning_faction()
+                         out("characters_in_regions() - owning faction of region " .. tostring(region_in_province:name()) .. " is: " .. tostring(owning_faction:name()))
                          if owning_faction:command_queue_index() ~= character:faction():command_queue_index() then
+                              out("characters_in_regions() - faction indices differ: " .. tostring(owning_faction:command_queue_index()) .. " ~= " ..
+                                       tostring(character:faction():command_queue_index()))
                               contested = true
                               out("characters_in_regions() - contested set to: " .. tostring(contested) .. " — breaking")
                               break
                          end
                     end
-                    out("characters_in_regions() - checked region " .. tostring(i))
                end
-               -- end
 
                -- debug check after loop
                out("after contested for loop. contested is set to: " .. tostring(contested))
