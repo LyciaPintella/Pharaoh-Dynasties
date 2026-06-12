@@ -1630,24 +1630,24 @@ function event_listener_functions:characters_in_regions()
 
                out("characters_in_regions() - starting contested for loop.")
                -- defensive checks: province or region_list may be nil in some edge cases
-            -- if province ~= nil and not province:is_null_interface() and province:region_list() ~= nil then
-			
-		  for _, current_region in model_pairs(province:regions()) do
-			if current_region then
-				out("characters_in_regions() - inspecting region: " .. current_region:name() .. ", owned by faction: " .. current_region:owning_faction():name())
-				if owning_faction:command_queue_index() ~= character:faction():command_queue_index() then
-					out("characters_in_regions() - faction indices differ: " .. tostring(owning_faction:command_queue_index()) .. " ~= " ..
-						    tostring(character:faction():command_queue_index()))
-					contested = true
-					out("characters_in_regions() - contested set to: " .. tostring(contested) .. " — breaking")
-					break
-				end
-			else
-				out("Error: current_region is nil in province:regions() iteration.")
-			end
-		end
-		  
-		  --[[
+               -- if province ~= nil and not province:is_null_interface() and province:region_list() ~= nil then
+
+               for _, current_region in model_pairs(province:regions()) do
+                    if current_region then
+                         out("characters_in_regions() - inspecting region: " .. current_region:name() .. ", owned by faction: " .. current_region:owning_faction():name())
+                         if current_region:owning_faction():command_queue_index() ~= region_owner:command_queue_index() then
+                              out("characters_in_regions() - faction indices differ: " .. tostring(owning_faction:command_queue_index()) .. " ~= " ..
+                                       tostring(character:faction():command_queue_index()))
+                              contested = true
+                              out("characters_in_regions() - contested set to: " .. tostring(contested) .. " — breaking")
+                              break
+                         end
+                    else
+                         out("characters_in_regions() - Error: current_region is nil in province:regions() iteration.")
+                    end
+               end
+
+               --[[
             for i = 0, province:region_list():num_items() - 1 do
                 local current_region = province:region_list():item_at(i)
                 out("characters_in_regions() - checking region " .. tostring(current_region:name()) ..
@@ -1668,10 +1668,9 @@ function event_listener_functions:characters_in_regions()
                     end
                 end
             end
-			]]--
+		]] --
 
                -- debug check after loop
-               out("after contested for loop. contested is set to: " .. tostring(contested))
 
                -------------------------------------------------------------------------
                ---- CALCULATE GENERAL BODYGUARD CASUALTIES FOR HESITANT CALCULATION ----
