@@ -1630,24 +1630,45 @@ function event_listener_functions:characters_in_regions()
 
                out("characters_in_regions() - starting contested for loop.")
                -- defensive checks: province or region_list may be nil in some edge cases
-               -- if province ~= nil and not province:is_null_interface() and province:region_list() ~= nil then
-               for i = 0, province:region_list():num_items() - 1 do
-                    local region_in_province = province:region_list():item_at(i)
-                    out("characters_in_regions() - checking region " .. tostring(region_in_province:name()) ..
-                             " for contested status. region_in_province:is_abandoned() is: " .. tostring(region_in_province:is_abandoned()))
-                    -- removed region_in_province ~= nil and owning_faction ~= nil and not region_in_province:is_null_interface() and
-                    if not region_in_province:is_abandoned() then
-                         local owning_faction = region_in_province:owning_faction()
-                         out("characters_in_regions() - owning faction of region " .. tostring(region_in_province:name()) .. " is: " .. tostring(owning_faction:name()))
-                         if owning_faction:command_queue_index() ~= character:faction():command_queue_index() then
-                              out("characters_in_regions() - faction indices differ: " .. tostring(owning_faction:command_queue_index()) .. " ~= " ..
-                                       tostring(character:faction():command_queue_index()))
-                              contested = true
-                              out("characters_in_regions() - contested set to: " .. tostring(contested) .. " — breaking")
-                              break
-                         end
+            -- if province ~= nil and not province:is_null_interface() and province:region_list() ~= nil then
+			
+		  for _, current_region in model_pairs(province:regions()) do
+			if current_region then
+				out("characters_in_regions() - inspecting region: " .. current_region:name() .. ", owned by faction: " .. current_region:owning_faction():name())
+				if owning_faction:command_queue_index() ~= character:faction():command_queue_index() then
+					out("characters_in_regions() - faction indices differ: " .. tostring(owning_faction:command_queue_index()) .. " ~= " ..
+						    tostring(character:faction():command_queue_index()))
+					contested = true
+					out("characters_in_regions() - contested set to: " .. tostring(contested) .. " — breaking")
+					break
+				end
+			else
+				out("Error: current_region is nil in province:regions() iteration.")
+			end
+		end
+		  
+		  --[[
+            for i = 0, province:region_list():num_items() - 1 do
+                local current_region = province:region_list():item_at(i)
+                out("characters_in_regions() - checking region " .. tostring(current_region:name()) ..
+                    " for contested status. current_region:is_abandoned() is: " ..
+                    tostring(current_region:is_abandoned()))
+                -- removed current_region ~= nil and owning_faction ~= nil and not current_region:is_null_interface() and
+                if not current_region:is_abandoned() then
+                    local owning_faction = current_region:owning_faction()
+                    out("characters_in_regions() - owning faction of region " ..
+                    tostring(current_region:name()) .. " is: " .. tostring(owning_faction:name()))
+                    if owning_faction:command_queue_index() ~= character:faction():command_queue_index() then
+                        out("characters_in_regions() - faction indices differ: " ..
+                            tostring(owning_faction:command_queue_index()) .. " ~= " ..
+                            tostring(character:faction():command_queue_index()))
+                        contested = true
+                        out("characters_in_regions() - contested set to: " .. tostring(contested) .. " — breaking")
+                        break
                     end
-               end
+                end
+            end
+			]]--
 
                -- debug check after loop
                out("after contested for loop. contested is set to: " .. tostring(contested))
