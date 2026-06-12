@@ -1602,7 +1602,7 @@ function event_listener_functions:characters_in_regions()
      core:add_listener("character_traits_expansion_characters_in_regions", "CharacterTurnEnd", true, function(context)
           out("launched characters_in_regions() - character_turn_end listener triggered")
           local character = context:character()
-
+		
           if character:is_null_interface() then
                out(" characters_in_regions() character is_null_interface!")
                return
@@ -1612,7 +1612,7 @@ function event_listener_functions:characters_in_regions()
                out(" characters_in_regions() character is a colonel or is a civilian!")
                return
           end
-
+		
           ----------------------------------------------
           ---- SPENT TURN IN REGIONS OR SETTLEMENTS ----
           ----------------------------------------------
@@ -1627,17 +1627,16 @@ function event_listener_functions:characters_in_regions()
                out("characters_in_regions() - character province is: " .. tostring(province:name()))
                out("characters_in_regions() - initializing contested to false")
                local contested = false
-
-               out("characters_in_regions() - starting contested for loop.")
+			
+               out("characters_in_regions() - starting contested for loop")
                -- defensive checks: province or region_list may be nil in some edge cases
                -- if province ~= nil and not province:is_null_interface() and province:region_list() ~= nil then
 
                for _, current_region in model_pairs(province:regions()) do
                     if current_region then
-                         out("characters_in_regions() - inspecting region: " .. current_region:name() .. ", owned by faction: " .. current_region:owning_faction():name())
-                         if current_region:owning_faction():command_queue_index() ~= region_owner:command_queue_index() then
-                              out("characters_in_regions() - faction indices differ: " .. tostring(owning_faction:command_queue_index()) .. " ~= " ..
-                                       tostring(character:faction():command_queue_index()))
+                         out("characters_in_regions() - inspecting region: " .. tostring(current_region:name()) .. ", owned by faction: " .. tostring(		current_region:owning_faction():name()))
+                         if current_region:owning_faction():command_queue_index() ~= faction:command_queue_index() then
+                              out("characters_in_regions() - current_region:owning_faction():command_queue_index() ~= region_owner:command_queue_index() " .. tostring(owning_faction:command_queue_index()) .. " ~= " .. tostring(character:faction():command_queue_index()))
                               contested = true
                               out("characters_in_regions() - contested set to: " .. tostring(contested) .. " — breaking")
                               break
@@ -1646,32 +1645,7 @@ function event_listener_functions:characters_in_regions()
                          out("characters_in_regions() - Error: current_region is nil in province:regions() iteration.")
                     end
                end
-
-               --[[
-            for i = 0, province:region_list():num_items() - 1 do
-                local current_region = province:region_list():item_at(i)
-                out("characters_in_regions() - checking region " .. tostring(current_region:name()) ..
-                    " for contested status. current_region:is_abandoned() is: " ..
-                    tostring(current_region:is_abandoned()))
-                -- removed current_region ~= nil and owning_faction ~= nil and not current_region:is_null_interface() and
-                if not current_region:is_abandoned() then
-                    local owning_faction = current_region:owning_faction()
-                    out("characters_in_regions() - owning faction of region " ..
-                    tostring(current_region:name()) .. " is: " .. tostring(owning_faction:name()))
-                    if owning_faction:command_queue_index() ~= character:faction():command_queue_index() then
-                        out("characters_in_regions() - faction indices differ: " ..
-                            tostring(owning_faction:command_queue_index()) .. " ~= " ..
-                            tostring(character:faction():command_queue_index()))
-                        contested = true
-                        out("characters_in_regions() - contested set to: " .. tostring(contested) .. " — breaking")
-                        break
-                    end
-                end
-            end
-		]] --
-
-               -- debug check after loop
-
+			
                -------------------------------------------------------------------------
                ---- CALCULATE GENERAL BODYGUARD CASUALTIES FOR HESITANT CALCULATION ----
                -------------------------------------------------------------------------
@@ -1697,10 +1671,10 @@ function event_listener_functions:characters_in_regions()
                          end
                     end
                end
-
+			
                if faction:is_allowed_to_capture_territory() and cm:char_is_general_with_army(character) and character:has_region() and not region:is_abandoned() then
                     if character:in_settlement() and not contested then
-
+					
                          if character:military_force():active_stance() ~= "military_force_active_stance_type_muster" then
                               -----------------------------------------------------
                               ---- SPENT TURNS IN OWN UNCONTESTED SETTTLEMENTS ----
@@ -1811,7 +1785,7 @@ function event_listener_functions:characters_in_regions()
                     -----------------------------------------
                     self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 25)
                end
-
+			
                ------------------------------------
                ---- POPULAR/UNPOPULAR GOVERNOR ----
                ------------------------------------
