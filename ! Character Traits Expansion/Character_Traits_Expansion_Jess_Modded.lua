@@ -1613,9 +1613,11 @@ function event_listener_functions:characters_in_regions()
                return
           end
 
-          -----------------------------------------
-          ---- SPENT TURN IN REGIONS OR SETTLEMENTS
-          -----------------------------------------
+          ----------------------------------------------
+          ---- SPENT TURN IN REGIONS OR SETTLEMENTS ----
+        ----------------------------------------------
+		----- removed character:has_faction() and 
+		if character:has_region() then
           local faction = character:faction()
           local region = character:region()
           local province = character:region():province()
@@ -1623,10 +1625,11 @@ function event_listener_functions:characters_in_regions()
 
           out("characters_in_regions() - starting contested for loop.")
           -- defensive checks: province or region_list may be nil in some edge cases
-		if province ~= nil and not province:is_null_interface() and province:region_list() ~= nil then
+		--if province ~= nil and not province:is_null_interface() and province:region_list() ~= nil then
 			for i = 0, province:region_list():num_items() - 1 do
 				local region_in_province = province:region_list():item_at(i)
-				if region_in_province ~= nil and owning_faction ~= nil and not region_in_province:is_null_interface() and not region_in_province:is_abandoned() then
+				-- removed region_in_province ~= nil and owning_faction ~= nil and not region_in_province:is_null_interface() and
+				if not region_in_province:is_abandoned() then
 					local owning_faction = region_in_province:owning_faction()
 					if owning_faction:command_queue_index() ~= character:faction():command_queue_index() then
 					contested = true
@@ -1636,7 +1639,7 @@ function event_listener_functions:characters_in_regions()
 				end
 				out("characters_in_regions() - checked region " .. tostring(i))
 			end
-		end
+		--end
 
           -- debug check after loop
           out("after contested for loop. contested is set to: " .. tostring(contested))
@@ -1842,6 +1845,7 @@ function event_listener_functions:characters_in_regions()
                     end
                end
           end
+	end
      end, true)
 end
 
