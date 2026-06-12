@@ -1767,16 +1767,16 @@ function event_listener_functions:characters_in_regions()
                          --------------------------------------------
                          ---- SPENT TURNS IN CONTESTED PROVINCES ----
                          --------------------------------------------	
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_feck", 20, 100)
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 100)
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 100)
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_feck", 20, 20)
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 20)
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 15)
                     elseif not character:in_settlement() and not contested then
                          ------------------------------------------------
                          ---- SPENT TURNS IN OWN UNCONTESTED REGIONS ----
                          ------------------------------------------------
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_feck", 20, 100)
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 100)
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 100)
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_feck", 20, 12.5)
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 10)
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 5)
                          out(" character not in settlement with full action points, applying 'feck' and 'bad_disciplinarian' ")
                     end
                elseif region:is_abandoned() then
@@ -2467,7 +2467,7 @@ function event_listener_functions:misc()
 
                -- RAIDING
                if stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_LAND_RAID" then
-                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_blunt", 20, 20);
+                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_blunt", 20, 25);
                     -- AMBUSHING
                elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_AMBUSH" then
                     self.character_traits:apply_trait_by_chance(character, "phar_main_trait_underhanded", 20, 25);
@@ -2476,7 +2476,7 @@ function event_listener_functions:misc()
                     self.character_traits:apply_trait_by_chance(character, "phar_main_trait_ambitious", 20, 7.5);
                     -- ENCAMP
                elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_SET_CAMP" then
-                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_content", 20, 100);
+                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_content", 20, 25);
                     -- RECRUITING
                elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_MUSTER" then
                     self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_charismatic", 20, 20);
