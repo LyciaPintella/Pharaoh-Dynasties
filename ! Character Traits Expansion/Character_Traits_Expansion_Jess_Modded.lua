@@ -1763,7 +1763,6 @@ function event_listener_functions:characters_in_regions()
                               out(" character_suffered_attrition")
                          end
                     end
-
                     -------------------------------
                     ---- CHARACTER UNDER SIEGE ----
                     -------------------------------
@@ -1771,7 +1770,6 @@ function event_listener_functions:characters_in_regions()
                          self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_blighted", 20, 20)
                          out(" character_under_siege")
                     end
-
                     ---------------------------------------
                     ---- REGION HAS SMUGGLERS' DEN ----
                     ---------------------------------------
@@ -1794,7 +1792,6 @@ function event_listener_functions:characters_in_regions()
                               end
                          end
                     end
-
                     ------------------------------------------------
                     ---- SETTLEMENT HAS MILITARY ADMIN BUILDING ----
                     ------------------------------------------------
