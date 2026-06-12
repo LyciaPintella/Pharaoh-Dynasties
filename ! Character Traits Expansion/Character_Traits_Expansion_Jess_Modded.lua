@@ -1957,7 +1957,6 @@ function event_listener_functions:characters_in_regions()
                     if character:turns_in_own_regions() >= 3 and character:military_force():active_stance() ~= "military_force_active_stance_type_muster" then
                          if public_order >= 75 then
                               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_good", 20, 7.5)
-                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 3.75)
                               out(" character_is_garrisoned_in_settlement_with_high_public_order!")
                          elseif public_order <= -60 then
                               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 7.5)
