@@ -2246,15 +2246,15 @@ function event_listener_functions:misc()
      core:add_listener("character_traits_expansion_character_turn_start", "CharacterTurnStart", true, function(context)
           local character = context:character()
 
-          if character:is_null_interface() then
-               -- out(" character_turn_start character is_null_interface!")
-               return
-          end
-
-          if not character:character_type("general") or character:character_details():is_civilian() then
-               -- out(" character_turn_start character is not a general or is a civilian!")
-               return
-          end
+		if character:is_null_interface() then
+			out("hcp_character_turn_end_main character is_null_interface!")
+			return
+		end
+	
+		if character:character_type("colonel") or character:character_details():is_civilian() then
+			out("hcp_character_turn_end_main character is a colonel or is a civilian!")
+			return
+		end
 
           if character:has_region() then
                -------------------------------------------------------------
