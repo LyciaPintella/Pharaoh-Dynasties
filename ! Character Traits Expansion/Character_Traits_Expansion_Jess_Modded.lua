@@ -1693,9 +1693,9 @@ function event_listener_functions:characters_in_regions()
                end
 
                if faction:is_allowed_to_capture_territory() and char_is_general_with_army and character_has_region then
-                    local is_region_contested = false
+                    local is_province_contested = false
 
-                    out("characters_in_regions() - starting is_region_contested for loop")
+                    out("characters_in_regions() - starting is_province_contested for loop")
                     for _, current_region in model_pairs(province:regions()) do
                          if current_region then
                               out("characters_in_regions() - inspecting region: " .. tostring(current_region:name()) .. ", owned by faction: " ..
@@ -1703,8 +1703,8 @@ function event_listener_functions:characters_in_regions()
                               if region_owning_faction_command_queue_index ~= faction:command_queue_index() then
                                    out("characters_in_regions() - region_owning_faction_command_queue_index ~= region_owner:command_queue_index() " ..
                                             tostring(region_owning_faction_command_queue_index) .. " ~= " .. tostring(faction():command_queue_index()))
-                                   is_region_contested = true
-                                   out("characters_in_regions() - is_region_contested set to: " .. tostring(is_region_contested) .. " — breaking")
+                                   is_province_contested = true
+                                   out("characters_in_regions() - is_province_contested set to: " .. tostring(is_province_contested) .. " — breaking")
                                    break
                               end
                          else
@@ -1833,7 +1833,7 @@ function event_listener_functions:characters_in_regions()
                          --------------------------------------------------------------------------------
                          ---- SPENT TURNS IN SETTLEMENTS OR CONTESTED, UNCONTESTED, OR ENEMY REGIONS ----
                          --------------------------------------------------------------------------------
-                         if character_is_in_settlement and not is_region_contested then
+                         if character_is_in_settlement and not is_province_contested then
                               if character:military_force():active_stance() ~= "military_force_active_stance_type_muster" then
                                    if character:turns_in_own_regions() >= 4 then
                                         out(" slothful_character_is_eligible_for_slothful")
@@ -1888,7 +1888,7 @@ function event_listener_functions:characters_in_regions()
                                         end
                                    end
                               end
-                         elseif character_is_in_settlement and is_region_contested then
+                         elseif character_is_in_settlement and is_province_contested then
                               if character:turns_in_own_regions() >= 3 and character:military_force():active_stance() ~= "military_force_active_stance_type_muster" and
                                    character:military_force():active_stance() ~= "military_force_active_stance_type_march" then
                                    if not bodyguard_heavy_casualties and not bodyguard_light_casualties then
@@ -1913,12 +1913,12 @@ function event_listener_functions:characters_in_regions()
                                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_cuckold", 20, 7.5)
                                    out(" character is married and is in enemy territory, applying 'cuckold' trait.")
                               end
-                              out("not character_is_in_settlement and is_region_contested: " .. tostring((not character_is_in_settlement) and is_region_contested))
-                         elseif not character_is_in_settlement and not is_region_contested then
+                              out("not character_is_in_settlement and is_province_contested: " .. tostring((not character_is_in_settlement) and is_province_contested))
+                         elseif not character_is_in_settlement and not is_province_contested then
                               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_feck", 20, 12.5)
                               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 10)
                               out(" character not in settlement with full action points, applying 'feck' and 'bad_disciplinarian'")
-                         elseif not character_is_in_settlement and is_region_contested then
+                         elseif not character_is_in_settlement and is_province_contested then
                               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_feck", 20, 20)
                               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 20)
                               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 15)
