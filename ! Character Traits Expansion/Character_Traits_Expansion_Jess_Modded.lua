@@ -1626,6 +1626,31 @@ function event_listener_functions:characters_in_regions()
                out(" character_" .. character:onscreen_name() .. "_is_old")
           end
 
+          -------------------------------
+          ---- SPENT TURN IN STANCES ----
+          -------------------------------
+          if cm:char_is_general_with_army(character) then
+               local stance = character:military_force():active_stance();
+
+               -- RAIDING
+               if stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_LAND_RAID" then
+                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_blunt", 20, 25);
+                    -- AMBUSHING
+               elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_AMBUSH" then
+                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_underhanded", 20, 20);
+                    -- FORCED MARCH
+               elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_MARCH" then
+                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_ambitious", 20, 7.5);
+                    -- ENCAMP
+               elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_SET_CAMP" then
+                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_content", 20, 15);
+                    -- RECRUITING
+               elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_MUSTER" then
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_charismatic", 20, 20);
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_military_admin_good", 20, 20);
+               end
+          end
+
           ----------------------------------------------
           ---- SPENT TURN IN REGIONS OR SETTLEMENTS ----
           ----------------------------------------------
@@ -1688,30 +1713,6 @@ function event_listener_functions:characters_in_regions()
                end
 
                if faction:is_allowed_to_capture_territory() and cm:char_is_general_with_army(character) and character:has_region() and not region:is_abandoned() then
-                    -------------------------------
-                    ---- SPENT TURN IN STANCES ----
-                    -------------------------------
-                    if cm:char_is_general_with_army(character) then
-                         local stance = character:military_force():active_stance();
-
-                         -- RAIDING
-                         if stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_LAND_RAID" then
-                              self.character_traits:apply_trait_by_chance(character, "phar_main_trait_blunt", 20, 25);
-                              -- AMBUSHING
-                         elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_AMBUSH" then
-                              self.character_traits:apply_trait_by_chance(character, "phar_main_trait_underhanded", 20, 20);
-                              -- FORCED MARCH
-                         elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_MARCH" then
-                              self.character_traits:apply_trait_by_chance(character, "phar_main_trait_ambitious", 20, 7.5);
-                              -- ENCAMP
-                         elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_SET_CAMP" then
-                              self.character_traits:apply_trait_by_chance(character, "phar_main_trait_content", 20, 15);
-                              -- RECRUITING
-                         elseif stance == "MILITARY_FORCE_ACTIVE_STANCE_TYPE_MUSTER" then
-                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_charismatic", 20, 20);
-                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_military_admin_good", 20, 20);
-                         end
-                    end
 
                     ------------------------------------
                     ---- POPULAR/UNPOPULAR GOVERNOR ----
