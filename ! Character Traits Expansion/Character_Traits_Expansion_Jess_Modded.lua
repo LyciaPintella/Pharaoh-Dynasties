@@ -1600,7 +1600,7 @@ function event_listener_functions:characters_in_regions()
      core:add_listener("character_traits_expansion_characters_in_regions", "CharacterTurnEnd", true, function(context)
           out("launched characters_in_regions() - character_turn_end listener triggered")
           local character = context:character()
-		local character_faction_command_queue_index = character:faction():command_queue_index()
+		local char_is_general_with_army = cm:char_is_general_with_army(character)
           if character:is_null_interface() then
                out(" characters_in_regions() character is_null_interface!")
                return
@@ -1630,7 +1630,7 @@ function event_listener_functions:characters_in_regions()
           -------------------------------
           ---- SPENT TURN IN STANCES ----
           -------------------------------
-          if cm:char_is_general_with_army(character) then
+          if char_is_general_with_army then
                local stance = character:military_force():active_stance();
 
                -- RAIDING
@@ -1661,7 +1661,7 @@ function event_listener_functions:characters_in_regions()
                local faction = character:faction()
                out("characters_in_regions() - character is in a region, starting checks. Faction is: " .. tostring(faction:name()))
                local region = character:region()
-	          local region_owning_faction_command_queue_index = region:owning_faction():command_queue_index()
+               local region_owning_faction_command_queue_index = region:owning_faction():command_queue_index()
                out("characters_in_regions(): character region is: " .. tostring(region:name()))
                local province = region:province()
                out("characters_in_regions() - character province is: " .. tostring(province:name()))
@@ -1671,7 +1671,7 @@ function event_listener_functions:characters_in_regions()
                -------------------------------------------------------------------------
                local bodyguard_light_casualties = false
                local bodyguard_heavy_casualties = false
-               if cm:char_is_general_with_army(character) then
+               if char_is_general_with_army then
                     local unit_list = character:military_force():unit_list()
                     for i = 0, unit_list:num_items() - 1 do
                          local unit = unit_list:item_at(i)
@@ -1692,7 +1692,7 @@ function event_listener_functions:characters_in_regions()
                     end
                end
 
-               if faction:is_allowed_to_capture_territory() and cm:char_is_general_with_army(character) and character_has_region then
+               if faction:is_allowed_to_capture_territory() and char_is_general_with_army and character_has_region then
                     local is_region_contested = false
 
                     out("characters_in_regions() - starting is_region_contested for loop")
@@ -1711,14 +1711,16 @@ function event_listener_functions:characters_in_regions()
                               out("characters_in_regions() - Error: current_region is nil in province:regions() iteration.")
                          end
                     end
-                    local character_is_in_settlement = character:in_settlement()
 
                     if not region:is_abandoned() then
-                         ------------------------------------
+                         local character_faction_command_queue_index = character:faction():command_queue_index()
+					local character_is_in_settlement = character:in_settlement()
+
+					------------------------------------
                          ---- POPULAR/UNPOPULAR GOVERNOR ----
                          ------------------------------------
                          if character_is_in_settlement then
-                              if cm:char_is_general_with_army(character) and character_has_region and region_owning_faction_command_queue_index ==
+                              if char_is_general_with_army and character_has_region and region_owning_faction_command_queue_index ==
                                    character_faction_command_queue_index then
                                    out(" character_" .. character:onscreen_name() .. " is governor of region: " .. region:name())
                                    if region:public_order() == 100 then
@@ -1763,14 +1765,14 @@ function event_listener_functions:characters_in_regions()
                          -------------------------------
                          ---- CHARACTER UNDER SIEGE ----
                          -------------------------------
-                         if cm:char_is_general_with_army(character) and character:has_garrison_residence() and character:garrison_residence():is_under_siege() then
+                         if char_is_general_with_army and character:has_garrison_residence() and character:garrison_residence():is_under_siege() then
                               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_blighted", 20, 20)
                               out(" character_under_siege")
                          end
                          ---------------------------------------
                          ---- REGION HAS SMUGGLERS' DEN --------
                          ---------------------------------------
-                         if cm:char_is_general_with_army(character) and character_has_region and region_owning_faction_command_queue_index ==
+                         if char_is_general_with_army and character_has_region and region_owning_faction_command_queue_index ==
                               character_faction_command_queue_index then
                               local building_list = region:settlement():building_list()
                               out(" character_" .. character:onscreen_name() .. " is in region: " .. region:name() .. " checking for smugglers' den")
@@ -1792,7 +1794,7 @@ function event_listener_functions:characters_in_regions()
                          ------------------------------------------------
                          ---- SETTLEMENT HAS MILITARY ADMIN BUILDING ----
                          ------------------------------------------------
-                         if cm:char_is_general_with_army(character) and character_has_region and region_owning_faction_command_queue_index ==
+                         if char_is_general_with_army and character_has_region and region_owning_faction_command_queue_index ==
                               character_faction_command_queue_index then
                               local region = character:region()
                               local building_list = region:settlement():building_list()
@@ -1811,7 +1813,7 @@ function event_listener_functions:characters_in_regions()
                          ---------------------------------------
                          ---- SETTLEMENT HAS ADMIN BUILDING ----
                          ---------------------------------------
-                         if cm:char_is_general_with_army(character) and character_has_region and region_owning_faction_command_queue_index ==
+                         if char_is_general_with_army and character_has_region and region_owning_faction_command_queue_index ==
                               character_faction_command_queue_index then
                               local region = character:region()
                               local building_list = region:settlement():building_list()
@@ -1827,6 +1829,7 @@ function event_listener_functions:characters_in_regions()
                                    end
                               end
                          end
+
                          --------------------------------------------------------------------------------
                          ---- SPENT TURNS IN SETTLEMENTS OR CONTESTED, UNCONTESTED, OR ENEMY REGIONS ----
                          --------------------------------------------------------------------------------
@@ -1931,7 +1934,7 @@ function event_listener_functions:characters_in_regions()
                ---- PRESENT IN REGION WITH HIGH/LOW PUBLIC ORDER ----
                -------------------------------------------------------------
                local public_order = region:public_order()
-               if cm:char_is_general_with_army(character) and character_has_region and character_is_in_settlement and
+               if char_is_general_with_army and character_has_region and character_is_in_settlement and
                     character:region():owning_faction():command_queue_index() == character:faction():command_queue_index() then
                     -- fix precedence: `not character:turns_in_own_regions() < 3` causes a boolean-number compare error
                     if character:turns_in_own_regions() >= 3 and character:military_force():active_stance() ~= "military_force_active_stance_type_muster" then
