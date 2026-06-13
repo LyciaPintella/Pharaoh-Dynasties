@@ -8,7 +8,7 @@
 local function out(...)
      local parts = {...}
      for i = 1, #parts do parts[i] = tostring(parts[i]) end
-     ModLog("Character Traits Expansion: " .. table.concat(parts, " ") .. ".")
+     ModLog("Character Traits Expansion: " .. table.concat(parts, "") .. ".")
 end
 
 --- @class trait_event_listener_table : table
@@ -1907,7 +1907,7 @@ function event_listener_functions:characters_in_regions()
                               self.character_traits:apply_trait_by_chance(character, "phar_main_trait_confident", 20, 10)
                               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 15)
                               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_pragmatic", 20, 10)
-                              out(" character in enemy region, applying 'confident' and 'scout' ")
+                              out(" character in enemy region, applying 'confident' and 'scout'")
                               -- additional check for marriage and action points and applies cuckold.
                               if character:family_member():has_spouse() and character:turns_in_enemy_regions() >= 3 then
                                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_cuckold", 20, 7.5)
@@ -1917,7 +1917,7 @@ function event_listener_functions:characters_in_regions()
                          elseif not character_is_in_settlement and not is_region_contested then
                               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_feck", 20, 12.5)
                               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 10)
-                              out(" character not in settlement with full action points, applying 'feck' and 'bad_disciplinarian' ")
+                              out(" character not in settlement with full action points, applying 'feck' and 'bad_disciplinarian'")
                          elseif not character_is_in_settlement and is_region_contested then
                               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_feck", 20, 20)
                               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scout", 20, 20)
