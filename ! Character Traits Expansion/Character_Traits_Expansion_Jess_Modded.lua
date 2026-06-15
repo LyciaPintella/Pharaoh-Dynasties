@@ -1231,16 +1231,16 @@ function event_listener_functions:battle()
           ------------------------------
           ---- HIGH ARMY CASUALTIES ----
           ------------------------------
-          local losses = character:percentage_of_own_alliance_killed()
-          if losses >= 0.75 then
+          local casualties_percent = character:percentage_of_own_alliance_killed()
+          if casualties_percent >= 0.70 then
                self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bloody", 20, 25)
                self.character_traits:apply_trait_by_chance(character, "phar_main_trait_reckless", 20, 30)
                out(" CHARACTER_COMPLETED_BATTLE_BLOODY")
-          elseif losses >= 0.6 then
+          elseif casualties_percent >= 0.55 then
                self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bloody", 20, 20)
                self.character_traits:apply_trait_by_chance(character, "phar_main_trait_reckless", 20, 22.5)
                out(" CHARACTER_COMPLETED_BATTLE_BLOODY")
-          elseif losses >= 0.45 then
+          elseif casualties_percent >= 0.4 then
                self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bloody", 20, 15)
                self.character_traits:apply_trait_by_chance(character, "phar_main_trait_reckless", 20, 15)
                out(" CHARACTER_COMPLETED_BATTLE_BLOODY")
@@ -1261,8 +1261,7 @@ function event_listener_functions:battle()
                               self.character_traits:apply_trait_by_chance(character, "phar_main_trait_brave", 20, 15)
                               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scarred", 20, 15)
                               out(" high_bodyguard_casualties_applying_brave_and_scarred")
-                         end
-                         if casualties_percent < percent_loss_trigger_low then
+                         elseif character:fought_in_battle() and casualties_percent < percent_loss_trigger_low then
                               self.character_traits:apply_trait_by_chance(character, "phar_main_trait_cautious", 20, 3.75)
                               out(" low_bodyguard_casualties")
                          end
@@ -1600,7 +1599,7 @@ function event_listener_functions:characters_in_regions()
      core:add_listener("character_traits_expansion_characters_in_regions", "CharacterTurnEnd", true, function(context)
           out("launched characters_in_regions() - character_turn_end listener triggered")
           local character = context:character()
-		local char_is_general_with_army = cm:char_is_general_with_army(character)
+          local char_is_general_with_army = cm:char_is_general_with_army(character)
           if character:is_null_interface() then
                out(" characters_in_regions() character is_null_interface!")
                return
@@ -1652,6 +1651,17 @@ function event_listener_functions:characters_in_regions()
                end
           end
 
+          -------------------------------
+          ---- SUFFERED ATTRITION---- ----
+          -------------------------------
+          local military_force = character:military_force()
+          if not military_force:is_null_interface() then
+               if military_force:will_suffer_any_attrition() then
+                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_ambitious", 20, 15);
+                    out(" character_suffered_attrition")
+               end
+          end
+
           local character_has_region = character:has_region()
           ----------------------------------------------
           ---- SPENT TURN IN REGIONS OR SETTLEMENTS ----
@@ -1670,7 +1680,7 @@ function event_listener_functions:characters_in_regions()
                ---- CALCULATE GENERAL BODYGUARD CASUALTIES FOR HESITANT CALCULATION ----
                -------------------------------------------------------------------------
                local bodyguard_light_casualties = false
-               local bodyguard_heavy_casualties = false
+          	local bodyguard_heavy_casualties = false
                if char_is_general_with_army then
                     local unit_list = character:military_force():unit_list()
                     for i = 0, unit_list:num_items() - 1 do
@@ -1714,14 +1724,13 @@ function event_listener_functions:characters_in_regions()
 
                     if not region:is_abandoned() then
                          local character_faction_command_queue_index = character:faction():command_queue_index()
-					local character_is_in_settlement = character:in_settlement()
+                         local character_is_in_settlement = character:in_settlement()
 
-					------------------------------------
+                         ------------------------------------
                          ---- POPULAR/UNPOPULAR GOVERNOR ----
                          ------------------------------------
                          if character_is_in_settlement then
-                              if char_is_general_with_army and character_has_region and region_owning_faction_command_queue_index ==
-                                   character_faction_command_queue_index then
+                              if char_is_general_with_army and character_has_region and region_owning_faction_command_queue_index == character_faction_command_queue_index then
                                    out(" character_" .. character:onscreen_name() .. " is governor of region: " .. region:name())
                                    if region:public_order() == 100 then
                                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 30)
@@ -1755,13 +1764,6 @@ function event_listener_functions:characters_in_regions()
                                    end
                               end
                          end
-                         local military_force = character:military_force()
-                         if not military_force:is_null_interface() then
-                              if military_force:will_suffer_any_attrition() then
-                                   self.character_traits:apply_trait_by_chance(character, "phar_main_trait_ambitious", 20, 15);
-                                   out(" character_suffered_attrition")
-                              end
-                         end
                          -------------------------------
                          ---- CHARACTER UNDER SIEGE ----
                          -------------------------------
@@ -1772,8 +1774,7 @@ function event_listener_functions:characters_in_regions()
                          ---------------------------------------
                          ---- REGION HAS SMUGGLERS' DEN --------
                          ---------------------------------------
-                         if char_is_general_with_army and character_has_region and region_owning_faction_command_queue_index ==
-                              character_faction_command_queue_index then
+                         if char_is_general_with_army and character_has_region and region_owning_faction_command_queue_index == character_faction_command_queue_index then
                               local building_list = region:settlement():building_list()
                               out(" character_" .. character:onscreen_name() .. " is in region: " .. region:name() .. " checking for smugglers' den")
 
@@ -1794,8 +1795,7 @@ function event_listener_functions:characters_in_regions()
                          ------------------------------------------------
                          ---- SETTLEMENT HAS MILITARY ADMIN BUILDING ----
                          ------------------------------------------------
-                         if char_is_general_with_army and character_has_region and region_owning_faction_command_queue_index ==
-                              character_faction_command_queue_index then
+                         if char_is_general_with_army and character_has_region and region_owning_faction_command_queue_index == character_faction_command_queue_index then
                               local region = character:region()
                               local building_list = region:settlement():building_list()
 
@@ -1813,8 +1813,7 @@ function event_listener_functions:characters_in_regions()
                          ---------------------------------------
                          ---- SETTLEMENT HAS ADMIN BUILDING ----
                          ---------------------------------------
-                         if char_is_general_with_army and character_has_region and region_owning_faction_command_queue_index ==
-                              character_faction_command_queue_index then
+                         if char_is_general_with_army and character_has_region and region_owning_faction_command_queue_index == character_faction_command_queue_index then
                               local region = character:region()
                               local building_list = region:settlement():building_list()
 
@@ -1829,7 +1828,6 @@ function event_listener_functions:characters_in_regions()
                                    end
                               end
                          end
-
                          --------------------------------------------------------------------------------
                          ---- SPENT TURNS IN SETTLEMENTS OR CONTESTED, UNCONTESTED, OR ENEMY REGIONS ----
                          --------------------------------------------------------------------------------
@@ -1934,8 +1932,8 @@ function event_listener_functions:characters_in_regions()
                ---- PRESENT IN REGION WITH HIGH/LOW PUBLIC ORDER ----
                -------------------------------------------------------------
                local public_order = region:public_order()
-               if char_is_general_with_army and character_has_region and character_is_in_settlement and
-                    character:region():owning_faction():command_queue_index() == character:faction():command_queue_index() then
+               if char_is_general_with_army and character_has_region and character_is_in_settlement and character:region():owning_faction():command_queue_index() ==
+                    character:faction():command_queue_index() then
                     -- fix precedence: `not character:turns_in_own_regions() < 3` causes a boolean-number compare error
                     if character:turns_in_own_regions() >= 3 and character:military_force():active_stance() ~= "military_force_active_stance_type_muster" then
                          if public_order >= 75 then
