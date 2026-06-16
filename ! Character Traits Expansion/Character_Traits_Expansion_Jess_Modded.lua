@@ -1680,7 +1680,7 @@ function event_listener_functions:characters_in_regions()
                ---- CALCULATE GENERAL BODYGUARD CASUALTIES FOR HESITANT CALCULATION ----
                -------------------------------------------------------------------------
                local bodyguard_light_casualties = false
-          	local bodyguard_heavy_casualties = false
+               local bodyguard_heavy_casualties = false
                if char_is_general_with_army then
                     local unit_list = character:military_force():unit_list()
                     for i = 0, unit_list:num_items() - 1 do
@@ -1733,17 +1733,21 @@ function event_listener_functions:characters_in_regions()
                               if char_is_general_with_army and character_has_region and region_owning_faction_command_queue_index == character_faction_command_queue_index then
                                    out(" character_" .. character:onscreen_name() .. " is governor of region: " .. region:name())
                                    if region:public_order() == 100 then
+                                        self.character_traits:apply_trait_by_chance(character, "phar_main_trait_content", 20, 20);
                                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 30)
                                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 7.5)
                                         out(" character_" .. character:onscreen_name() .. " ranked up in settlement with high public order. giving popular.")
                                    elseif region:public_order() >= 80 then
-                                        self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 17.5)
-                                        self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 5)
+                                        self.character_traits:apply_trait_by_chance(character, "phar_main_trait_content", 20, 10);
+                                        self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 12.5)
+                                        self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 12.5)
                                         out(" character_" .. character:onscreen_name() .. " ranked up in settlement with high public order. giving popular.")
                                    elseif region:public_order() >= 65 then
-                                        self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 2.5)
+                                        self.character_traits:apply_trait_by_chance(character, "phar_main_trait_content", 20, 5);
+                                        self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 5)
                                         out(" character_" .. character:onscreen_name() .. " ranked up in settlement with high public order. giving popular.")
                                    elseif region:public_order() >= 50 then
+                                        self.character_traits:apply_trait_by_chance(character, "phar_main_trait_content", 20, 2.5);
                                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 2.5)
                                         out(" character_" .. character:onscreen_name() .. " ranked up in settlement with high public order. giving popular.")
                                    elseif region:public_order() <= -25 then
