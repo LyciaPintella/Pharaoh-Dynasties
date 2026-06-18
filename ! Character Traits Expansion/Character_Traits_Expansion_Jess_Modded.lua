@@ -1690,7 +1690,6 @@ function event_listener_functions:characters_in_regions()
                          out("Province under construction: Checking character " .. character():onscreen_name() ..
                                   "'s province for construction. Does their faction own the region: " .. character:region():name() .. "? " ..
                                   tostring(region_owning_faction_cqi == faction_cqi))
-
                          if region_owning_faction_cqi == faction_cqi then
                               local region = province:region_list():item_at(i)
                               for i = 0, region:slot_list():num_items() - 1 do
