@@ -2068,8 +2068,8 @@ function event_listener_functions:faction_leaders()
           if context:is_war() == true then
                out(" WAR_DECLARATION Event Triggered")
 
-               local proposer = context:proposer();
-               local recipient = context:recipient();
+               local proposer = context:proposer()
+               local recipient = context:recipient()
                local character = context:character()
 
                if character:faction():name() == proposer:name() then
@@ -2083,8 +2083,8 @@ function event_listener_functions:faction_leaders()
           if context:is_peace_treaty() == true then
                out(" PEACE_DECLARATION_EVENT")
 
-               local proposer = context:proposer();
-               local recipient = context:recipient();
+               local proposer = context:proposer()
+               local recipient = context:recipient()
                local character = context:character()
 
                if character:faction():name() == proposer:name() then
@@ -2173,12 +2173,12 @@ function event_listener_functions:misc()
           local character = context:character()
 
           if character:is_null_interface() then
-               out("_character_turn_end_main character is_null_interface!")
+               out("character_traits_expansion_character_turn_start character  is_null_interface!")
                return
           end
 
           if character:character_type("colonel") or character:character_details():is_civilian() then
-               out("_character_turn_end_main character is a colonel or is a civilian!")
+               out("character_traits_expansion_character_turn_start is a colonel or is a civilian!")
                return
           end
 
