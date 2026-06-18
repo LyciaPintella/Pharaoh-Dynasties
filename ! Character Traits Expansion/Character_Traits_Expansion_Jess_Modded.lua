@@ -1809,7 +1809,8 @@ function event_listener_functions:characters_in_regions()
                                         local building_superchains = building_list:item_at(i):superchain()
                                         if self.character_traits.building_superchains.military_administration[building_superchain] then
                                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_military_admin_good", 20, 7.5)
-                                             out(" character_" .. character:onscreen_name() .. " found military admin building: " .. building_superchain)
+                                             out(" character_" .. character:onscreen_name() .. " found military admin building: " ..
+                                                      self.character_traits.building_superchains.military_administration[building_superchain])
                                         end
                                    end
                               end
@@ -2272,24 +2273,39 @@ function event_listener_functions:pillage_and_conquest()
 end
 
 function event_listener_functions:provincial_construction()
-     --------------------------------
-     ---- PROVINCE UNDER CONSTRUCTION
-     --------------------------------
-     core:add_listener("character_traits_expansion_provoncial_construction", "CharacterEndTurn", function(context)
+     -------------------------------------
+     ---- PROVINCE UNDER CONSTRUCTION ----
+     -------------------------------------
+     -- ! Lycia Construction Bookmark
+     core:add_listener("character_traits_expansion_provoncial_construction", "CharacterEndTurn", true, function(context)
           local character = context:character()
           local province = character:region():province()
-          for i = 0, province:region_list():num_items() - 1 do
-               if character:has_region() and character:region():owning_faction():command_queue_index() == character:faction():command_queue_index() then
-                    for i = 0, region:slot_list():num_items() - 1 do
-                         local slot = region:slot_list():item_at(i)
-                         if slot:is_there_construction() then return true end
+          local construction = false
+
+          if character:has_region() and character:region():owning_faction():command_queue_index() == character:faction():command_queue_index() then
+               out("Province under construction: character " .. character():onscreen_name() .. " is present in province: " .. character:region():province_name() ..
+                        ". Does their faction own their region: " .. character:region():owning_faction():command_queue_index() ==
+                        character:faction():command_queue_index())
+               for i = 0, province:region_list():num_items() - 1 do
+                    out("Province under construction: Checking character " .. character():onscreen_name() ..
+                             "'s province for construction. Does their faction own the region: " .. character:region():name() .. "? " ..
+                             character:region():owning_faction():command_queue_index() == character:faction():command_queue_index())
+
+                    if character:region():owning_faction():command_queue_index() == character:faction():command_queue_index() then
+                         local region = character:region()
+                         for i = 0, region:slot_list():num_items() - 1 do
+                              local slot = region:slot_list():item_at(i)
+                              if slot:is_there_construction() then
+                                   construction = true
+                                   break
+                              end
+                         end
                     end
                end
+               if construction == true then self.character_traits:apply_trait_by_chance(character, "phar_main_trait_cultured", 20, 6.66) end
           end
-          return false
-     end, function(context) self.character_traits:apply_trait_by_chance(character, "phar_main_trait_cultured", 20, 12.5) end, true)
+     end, true)
 
-     -- if slot:building_chain_key() == "phar_main_ers_shrine" then return true end
      -----------------------------
      ---- BUILDING COMPLETED ----
      -----------------------------
