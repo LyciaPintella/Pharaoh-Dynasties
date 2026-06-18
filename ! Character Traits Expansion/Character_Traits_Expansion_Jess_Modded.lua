@@ -1684,8 +1684,9 @@ function event_listener_functions:characters_in_regions()
                         tostring(region_owning_faction_cqi) .. ". Character's faction CQI: " .. tostring(faction_cqi))
                if region_owning_faction_cqi == faction_cqi then
                     local construction = false
-                    out("Province under construction: character " .. tostring(character():onscreen_name()) .. " is present in province: " .. tostring(character:region():province_name()) ..
-                             ". Does their faction own their region: " .. tostring(region_owning_faction_cqi == faction_cqi))
+                    out("Province under construction: character " .. tostring(character():onscreen_name()) .. " is present in province: " ..
+                             tostring(character:region():province_name()) .. ". Does their faction own their region: " ..
+                             tostring(region_owning_faction_cqi == faction_cqi))
                     for i = 0, province:region_list():num_items() - 1 do
                          out("Province under construction: Checking character " .. character():onscreen_name() ..
                                   "'s province for construction. Does their faction own the region: " .. tostring(character:region():name()) .. "? " ..
@@ -1695,8 +1696,10 @@ function event_listener_functions:characters_in_regions()
                               for i = 0, region:slot_list():num_items() - 1 do
                                    local slot = region:slot_list():item_at(i)
                                    if slot:is_there_construction() then
-                                construction = true
-						  out("Province under construction: construction in province: found construction in a character's province. Setting construction to true: " .. tostring(construction))
+                                        construction = true
+                                        out(
+                                             "Province under construction: construction in province: found construction in a character's province. Setting construction to true: " ..
+                                                  tostring(construction))
                                         -- break
                                    end
                               end
