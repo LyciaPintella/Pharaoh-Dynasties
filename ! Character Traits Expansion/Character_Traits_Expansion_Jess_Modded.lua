@@ -2284,8 +2284,8 @@ function event_listener_functions:provincial_construction()
 
           if character:has_region() and character:region():owning_faction():command_queue_index() == character:faction():command_queue_index() then
                out("Province under construction: character " .. character():onscreen_name() .. " is present in province: " .. character:region():province_name() ..
-                        ". Does their faction own their region: " .. character:region():owning_faction():command_queue_index() ==
-                        character:faction():command_queue_index())
+                        ". Does their faction own their region: " .. tostring(character:region():owning_faction():command_queue_index() ==
+                        character:faction():command_queue_index()))
                for i = 0, province:region_list():num_items() - 1 do
                     out("Province under construction: Checking character " .. character():onscreen_name() ..
                              "'s province for construction. Does their faction own the region: " .. character:region():name() .. "? " ..

@@ -491,7 +491,7 @@ modular_difficulty_campaign.config = {
 
      applicable_list_of_maat_disasters = {"Earthquake", "Flood", "Plague", "Drought"},
 
-     max_pretenders_to_the_throne = {low = 2, medium = 3, high = 4},
+     max_pretenders_to_the_throne = {low = 2, medium = 4, high = 6},
 
      attrition_intensity = {
           bundle_key = "phar_main_modular_difficulty_attrition_intensity",
@@ -2179,7 +2179,7 @@ modular_difficulty_campaign.settings = {
           ui = {
                category = modular_difficulty_campaign.ui_panel.settings_category_tabs.campaign,
                component_type = modular_difficulty_campaign.ui_panel.settings_component_types.dropdown,
-               campaign_changeable = false,
+               campaign_changeable = true,
                ui_order = 5
           },
           default_value = "None",
