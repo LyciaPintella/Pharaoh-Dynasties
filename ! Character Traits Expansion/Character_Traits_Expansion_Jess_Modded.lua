@@ -1698,7 +1698,7 @@ function event_listener_functions:characters_in_regions()
                                         out(
                                              "Province under construction: construction in province: found construction in a character's province. Setting construction to true: " ..
                                                   tostring(construction))
-                                        -- break
+                                        break
                                    end
                               end
                          end
@@ -1747,7 +1747,7 @@ function event_listener_functions:characters_in_regions()
                                              tostring(region_owning_faction_cqi) .. " ~= " .. tostring(faction():command_queue_index()))
                                    is_province_contested = true
                                    out("characters_in_regions() - is_province_contested set to: " .. tostring(is_province_contested) .. " — breaking")
-                                   -- break
+                                   break
                               end
                          else
                               out("characters_in_regions() - Error: current_region is nil in province:regions() iteration.")
@@ -1826,7 +1826,7 @@ function event_listener_functions:characters_in_regions()
                                              if smugglers_den_present == true then
                                                   self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_criminal", 20, 25)
                                                   out(" smugglers' den found!")
-                                                  -- break
+                                                  break
                                              end
                                         end
                                    end
@@ -2474,7 +2474,7 @@ function event_listener_functions:weak_corrupt_governments()
                          self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_corrupt", 20, 5)
                          self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_degenerate", 20, 5)
                          out(" corrupt pleasure palace found!")
-                         -- break
+                         break
                     end
                end
           end
