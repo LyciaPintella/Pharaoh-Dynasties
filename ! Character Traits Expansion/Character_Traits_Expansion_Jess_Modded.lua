@@ -529,7 +529,7 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
 
                },
                character_ends_turn_in_region_with_construction_economy_building = {
-                    [1] = {trait = "phar_main_trait_materialistic", points = 4},
+                    [1] = {trait = "phar_main_trait_materialistic", points = 0},
                     [2] = {trait = "phar_main_trait_amenmesse", points = 0}
 
                },
@@ -582,7 +582,8 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
                          character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 3},
                          character_suffered_attrition = {phar_main_trait_ambitious = 5},
                          character_won_battle_cadmean_victory = {phar_main_trait_blunt = 3},
-                         character_won_defensive_battle = {phar_main_trait_hesitant = 1}
+                         character_won_defensive_battle = {phar_main_trait_hesitant = 1},
+                         character_won_battle = {phar_main_trait_ramesses = 4}
                     }
                },
                -- AMENMESSE--
@@ -590,8 +591,7 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
                     background_trait_key = "phar_main_background_amenmesse",
                     faction = "phar_main_amenmesse",
                     events = {
-                         character_ends_turn_in_region_with_construction_economy_building = {phar_main_trait_amenmesse = 3},
-                         character_won_battle = {phar_main_trait_amenmesse = 3},
+                         character_ends_turn_in_region_with_construction_economy_building = {phar_main_trait_amenmesse = 0},
                          character_ends_turn_in_region_with_construction_shrine_building = {phar_main_trait_spiritual = 3},
                          character_bodyguard_suffered_casualties_low = {phar_main_trait_cautious = 4, phar_main_trait_brave = 3},
                          character_recruited_1h_melee_unit_spears = {phar_main_trait_cautious = 3},
@@ -620,7 +620,8 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
                          character_beeing_reinforced = {phar_main_trait_cooperative = 5},
                          character_spent_turn_in_enemy_region = {phar_main_trait_confident = 3},
                          character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 3},
-                         character_won_defensive_battle = {phar_main_trait_hesitant = 3}
+                         character_won_defensive_battle = {phar_main_trait_hesitant = 3},
+                         character_won_battle = {phar_main_trait_amenmesse = 4}
                     }
                },
                -- BAY--
@@ -657,7 +658,7 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
                          character_spent_turn_in_enemy_region = {phar_main_trait_confident = 3},
                          character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 3},
                          character_won_defensive_battle = {phar_main_trait_hesitant = 3},
-                         character_won_battle = {phar_main_trait_bay = 2}
+                         character_won_battle = {phar_main_trait_bay = 4}
                     }
                },
                -- IRSU--
@@ -694,7 +695,7 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
                          character_spent_turn_in_enemy_region = {phar_main_trait_confident = 3},
                          character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 3},
                          character_won_defensive_battle = {phar_main_trait_hesitant = 3},
-                         character_won_battle = {phar_main_trait_irsu = 2}
+                         character_won_battle = {phar_main_trait_irsu = 4}
                     }
                },
                -- KURUNTA--
@@ -731,7 +732,7 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
                          character_spent_turn_in_enemy_region = {phar_main_trait_confident = 3},
                          character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 3},
                          character_won_defensive_battle = {phar_main_trait_hesitant = 3},
-                         character_won_battle = {phar_main_trait_kurunta = 2}
+                         character_won_battle = {phar_main_trait_kurunta = 4}
                     }
                },
                -- SETI--
@@ -768,7 +769,7 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
                          character_spent_turn_in_enemy_region = {phar_main_trait_confident = 5},
                          character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 3},
                          character_won_defensive_battle = {phar_main_trait_hesitant = 3},
-                         character_won_battle = {phar_main_trait_seti = 2}
+                         character_won_battle = {phar_main_trait_seti = 4}
                     }
                },
                -- SUPPI--
@@ -805,7 +806,7 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
                          character_spent_turn_in_enemy_region = {phar_main_trait_confident = 3},
                          character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 3},
                          character_won_defensive_battle = {phar_main_trait_hesitant = 3},
-                         character_won_battle = {phar_main_trait_suppiluliuma = 2}
+                         character_won_battle = {phar_main_trait_suppiluliuma = 4}
                     }
                },
                -- TAUSRET--
@@ -842,7 +843,7 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
                          character_spent_turn_in_enemy_region = {phar_main_trait_confident = 3},
                          character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 3},
                          character_won_defensive_battle = {phar_main_trait_hesitant = 3},
-                         character_won_battle = {phar_main_trait_tausret = 2}
+                         character_won_battle = {phar_main_trait_tausret = 4}
                     }
                },
                -- WALWETES--
@@ -853,7 +854,6 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
                          character_ends_turn_in_region_with_construction_shrine_building = {phar_main_trait_spiritual = 3},
                          character_won_defensive_battle = {phar_main_trait_hesitant = 3},
                          character_won_battle_cadmean_victory = {phar_main_trait_blunt = 3},
-                         character_won_battle = {phar_sea_trait_walwetes = 1},
                          character_suffered_attrition = {phar_main_trait_ambitious = 3},
                          character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 3},
                          character_spent_turns_in_march_stance = {phar_main_trait_ambitious = 3},
@@ -879,7 +879,8 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
                          character_bodyguard_suffered_casualties_high = {phar_main_trait_reckless = 5},
                          character_being_lazy_in_owned_settlement_low_public_order = {phar_main_trait_irreverent = 3, phar_main_trait_hesitant = 3},
                          character_being_lazy_in_owned_settlement_high_public_order = {phar_main_trait_respectful = 3, phar_main_trait_hesitant = 3},
-                         character_beeing_reinforced = {phar_main_trait_cooperative = 3}
+                         character_beeing_reinforced = {phar_main_trait_cooperative = 3},
+                         character_won_battle = {phar_sea_trait_walwetes = 4}
                     }
                },
                -- IOLAOS--
@@ -890,7 +891,6 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
                          character_ends_turn_in_region_with_construction_shrine_building = {phar_main_trait_spiritual = 3},
                          character_won_defensive_battle = {phar_main_trait_hesitant = 3},
                          character_won_battle_cadmean_victory = {phar_main_trait_blunt = 3},
-                         character_won_battle = {phar_sea_trait_iolas = 2},
                          character_suffered_attrition = {phar_main_trait_ambitious = 3},
                          character_spent_turns_in_raiding_stance = {phar_main_trait_blunt = 3},
                          character_spent_turns_in_march_stance = {phar_main_trait_ambitious = 3},
@@ -916,7 +916,8 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
                          character_bodyguard_suffered_casualties_high = {phar_main_trait_reckless = 5},
                          character_being_lazy_in_owned_settlement_low_public_order = {phar_main_trait_irreverent = 3, phar_main_trait_hesitant = 3},
                          character_being_lazy_in_owned_settlement_high_public_order = {phar_main_trait_respectful = 3, phar_main_trait_hesitant = 3},
-                         character_beeing_reinforced = {phar_main_trait_cooperative = 3}
+                         character_beeing_reinforced = {phar_main_trait_cooperative = 3},
+                         character_won_battle = {phar_sea_trait_iolas = 4}
                     }
                },
                -- AGAMEMNON--
@@ -953,6 +954,7 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
                          character_suffered_attrition = {phar_main_trait_ambitious = 5},
                          character_won_battle_cadmean_victory = {phar_main_trait_blunt = 3},
                          character_won_defensive_battle = {phar_main_trait_hesitant = 1}
+                         -- character_won_battle = {phar_map_background_agamemnon = 4}
                     }
                },
                -- PRIAM--
@@ -989,6 +991,7 @@ function event_listener_functions.character_traits:modify_phar_campaign_traits()
                          character_suffered_attrition = {phar_main_trait_ambitious = 3},
                          character_won_battle_cadmean_victory = {phar_main_trait_blunt = 3},
                          character_won_defensive_battle = {phar_main_trait_hesitant = 1}
+                         -- character_won_battle = {phar_map_background_priam = 4}
                     }
                },
                -- ADAD--
@@ -1221,10 +1224,10 @@ function event_listener_functions:battle()
           ---- POPULAR/UNPOPULAR TRAIT ----
           -------------------------------
           if character:won_battle() then
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 5)
+               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 7.5)
                out(" CHARACTER_COMPLETED_BATTLE_POPULAR")
           else
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 5)
+               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 7.5)
                out(" CHARACTER_COMPLETED_BATTLE_UNPOPULAR")
           end
 
@@ -1233,16 +1236,16 @@ function event_listener_functions:battle()
           ------------------------------
           local casualties_percent = character:percentage_of_own_alliance_killed()
           if casualties_percent >= 0.70 then
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bloody", 20, 25)
-               self.character_traits:apply_trait_by_chance(character, "phar_main_trait_reckless", 20, 30)
+               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bloody", 20, 20)
+               self.character_traits:apply_trait_by_chance(character, "phar_main_trait_reckless", 20, 25)
                out(" CHARACTER_COMPLETED_BATTLE_BLOODY")
           elseif casualties_percent >= 0.55 then
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bloody", 20, 20)
-               self.character_traits:apply_trait_by_chance(character, "phar_main_trait_reckless", 20, 22.5)
+               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bloody", 20, 17.5)
+               self.character_traits:apply_trait_by_chance(character, "phar_main_trait_reckless", 20, 20)
                out(" CHARACTER_COMPLETED_BATTLE_BLOODY")
           elseif casualties_percent >= 0.4 then
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bloody", 20, 15)
-               self.character_traits:apply_trait_by_chance(character, "phar_main_trait_reckless", 20, 15)
+               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bloody", 20, 12.5)
+               self.character_traits:apply_trait_by_chance(character, "phar_main_trait_reckless", 20, 12.5)
                out(" CHARACTER_COMPLETED_BATTLE_BLOODY")
           end
 
@@ -1255,8 +1258,8 @@ function event_listener_functions:battle()
                     local unit = unit_list:item_at(i)
                     if unit:belongs_to_unit_set("phar_main_bodyguards") then
                          local casualties_percent = 100 - unit:percentage_proportion_of_full_strength()
-                         local percent_loss_trigger_high = 30
-                         local percent_loss_trigger_low = 20
+                         local percent_loss_trigger_high = 35
+                         local percent_loss_trigger_low = 25
                          if character:fought_in_battle() and casualties_percent > percent_loss_trigger_high then
                               self.character_traits:apply_trait_by_chance(character, "phar_main_trait_brave", 20, 15)
                               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scarred", 20, 15)
@@ -1289,13 +1292,12 @@ function event_listener_functions:battle()
           -- check if the cultures are different before applying the traits
           if enemy_culture ~= character_faction:culture() then
                if self.character_traits.faction_to_culture_pairs[enemy_culture] ~= nil then
+                    culture_string = self.event_listener_functions.character_traits.faction_to_culture_pairs[enemy_culture]
                     if character:won_battle() then
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_wins_against_" ..
-                                                                          self.event_listener_functions.character_traits.faction_to_culture_pairs[enemy_culture], 20, 20)
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_wins_against_" .. culture_string, 20, 20)
                          out(" battle_wins_against_" .. tostring(enemy_culture))
                     else
-                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_defeats_against_" ..
-                                                                          event_listener_functions.character_traits.faction_to_culture_pairs[enemy_culture], 20, 20)
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_defeats_against_" .. culture_string, 20, 20)
                          out(" battle_defeats_against_" .. tostring(enemy_culture))
                     end
                end
@@ -1338,7 +1340,7 @@ function event_listener_functions:battle()
                     self.character_traits:apply_trait_by_chance(attacker, "character_traits_expansion_trait_siege_victory", 20, 20)
                else
                     self.character_traits:apply_trait_by_chance(attacker, "character_traits_expansion_trait_siege_defeat", 20, 50)
-                    self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_siege_defense_victory", 20, 0)
+                    self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_siege_defense_victory", 20, 20)
                end
                return
           end
@@ -1353,7 +1355,7 @@ function event_listener_functions:battle()
                     self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_unlucky", 20, 15)
                     self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_survivor", 20, 15)
                     self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_military_admin_bad", 20, 15)
-                    self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_paranoia", 20, 10)
+                    self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_paranoia", 20, 12.5)
                     out(" ambush_battle_detected_attacker_won")
                else
                     self.character_traits:apply_trait_by_chance(attacker, "character_traits_expansion_trait_military_admin_bad", 20, 20)
@@ -1371,7 +1373,9 @@ function event_listener_functions:battle()
           if battle:failed_ambush_battle() then
                if attacker:won_battle() then
                     self.character_traits:apply_trait_by_chance(attacker, "phar_main_trait_blunt", 20, 20)
-                    self.character_traits:apply_trait_by_chance(attacker, "character_traits_expansion_trait_unlucky", 20, 20)
+                    self.character_traits:apply_trait_by_chance(attacker, "character_traits_expansion_trait_unlucky", 20,
+                    20)
+				self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_unlucky", 20, 25)
                     out(" failed_ambush_battle_detected_attacker_won")
                else
                     self.character_traits:apply_trait_by_chance(attacker, "phar_main_trait_blunt", 20, 20)
@@ -1469,9 +1473,12 @@ function event_listener_functions:battle()
                if cm:char_is_general_with_army(attacker) and attacker:faction():has_home_region() then
                     local home = attacker:faction():home_region():settlement()
                     local distance = 1750
-                    if distance and distance_squared(attacker:logical_position_x(), attacker:logical_position_y(), home:logical_position_x(), home:logical_position_y()) >=
-                         distance * distance then
-                         self.character_traits:apply_trait_by_chance(attacker, "character_traits_expansion_trait_campaigner", 20, 25)
+				local home_x = home:logical_position_x()
+				local home_y = home:logical_position_y()
+				local attacker_x = attacker:logical_position_x()
+				local attacker_y = attacker:logical_position_y()
+                    if distance and distance_squared(attacker_x, attacker_y, home_x, home_y) >= distance * distance then
+                         self.character_traits:apply_trait_by_chance(attacker, "character_traits_expansion_trait_campaigner", 20, 20)
                          out("character_traits_expansion battle fought far from capital")
                     end
                end
@@ -1480,10 +1487,13 @@ function event_listener_functions:battle()
           if defender:faction():is_allowed_to_capture_territory() then
                if cm:char_is_general_with_army(defender) and defender:faction():has_home_region() then
                     local home = defender:faction():home_region():settlement()
-                    local distance = 1750
-                    if distance and distance_squared(defender:logical_position_x(), defender:logical_position_y(), home:logical_position_x(), home:logical_position_y()) >=
-                         distance * distance then
-                         self.character_traits:apply_trait_by_chance(defender, "	", 20, 25)
+				local distance = 1750
+				local defender_x = defender:logical_position_x()
+				local defender_y = defender:logical_position_y()
+				local home_x = home:logical_position_x()
+				local home_y = home:logical_position_y()
+                    if distance and distance_squared(defender_x, defender_y, home_x, home_y) >= distance * distance then
+                         self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_campaigner", 20, 20)
                          out("character_traits_expansion battle fought far from capital")
                     end
                end
@@ -1589,7 +1599,7 @@ function event_listener_functions:battle()
                out(" post_battle_slaughter_character_in_settlement")
                return
           else
-               self.character_traits:apply_trait_by_chance(context:character(), "phar_main_trait_cruel", 20, 25)
+               self.character_traits:apply_trait_by_chance(context:character(), "phar_main_trait_cruel", 20, 20)
                out(" post_battle_slaughter")
           end
      end, true)
