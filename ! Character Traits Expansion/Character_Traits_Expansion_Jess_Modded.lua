@@ -2351,7 +2351,7 @@ function event_listener_functions:provincial_construction()
                     ----------------------------
                     ---- BUILT ANY BUILDING ----
                     ----------------------------
-                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_cultured", 20, 4.5)
+                    self.character_traits:apply_trait_by_chance(character, "phar_main_trait_cultured", 20, 5)
 
                     --------------------------
                     ---- BUILT FARMS ----
