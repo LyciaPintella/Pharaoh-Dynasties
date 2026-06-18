@@ -1669,9 +1669,10 @@ function event_listener_functions:characters_in_regions()
           out("characters_in_regions: character:has_region() is " .. tostring(character:has_region()))
           if character:has_region() then
                local faction = character:faction()
+               local faction_cqi = faction:command_queue_index()
                out("characters_in_regions() - character is in a region, starting checks. Faction is: " .. tostring(faction:name()))
                local region = character:region()
-               local region_owning_faction_command_queue_index = region:owning_faction():command_queue_index()
+               local region_owning_faction_cqi = region:owning_faction():command_queue_index()
                out("characters_in_regions(): character region is: " .. tostring(region:name()))
                local province = region:province()
                out("characters_in_regions() - character province is: " .. tostring(province:name()))
@@ -1679,22 +1680,24 @@ function event_listener_functions:characters_in_regions()
                -------------------------------------
                ---- PROVINCE UNDER CONSTRUCTION ----
                -------------------------------------
-               if character:region():owning_faction():command_queue_index() == character:faction():command_queue_index() then
+               out("Characters in regions - Province under construction: Begin if statement. Character's region owning faction CQI: " ..
+                        tostring(region_owning_faction_cqi) .. ". Character's faction CQI: " .. tostring(faction_cqi))
+               if region_owning_faction_cqi == faction_cqi then
                     local construction = false
                     out("Province under construction: character " .. character():onscreen_name() .. " is present in province: " .. character:region():province_name() ..
-                             ". Does their faction own their region: " ..
-                             tostring(character:region():owning_faction():command_queue_index() == character:faction():command_queue_index()))
+                             ". Does their faction own their region: " .. tostring(region_owning_faction_cqi == faction_cqi))
                     for i = 0, province:region_list():num_items() - 1 do
                          out("Province under construction: Checking character " .. character():onscreen_name() ..
                                   "'s province for construction. Does their faction own the region: " .. character:region():name() .. "? " ..
-                                  tostring(character:region():owning_faction():command_queue_index() == character:faction():command_queue_index()))
+                                  tostring(region_owning_faction_cqi == faction_cqi))
 
-                         if character:region():owning_faction():command_queue_index() == character:faction():command_queue_index() then
+                         if region_owning_faction_cqi == faction_cqi then
                               local region = character:region()
                               for i = 0, region:slot_list():num_items() - 1 do
                                    local slot = region:slot_list():item_at(i)
                                    if slot:is_there_construction() then
                                         construction = true
+                                        -- break
                                    end
                               end
                          end
@@ -1737,12 +1740,13 @@ function event_listener_functions:characters_in_regions()
                          if current_region then
                               out("characters_in_regions() - inspecting region: " .. tostring(current_region:name()) .. ", owned by faction: " ..
                                        tostring(current_region:owning_faction():name()))
-                              if region_owning_faction_command_queue_index ~= faction:command_queue_index() then
-                                   out("characters_in_regions() - region_owning_faction_command_queue_index ~= region_owner:command_queue_index() " ..
-                                            tostring(region_owning_faction_command_queue_index) .. " ~= " .. tostring(faction():command_queue_index()))
+                              if region_owning_faction_cqi ~= faction:command_queue_index() then
+                                   out(
+                                        "characters_in_regions() - region_owning_faction_cqi ~= region_owner:command_queue_index() " ..
+                                             tostring(region_owning_faction_cqi) .. " ~= " .. tostring(faction():command_queue_index()))
                                    is_province_contested = true
                                    out("characters_in_regions() - is_province_contested set to: " .. tostring(is_province_contested) .. " — breaking")
-                                   break
+                                   -- break
                               end
                          else
                               out("characters_in_regions() - Error: current_region is nil in province:regions() iteration.")
@@ -1750,14 +1754,14 @@ function event_listener_functions:characters_in_regions()
                     end
 
                     if not region:is_abandoned() then
-                         local character_faction_command_queue_index = character:faction():command_queue_index()
+                         local character_faction_command_queue_index = faction_cqi
                          local character_is_in_settlement = character:in_settlement()
 
                          ------------------------------------
                          ---- POPULAR/UNPOPULAR GOVERNOR ----
                          ------------------------------------
                          if character_is_in_settlement then
-                              if char_is_general_with_army and character_has_region and region_owning_faction_command_queue_index == character_faction_command_queue_index then
+                              if char_is_general_with_army and character_has_region and region_owning_faction_cqi == character_faction_command_queue_index then
                                    out(" character_" .. character:onscreen_name() .. " is governor of region: " .. region:name())
                                    if region:public_order() == 100 then
                                         self.character_traits:apply_trait_by_chance(character, "phar_main_trait_content", 20, 20);
@@ -1805,20 +1809,24 @@ function event_listener_functions:characters_in_regions()
                          ---------------------------------------
                          ---- REGION HAS SMUGGLERS' DEN --------
                          ---------------------------------------
-                         if char_is_general_with_army and character_has_region and region_owning_faction_command_queue_index == character_faction_command_queue_index then
+                         if char_is_general_with_army and character_has_region and region_owning_faction_cqi == character_faction_command_queue_index then
                               local building_list = region:settlement():building_list()
                               out(" character_" .. character:onscreen_name() .. " is in region: " .. region:name() .. " checking for smugglers' den")
 
                               -- check for smugglers' den
                               for i = 0, building_list:num_items() - 1 do
                                    local building = building_list:item_at(i)
+                                   local smugglers_den_present = false
                                    if not building:is_null_interface() then
                                         local superchain = building:superchain()
                                         if superchain == "phar_main_port_coast_derivative_type_a" or superchain ==
                                              "phar_main_irsu_resource_production_port_coast_derivative_type_a" then
-                                             self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_criminal", 20, 25)
-                                             out(" smugglers' den found!")
-                                             break
+                                             smugglers_den_present = true
+                                             if smugglers_den_present == true then
+                                                  self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_criminal", 20, 25)
+                                                  out(" smugglers' den found!")
+                                                  -- break
+                                             end
                                         end
                                    end
                               end
@@ -1826,7 +1834,7 @@ function event_listener_functions:characters_in_regions()
                          ------------------------------------------------
                          ---- SETTLEMENT HAS MILITARY ADMIN BUILDING ----
                          ------------------------------------------------
-                         if char_is_general_with_army and character_has_region and region_owning_faction_command_queue_index == character_faction_command_queue_index then
+                         if char_is_general_with_army and character_has_region and region_owning_faction_cqi == character_faction_command_queue_index then
                               local region = character:region()
                               local building_list = region:settlement():building_list()
 
@@ -1845,7 +1853,7 @@ function event_listener_functions:characters_in_regions()
                          ---------------------------------------
                          ---- SETTLEMENT HAS ADMIN BUILDING ----
                          ---------------------------------------
-                         if char_is_general_with_army and character_has_region and region_owning_faction_command_queue_index == character_faction_command_queue_index then
+                         if char_is_general_with_army and character_has_region and region_owning_faction_cqi == character_faction_command_queue_index then
                               local region = character:region()
                               local building_list = region:settlement():building_list()
 
@@ -1964,8 +1972,7 @@ function event_listener_functions:characters_in_regions()
                ---- PRESENT IN REGION WITH HIGH/LOW PUBLIC ORDER ----
                -------------------------------------------------------------
                local public_order = region:public_order()
-               if char_is_general_with_army and character_has_region and character_is_in_settlement and character:region():owning_faction():command_queue_index() ==
-                    character:faction():command_queue_index() then
+               if char_is_general_with_army and character_has_region and character_is_in_settlement and region_owning_faction_cqi == faction_cqi then
                     -- fix precedence: `not character:turns_in_own_regions() < 3` causes a boolean-number compare error
                     if character:turns_in_own_regions() >= 3 and character:military_force():active_stance() ~= "military_force_active_stance_type_muster" then
                          if public_order >= 75 then
@@ -2412,13 +2419,13 @@ function event_listener_functions:weak_corrupt_governments()
      --------------------
      core:add_listener("character_traits_expansion_rebellion", "RegionRebels", true, function(context)
           local province = context:region():province()
-
           for i = 0, province:region_list():num_items() - 1 do
+               local region = province:region_list():item_at(i)
                if region:has_settlement() and region:settlement():has_commander() then
                     local character = region:settlement():commander()
                     self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 20)
                     self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_authoritarian", 20, 15)
-                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_bad", 20, 12.5)
+                    self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_admin_bad", 20, 20)
 
                     out(" region_in_province_rebelled_and_attempted_to_give_trait_to_" .. tostring(cm:char_lookup_str(character:command_queue_index())))
                end
@@ -2429,29 +2436,44 @@ function event_listener_functions:weak_corrupt_governments()
           -------------------------------
           --- TEMPTED BY CORRUPTION
           -------------------------------
+          if character:is_null_interface() then
+               out(" characters_in_regions() character is_null_interface!")
+               return
+          end
+
+          out("characters_in_regions() - character is " .. character:onscreen_name())
+          if character:character_type("colonel") or character:character_details():is_civilian() then
+               out(" characters_in_regions() character is a colonel or is a civilian!")
+               return
+          end
+
           if cm:char_is_general_with_army(character) and character:has_region() and character:region():owning_faction():command_queue_index() ==
                character:faction():command_queue_index() then
                local building_list = character:region():settlement():building_list()
                out(" character_" .. character:onscreen_name() .. " is in region: " .. region:name() .. " checking for treasury, palace of pleasure and gold mine")
 
-               -- check for palace of pleasures
                for i = 0, building_list:num_items() - 1 do
                     local building = building_list:item_at(i)
+                    local growth_present = false
+                    local gold_mine_present = false
                     if not building:is_null_interface() then
                          local superchain = building:superchain()
-                         if superchain == "phar_map_bab_province_management_happiness_growth_type_a" then
-                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_corrupt", 20, 5)
-                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_degenerate", 20, 5)
-                              out(" corrupt pleasure palace found!")
-                              break
-                         end
-
+                         -- check for palace of pleasures
+                         if superchain == "phar_map_bab_province_management_happiness_growth_type_a" then growth_present = true end
                          -- check for gold mine
-                         if self.character_traits.building_superchains.gold[superchain] then
-                              self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_corrupt", 20, 5)
-                              out(" corrupt gold mine found!")
-                              break
-                         end
+                         if self.character_traits.building_superchains.gold[superchain] then gold_mine_present = true end
+                    end
+
+                    if gold_mine_present == true then
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_corrupt", 20, 5)
+                         out(" corrupt gold mine found!")
+                    end
+
+                    if growth_present == true then
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_corrupt", 20, 5)
+                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_degenerate", 20, 5)
+                         out(" corrupt pleasure palace found!")
+                         -- break
                     end
                end
           end
