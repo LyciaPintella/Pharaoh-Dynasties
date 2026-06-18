@@ -1676,7 +1676,7 @@ function event_listener_functions:characters_in_regions()
                out("characters_in_regions(): character region is: " .. tostring(region:name()))
                local province = region:province()
                out("characters_in_regions() - character province is: " .. tostring(province:name()))
-            local character_owns_region = false
+               local character_owns_region = false
 
                -------------------------------------
                ---- PROVINCE UNDER CONSTRUCTION ----
