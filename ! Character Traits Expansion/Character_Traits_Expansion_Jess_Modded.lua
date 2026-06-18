@@ -1687,10 +1687,10 @@ function event_listener_functions:characters_in_regions()
                     out("Province under construction: character " .. tostring(character():onscreen_name()) .. " is present in province: " ..
                              tostring(character:region():province_name()) .. ". Character faction cqi:  " .. tostring(faction_cqi) .. ". Region owning faction CQI: " ..
                              tostring(region_owning_faction_cqi))
-                    for i = 0, province:region_list():num_items() - 1 do
+                    for i = 0, province:regions():num_items() - 1 do
                          out("Province under construction: Outer for loop started.")
                          if region_owning_faction_cqi == faction_cqi then
-                              local province_region = province:region_list():item_at(i)
+                              local province_region = province:regions():item_at(i)
                               for i = 0, province_region:slot_list():num_items() - 1 do
                                    local slot = province_region:slot_list():item_at(i)
                                    if slot:is_there_construction() then
@@ -2327,7 +2327,7 @@ function event_listener_functions:provincial_construction()
           local province = building:region():province()
           local settlement = building:region():settlement()
           local building_superchain_key = building:superchain()
-          for i = 0, province:region_list():num_items() - 1 do
+          for i = 0, province:regions():num_items() - 1 do
                if settlement:has_commander() then
                     local character = settlement:commander()
 
@@ -2420,8 +2420,8 @@ function event_listener_functions:weak_corrupt_governments()
      --------------------
      core:add_listener("character_traits_expansion_rebellion", "RegionRebels", true, function(context)
           local province = context:region():province()
-          for i = 0, province:region_list():num_items() - 1 do
-               local region = province:region_list():item_at(i)
+          for i = 0, province:regions():num_items() - 1 do
+               local region = province:regions():item_at(i)
                if region:has_settlement() and region:settlement():has_commander() then
                     local character = region:settlement():commander()
                     self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_disciplinarian", 20, 20)
