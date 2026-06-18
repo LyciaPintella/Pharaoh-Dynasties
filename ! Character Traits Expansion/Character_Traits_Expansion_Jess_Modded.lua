@@ -1676,20 +1676,26 @@ function event_listener_functions:characters_in_regions()
                out("characters_in_regions(): character region is: " .. tostring(region:name()))
                local province = region:province()
                out("characters_in_regions() - character province is: " .. tostring(province:name()))
+            local character_owns_region = false
 
                -------------------------------------
                ---- PROVINCE UNDER CONSTRUCTION ----
                -------------------------------------
                out("Characters in regions - Province under construction: Begin if statement. Character's region owning faction CQI: " ..
                         tostring(region_owning_faction_cqi) .. ". Character's faction CQI: " .. tostring(faction_cqi))
+
                if region_owning_faction_cqi == faction_cqi then
+                    character_owns_region = true
+                    out("Characters in regions - Province under construction: Debug check: character_owns_region is: " .. tostring(character_owns_region))
+               end
+               if character_owns_region == true then
                     local construction = false
                     out("Province under construction: character " .. tostring(character():onscreen_name()) .. " is present in province: " ..
                              tostring(character:region():province_name()) .. ". Character faction cqi:  " .. tostring(faction_cqi) .. ". Region owning faction CQI: " ..
                              tostring(region_owning_faction_cqi))
                     for i = 0, province:regions():num_items() - 1 do
                          out("Province under construction: Outer for loop started.")
-                         if region_owning_faction_cqi == faction_cqi then
+                         if character_owns_region then
                               local province_region = province:regions():item_at(i)
                               for i = 0, province_region:slot_list():num_items() - 1 do
                                    local slot = province_region:slot_list():item_at(i)
@@ -1973,7 +1979,7 @@ function event_listener_functions:characters_in_regions()
                ---- PRESENT IN REGION WITH HIGH/LOW PUBLIC ORDER ----
                -------------------------------------------------------------
                local public_order = region:public_order()
-               if char_is_general_with_army and character_has_region and character_is_in_settlement and region_owning_faction_cqi == faction_cqi then
+               if char_is_general_with_army and character_has_region and character_is_in_settlement and character_owns_region then
                     -- fix precedence: `not character:turns_in_own_regions() < 3` causes a boolean-number compare error
                     if character:turns_in_own_regions() >= 3 and character:military_force():active_stance() ~= "military_force_active_stance_type_muster" then
                          if public_order >= 75 then
