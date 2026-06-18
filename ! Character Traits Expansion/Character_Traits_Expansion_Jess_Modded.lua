@@ -1676,6 +1676,33 @@ function event_listener_functions:characters_in_regions()
                local province = region:province()
                out("characters_in_regions() - character province is: " .. tostring(province:name()))
 
+               -------------------------------------
+               ---- PROVINCE UNDER CONSTRUCTION ----
+               -------------------------------------
+               if character:region():owning_faction():command_queue_index() == character:faction():command_queue_index() then
+                    local construction = false
+                    out("Province under construction: character " .. character():onscreen_name() .. " is present in province: " .. character:region():province_name() ..
+                             ". Does their faction own their region: " ..
+                             tostring(character:region():owning_faction():command_queue_index() == character:faction():command_queue_index()))
+                    for i = 0, province:region_list():num_items() - 1 do
+                         out("Province under construction: Checking character " .. character():onscreen_name() ..
+                                  "'s province for construction. Does their faction own the region: " .. character:region():name() .. "? " ..
+                                  tostring(character:region():owning_faction():command_queue_index() == character:faction():command_queue_index()))
+
+                         if character:region():owning_faction():command_queue_index() == character:faction():command_queue_index() then
+                              local region = character:region()
+                              for i = 0, region:slot_list():num_items() - 1 do
+                                   local slot = region:slot_list():item_at(i)
+                                   if slot:is_there_construction() then
+                                        construction = true
+                                   end
+                              end
+                         end
+                    end
+                    out("Province under construction: construction in province: " .. tostring(construction))
+                    if construction == true then self.character_traits:apply_trait_by_chance(character, "phar_main_trait_cultured", 20, 6.66) end
+               end
+
                -------------------------------------------------------------------------
                ---- CALCULATE GENERAL BODYGUARD CASUALTIES FOR HESITANT CALCULATION ----
                -------------------------------------------------------------------------
@@ -2277,38 +2304,13 @@ function event_listener_functions:provincial_construction()
      ---- PROVINCE UNDER CONSTRUCTION ----
      -------------------------------------
      -- ! Lycia Construction Bookmark
+     --[[
      core:add_listener("character_traits_expansion_provoncial_construction", "CharacterEndTurn", true, function(context)
           local character = context:character()
-          local province = character:region():province()
-          local construction = false
+        local province = character:region():province()
 
-          if character:has_region() and character:region():owning_faction():command_queue_index() == character:faction():command_queue_index() then
-               out("Province under construction: character " .. character():onscreen_name() .. " is present in province: " .. character:region():province_name() ..
-                        ". Does their faction own their region: " .. tostring(character:region():owning_faction():command_queue_index() ==
-                        character:faction():command_queue_index()))
-            for i = 0, province:region_list():num_items() - 1 do
-                out("Province under construction: Checking character " .. character():onscreen_name() ..
-                    "'s province for construction. Does their faction own the region: " ..
-                    character:region():name() .. "? " ..
-                    tostring(character:region():owning_faction():command_queue_index() ==
-                    character:faction():command_queue_index()))
-
-                if character:region():owning_faction():command_queue_index() == character:faction():command_queue_index() then
-                    local region = character:region()
-                    for i = 0, region:slot_list():num_items() - 1 do
-                        local slot = region:slot_list():item_at(i)
-                        if slot:is_there_construction() then
-                            construction = true
-                            break
-                        end
-                    end
-                end
-            end
-		  out("Province under construction: construction in province: " .. tostring(construction))
-               if construction == true then self.character_traits:apply_trait_by_chance(character, "phar_main_trait_cultured", 20, 6.66) end
-          end
      end, true)
-
+--]]
      -----------------------------
      ---- BUILDING COMPLETED ----
      -----------------------------
