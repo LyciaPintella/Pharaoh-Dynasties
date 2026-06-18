@@ -1677,6 +1677,7 @@ function event_listener_functions:characters_in_regions()
                local province = region:province()
                out("characters_in_regions() - character province is: " .. tostring(province:name()))
                local character_owns_region = false
+               local construction = false
 
                -------------------------------------
                ---- PROVINCE UNDER CONSTRUCTION ----
@@ -1689,21 +1690,21 @@ function event_listener_functions:characters_in_regions()
                     out("Characters in regions - Province under construction: Debug check: character_owns_region is: " .. tostring(character_owns_region))
                end
                if character_owns_region == true then
-                    local construction = false
-                    out("Province under construction: character " .. tostring(character():onscreen_name()) .. " is present in province: " ..
+                    --[[out("Province under construction: character " .. tostring(character():onscreen_name()) .. " is present in province: " ..
                              tostring(character:region():province_name()) .. ". Character faction cqi:  " .. tostring(faction_cqi) .. ". Region owning faction CQI: " ..
-                             tostring(region_owning_faction_cqi))
+                             tostring(region_owning_faction_cqi))--]]
                     for i = 0, province:regions():num_items() - 1 do
                          out("Province under construction: Outer for loop started.")
                          if character_owns_region then
+                              out("Province under construction: character_owns_region if block fired")
                               local province_region = province:regions():item_at(i)
                               for i = 0, province_region:slot_list():num_items() - 1 do
+                                   out("Province under construction: or i = 0, province_region:slot_list():num_items() - 1 do block fired")
                                    local slot = province_region:slot_list():item_at(i)
                                    if slot:is_there_construction() then
                                         construction = true
                                         out(
-                                             "Province under construction: construction in province: found construction in a character's province. Setting construction to true: " ..
-                                                  tostring(construction))
+                                             "Province under construction: construction in province: found construction in a character's province. Setting construction to true:")
                                         break
                                    end
                               end
