@@ -1720,7 +1720,7 @@ function event_listener_functions:characters_in_regions()
                          end
                     end
                     out("Province under construction: construction in province is " .. tostring(construction) .. ". Applying cultured trait")
-                    if construction == true then self.character_traits:apply_trait_by_chance(character, "phar_main_trait_cultured", 20, 6.66) end
+                    if construction == true then self.character_traits:apply_trait_by_chance(character, "phar_main_trait_cultured", 20, 15) end
 
                     -------------------------------------------------------------------------
                     ---- CALCULATE GENERAL BODYGUARD CASUALTIES FOR HESITANT CALCULATION ----
