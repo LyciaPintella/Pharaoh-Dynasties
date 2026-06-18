@@ -478,7 +478,7 @@ end
 function event_listener_functions.character_traits:modify_phar_campaign_traits()
      -- Check if the config table exists to avoid any potential errors
      if campaign_traits and campaign_traits.config then
-          campaign_traits.config.max_num_traits = 20
+          campaign_traits.config.max_num_traits = 50
           out("max_num_traits has been set to " .. campaign_traits.config.max_num_traits)
      else
           out("event_listener_functions:modify_phar_campaign_traits Failed to find campaign_traits.config")
