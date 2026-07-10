@@ -1,10 +1,10 @@
 --[[
      ? This is a guide for what buildings make what items. I've kept the db tag for the buildings
      ? and items, and included their plain English names so you can know what items to expect.
-	
+
 ! Bazaar of the Arts: phar_main_common_general_12 (+2 Happiness), phar_main_rare_19 (+2 Happiness, +5% Replenishment in Encamp Stance), phar_main_rare_31 (-5% Attrition, +4 Workforce), phar_main_rare_42 (Senet Game Set: +2 Siege Holdout Time, +10% Unit Experience), phar_main_rare_7 (Supporter: +2 Influence, +1 Presence For General).
      * Variant: phar_main_all_province_management_happiness_type_c_3
-	
+
 ! Bronze Proving Hall: phar_main_common_equipment_axe, phar_main_common_equipment_club, phar_main_common_equipment_spear, phar_main_common_equipment_khopesh, phar_main_common_equipment_sword
      * Variant: phar_main_all_resource_production_bronze_mine_derivative_type_a_2
 
@@ -22,11 +22,11 @@
 
 ! Royal Bronze Worker / Royal Bronzeworker: phar_main_common_armour_heavy, phar_main_common_armour_light, phar_main_common_armour_medium
 	* Variants: phar_main_all_resource_production_modifier_bronze_3, phar_main_tausret_resource_production_modifier_bronze_3
-	
+
 ? These are all workforce cost reduction items for construction
 ! Royal Jeweller: phar_main_rare_30 (Nubian Jewelry: phar_main_rare_30 (Nubian Jewelry: -1 to idle workforce cost of municipal complex buildings, General aura size), phar_main_rare_43 (ranged upkeep reduction), phar_main_rare_49 (workforce cost reduction for resource production buildings.).
 	* Variants: phar_main_irsu_resource_production_gold_mine_derivative_type_b_1, phar_main_all_resource_production_gold_mine_derivative_type_b_1
-	
+
 ! Smugglers' Market / Smuggler's Market / Smugglers' Port / Smuggler's Port: phar_main_common_general_2 (5% rare ancillary chance), phar_main_common_general_8 (5% ancillary steal), Smuggler (phar_main_rare_12 - 35% LOS 5% ancillary steal), Saboteur (phar_main_rare_14 - Reduces enemy army movement in region), Poisoner (phar_main_rare_9 - reduces enemy army movement + bodyguard lethality.).
 	* Variant: phar_main_all_resource_production_port_coast_derivative_type_a_1
 
@@ -38,7 +38,7 @@
 ! Visitor's Quarters, Damokoros' Road Infrastructure: phar_main_common_general_22 (Scout: +35% Line of Sight), phar_main_common_general_24 (Tracker: -10% Enemy Movement in Region), phar_main_common_general_28 (Sandals: - Prayer Movement Restoration +20%), phar_main_common_general_7 (Devoted Taskmaster: +4 Influence), phar_main_common_general_9 (Trapper: -10% Enemy Movement in Region), phar_main_rare_1 (Libu Tracker: -10% Enemy Movement Range in Region & 5% Ambush Chance).
      * Variants: phar_main_all_province_management_roads_3, phar_map_bab_province_management_influence_roads_type_a_3, phar_map_myc_province_management_roads_3
 
-]]-- 
+]] --
 --[[
 Grand Temple of Amun - (phar_main_religion_cult_center_grand_temple_amun_1): Small Altar (phar_main_common_general_15 - +1 prayer duration).
 Grand Temple of Anubis - (phar_main_religion_cult_center_grand_temple_anubis_1): Small Altar (phar_main_common_general_15 - +1 prayer duration).
@@ -71,7 +71,7 @@ Grand Temple of Ninurta - (phar_map_religion_cult_center_grand_temple_ninurta_1)
 Grand Temple of Poseidon - (phar_map_religion_cult_center_grand_temple_poseidon_1): Small Altar (phar_main_common_general_15 - +1 prayer duration).
 Grand Temple of Zeus - (phar_map_religion_cult_center_grand_temple_zeus_1): Small Altar (phar_main_common_general_15 - +1 prayer duration).
 
-]]--
+]] --
 --[[
 
 ! Champion's Hall: phar_main_rare_15 (Duellist: +5% Ambush Defence Channce, XP for sword and khopesh units),  phar_main_rare_16 (Blind Veteran: +20% Ambush defence chance, XP for spear units), phar_main_rare_17 (Strongman - +2 Public Order, XP for axe and club units).
@@ -108,7 +108,7 @@ Granary, Provisioning Headquarters: phar_main_common_general_29 (Mining Hammer: 
 ? Native Barracks (Major Settlement) - (phar_map_all_military_native_type_a_haltamti_4): phar_main_rare_3 (Mitanni Horse Trainer, +20% movement to Force March and Full Speed stance, 325 XP per turn for chariots), phar_main_rare_5 (Assyrian Mercenary - +2 Influence, +15% Combat XP for all units)
 ? Native Barracks (Major Settlement) - (phar_map_all_military_native_type_a_mat_assur_4): phar_main_rare_3 (Mitanni Horse Trainer, +20% movement to Force March and Full Speed stance, 325 XP per turn for chariots), phar_main_rare_5 (Assyrian Mercenary - +2 Influence, +15% Combat XP for all units)
 ? Native Barracks (Major Settlement) - (phar_map_all_military_native_type_a_mat_tamti_4): phar_main_rare_3 (Mitanni Horse Trainer, +20% movement to Force March and Full Speed stance, 325 XP per turn for chariots), phar_main_rare_5 (Assyrian Mercenary - +2 Influence, +15% Combat XP for all units)
-	
+
 
 Oxen Cart Assembly:  phar_sea_rare_9, phar_main_common_general_22 (Scout: +35% Line of Sight), phar_main_common_general_24 (Tracker: -10% Enemy Movement in Region), phar_main_common_general_28 (Sandals: - Prayer Movement Restoration +20%), phar_main_common_general_7 (Devoted Taskmaster: +4 Influence), phar_main_common_general_9 (Trapper: 10% Enemy Movement in Region), phar_main_rare_1 (Libu Tracker: -10% Enemy Movement Range in Region & 5% Ambush Chance).
      * Variant: phar_sea_peleset_province_management_movement_production_boost_3
@@ -415,49 +415,28 @@ local building_spawn_chance = {
      ["phar_main_all_landmark_production_boost_tarsus_1"] = 8
 }
 
-core:add_listener("forge_detect", "FactionTurnStart", function(context)
-     out("Buildings Spawn Ancillaries Mod: INIT2.")
-     for building, anc_list in pairs(ancillary_master_list) do
-          if context:faction():building_exists(building) then
-               out("Buildings Spawn Ancillaries Mod: " .. building .. " detected for " .. context:faction():name())
-               return true
-          end
-     end
-     out("Buildings Spawn Ancillaries Mod: " .. context:faction():name() .. " has no tracked buildings.")
-     return false
-end, function(context)
-     out("Buildings Spawn Ancillaries Mod: Faction has at least one tracked building, but we need to check for others.")
-     local region_list = context:faction():region_list()
-
-     for building, anc_list in pairs(ancillary_master_list) do
-          out("Buildings Spawn Ancillaries Mod: checks for building " .. building)
-          local chances_to_spawn = return_building_number(building, region_list)
-          spawn_ancillaries(context:faction():name(), chances_to_spawn, anc_list, building)
-     end
-end, true)
-
 function return_building_number(building_key, region_list)
-     out("Buildings Spawn Ancillaries Mod: func called to find number of " .. building_key)
-     local number_to_return = 0
-     for i = 0, region_list:num_items() - 1 do
-          this_region = region_list:item_at(i)
+    out("Buildings Spawn Ancillaries Mod: func called to find number of " .. building_key)
+    local number_to_return = 0
+    for i = 0, region_list:num_items() - 1 do
+        this_region = region_list:item_at(i)
 
-          if this_region:building_exists(building_key) then
-               -- out("Buildings Spawn Ancillaries Mod: "..building_key.."detected in region")
-               local this_slot_list = this_region:slot_list()
+        if this_region:building_exists(building_key) then
+            -- out("Buildings Spawn Ancillaries Mod: "..building_key.."detected in region")
+            local this_slot_list = this_region:slot_list()
 
-               for j = 0, this_slot_list:num_items() - 1 do
-                    local this_slot = this_slot_list:item_at(j)
+            for j = 0, this_slot_list:num_items() - 1 do
+                local this_slot = this_slot_list:item_at(j)
 
-                    if this_slot:has_building() and this_slot:building():name() == building_key then
-                         out("Buildings Spawn Ancillaries Mod: " .. building_key .. "detected in slot")
-                         number_to_return = number_to_return + 1
-                    end
-               end
-          end
-     end
-     out("Buildings Spawn Ancillaries Mod: returning value of " .. number_to_return)
-     return number_to_return
+                if this_slot:has_building() and this_slot:building():name() == building_key then
+                    out("Buildings Spawn Ancillaries Mod: " .. building_key .. "detected in slot")
+                    number_to_return = number_to_return + 1
+                end
+            end
+        end
+    end
+    out("Buildings Spawn Ancillaries Mod: returning value of " .. number_to_return)
+    return number_to_return
 end
 
 function spawn_ancillaries(faction, chances, ancillary_list, building)
@@ -478,3 +457,24 @@ function spawn_ancillaries(faction, chances, ancillary_list, building)
           end
      end
 end
+
+core:add_listener("forge_detect", "FactionTurnStart", function(context)
+     out("Buildings Spawn Ancillaries Mod: INIT2.")
+     for building, anc_list in pairs(ancillary_master_list) do
+          if context:faction():building_exists(building) then
+               out("Buildings Spawn Ancillaries Mod: " .. building .. " detected for " .. context:faction():name())
+               return true
+          end
+     end
+     out("Buildings Spawn Ancillaries Mod: " .. context:faction():name() .. " has no tracked buildings.")
+     return false
+end, function(context)
+     out("Buildings Spawn Ancillaries Mod: Faction has at least one tracked building, but we need to check for others.")
+     local region_list = context:faction():region_list()
+
+     for building, anc_list in pairs(ancillary_master_list) do
+          out("Buildings Spawn Ancillaries Mod: checks for building " .. building)
+          local chances_to_spawn = return_building_number(building, region_list)
+          spawn_ancillaries(context:faction():name(), chances_to_spawn, anc_list, building)
+     end
+end, true)
