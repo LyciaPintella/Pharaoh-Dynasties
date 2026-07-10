@@ -299,7 +299,8 @@ local ancillary_master_list = {
 }
 
 local building_spawn_chance = {
-     -- ["building_id"] = number
+    -- ["building_id"] = number
+	["phar_main_all_resource_production_bronze_mine_type_b_1"] = 3,
      ["phar_main_all_resource_production_bronze_mine_derivative_type_a_2"] = 3,
      ["phar_main_all_resource_production_modifier_bronze_3"] = 3,
      ["phar_main_tausret_resource_production_modifier_bronze_3"] = 3,
@@ -420,14 +421,14 @@ function return_building_number(building_key, region_list)
           this_region = region_list:item_at(i)
 
           if this_region:building_exists(building_key) then
-               -- out("anc_mod: "..building_key.."detected in region")
+               -- out("anc_mod: "..building_key.." detected in region")
                local this_slot_list = this_region:slot_list()
 
                for j = 0, this_slot_list:num_items() - 1 do
                     local this_slot = this_slot_list:item_at(j)
 
                     if this_slot:has_building() and this_slot:building():name() == building_key then
-                         out("anc_mod: " .. building_key .. "detected in slot")
+                         out("anc_mod: " .. building_key .. " detected in slot")
                          number_to_return = number_to_return + 1
                     end
                end
