@@ -2338,12 +2338,13 @@ function event_listener_functions:provincial_construction()
      -----------------------------
      ---- BUILDING COMPLETED ----
      -----------------------------
-     core:add_listener("character_traits_expansion_BUILDING_COMPLETED", "BuildingCompleted", true, function(context)
+     core:add_listener("character_traits_expansion_building_completed", "BuildingCompleted", true, function(context)
           local building = context:building()
           local province = building:region():province()
-          local settlement = building:region():settlement()
-          local building_superchain_key = building:superchain()
-          for i = 0, province:regions():num_items() - 1 do
+		local building_superchain_key = building:superchain()
+		-- ! Lycia Bookmark
+		for i = 0, province:regions():num_items() - 1 do
+			local settlement = province:regions():item_at(i):settlement()
                if settlement:has_commander() then
                     local character = settlement:commander()
 
