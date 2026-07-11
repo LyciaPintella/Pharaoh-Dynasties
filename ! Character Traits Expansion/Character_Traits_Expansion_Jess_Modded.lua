@@ -1467,7 +1467,7 @@ function event_listener_functions:battle()
           if attacker:faction():is_allowed_to_capture_territory() then
                if cm:char_is_general_with_army(attacker) and attacker:faction():has_home_region() then
                     local home = attacker:faction():home_region():settlement()
-                    local distance = 750
+                    local distance = 650
                     local home_x = home:logical_position_x()
                     local home_y = home:logical_position_y()
                     local attacker_x = attacker:logical_position_x()
@@ -1483,7 +1483,7 @@ function event_listener_functions:battle()
           if defender:faction():is_allowed_to_capture_territory() then
                if cm:char_is_general_with_army(defender) and defender:faction():has_home_region() then
                     local home = defender:faction():home_region():settlement()
-                    local distance = 750
+                    local distance = 650
                     local defender_x = defender:logical_position_x()
                     local defender_y = defender:logical_position_y()
                     local home_x = home:logical_position_x()
