@@ -1475,7 +1475,7 @@ function event_listener_functions:battle()
 				if distance and distance_squared(attacker:logical_position_x(), attacker:logical_position_y(), home:logical_position_x(), home:logical_position_y()) >= distance * distance then
                     --if distance and distance_squared(attacker_x, attacker_y, home_x, home_y) >= distance * distance then
                          self.character_traits:apply_trait_by_chance(attacker, "character_traits_expansion_trait_campaigner", 20, 20)
-                         out("attacker fought battle far from capital")
+                         out("attacker fought battle far from capital, applying campaigner trait")
                     end
                end
           end
@@ -1491,7 +1491,7 @@ function event_listener_functions:battle()
 				if distance and distance_squared(defender:logical_position_x(), defender:logical_position_y(), home:logical_position_x(), home:logical_position_y()) >= distance * distance then
                     --if distance and distance_squared(defender_x, defender_y, home_x, home_y) >= distance * distance then
                          self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_campaigner", 20, 20)
-                         out("defender fought battle far from capital")
+                         out("defender fought battle far from capital, applying campaigner trait")
                     end
                end
           end
