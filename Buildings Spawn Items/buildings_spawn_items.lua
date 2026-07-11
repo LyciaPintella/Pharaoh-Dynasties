@@ -8,7 +8,10 @@
 ! Bronze Proving Hall: phar_main_common_equipment_axe, phar_main_common_equipment_club, phar_main_common_equipment_spear, phar_main_common_equipment_khopesh, phar_main_common_equipment_sword
      * Variant: phar_main_all_resource_production_bronze_mine_derivative_type_a_2
 
-! Bronzeworker's District / Bronzeworkers' District: phar_main_common_shield_large, phar_main_common_shield_medium, z_bodyguard_common_equipment_two_handed_axe, z_bodyguard_common_equipment_two_handed_club, z_bodyguard_common_equipment_two_handed_spear, z_bodyguard_common_equipment_two_handed_sword
+! Bronzeworker's District / Bronzeworkers' District:
+! phar_main_common_shield_large, phar_main_common_shield_medium,
+! z_bodyguard_common_equipment_two_handed_axe, z_bodyguard_common_equipment_two_handed_club,
+! z_bodyguard_common_equipment_two_handed_spear, z_bodyguard_common_equipment_two_handed_sword
 	* Variant: phar_main_all_resource_production_bronze_mine_type_b_1
 
 ! Cedar Warehouse: phar_main_common_equipment_bow, phar_main_common_equipment_chariot, phar_main_common_shield_large, phar_main_common_shield_medium, phar_main_common_shield_small, phar_main_common_equipment_spear.
