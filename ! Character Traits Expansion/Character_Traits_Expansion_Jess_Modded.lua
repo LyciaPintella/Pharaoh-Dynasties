@@ -1453,10 +1453,6 @@ function event_listener_functions:battle()
           --------------------------------
           ---- BATTLES AGAINST REBELS ----
           --------------------------------
-          local battle = context:pending_battle()
-          local attacker = battle:attacker()
-          local defender = battle:defender()
-
           if attacker:faction():is_rebel() and attacker:won_battle() == false then
                self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_authoritarian", 20, 30)
                out("battle_against_rebels_defender_gains_authoritarian_trait")
@@ -1476,9 +1472,10 @@ function event_listener_functions:battle()
                     local home_y = home:logical_position_y()
                     local attacker_x = attacker:logical_position_x()
                     local attacker_y = attacker:logical_position_y()
-                    if distance and distance_squared(attacker_x, attacker_y, home_x, home_y) >= distance * distance then
+				if distance and distance_squared(attacker:logical_position_x(), attacker:logical_position_y(), home:logical_position_x(), home:logical_position_y()) >= distance * distance then
+                    --if distance and distance_squared(attacker_x, attacker_y, home_x, home_y) >= distance * distance then
                          self.character_traits:apply_trait_by_chance(attacker, "character_traits_expansion_trait_campaigner", 20, 20)
-                         out("character_traits_expansion battle fought far from capital")
+                         out("attacker fought battle far from capital")
                     end
                end
           end
@@ -1491,9 +1488,10 @@ function event_listener_functions:battle()
                     local defender_y = defender:logical_position_y()
                     local home_x = home:logical_position_x()
                     local home_y = home:logical_position_y()
-                    if distance and distance_squared(defender_x, defender_y, home_x, home_y) >= distance * distance then
+				if distance and distance_squared(defender:logical_position_x(), defender:logical_position_y(), home:logical_position_x(), home:logical_position_y()) >= distance * distance then
+                    --if distance and distance_squared(defender_x, defender_y, home_x, home_y) >= distance * distance then
                          self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_campaigner", 20, 20)
-                         out("character_traits_expansion battle fought far from capital")
+                         out("defender fought battle far from capital")
                     end
                end
           end
