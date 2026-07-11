@@ -321,10 +321,10 @@ local MANAGEMENT_BUILDING_SUPERCHAINS_SET = {
 cm:add_first_tick_callback(function()
      -- Check if the config table exists to avoid any potential errors
 	if campaign_traits and campaign_traits.config then
-		campaign_traits.config.max_num_traits = 20
-		out("HCP_max_num_traits has been set to " .. campaign_traits.config.max_num_traits)
+		campaign_traits.config.max_num_traits = 30
+		out("max_num_traits has been set to " .. campaign_traits.config.max_num_traits)
 	else
-		out("HCP_Mod: Failed to find campaign_traits.config")
+		out("Failed to find campaign_traits.config")
 	end
 
      -- Injects my custom traits into the vanilla civilian_traits table so I don't need to worry about giving traits to them.
