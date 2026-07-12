@@ -1377,7 +1377,7 @@ function event_listener_functions:battle()
                     out("failed ambush battle: attacker won, applying blunt and unlucky traits")
                else
                     self.character_traits:apply_trait_by_chance(attacker, "phar_main_trait_blunt", 20, 20)
-                    self.character_traits:apply_trait_by_chance(attacker, "character_traits_expansion_trait_unlucky", 20, 15)
+                    self.character_traits:apply_trait_by_chance(attacker, "character_traits_expansion_trait_unlucky", 20, 20)
                     self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_lucky", 20, 20)
                     out("failed_ambush_battle_detected_attacker_lost")
                end
