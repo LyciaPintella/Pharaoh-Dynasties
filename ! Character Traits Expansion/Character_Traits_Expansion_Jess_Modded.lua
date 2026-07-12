@@ -1339,8 +1339,8 @@ function event_listener_functions:battle()
                if attacker:won_battle() then
                     self.character_traits:apply_trait_by_chance(attacker, "character_traits_expansion_trait_siege_victory", 20, 20)
                else
-                    self.character_traits:apply_trait_by_chance(attacker, "character_traits_expansion_trait_siege_defeat", 20, 50)
-                    self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_siege_defense_victory", 20, 20)
+                    self.character_traits:apply_trait_by_chance(attacker, "character_traits_expansion_trait_siege_defeat", 20, 35)
+                    self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_siege_defense_victory", 20, 35)
                end
                return
           end
@@ -1356,14 +1356,14 @@ function event_listener_functions:battle()
                     self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_survivor", 20, 15)
                     self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_military_admin_bad", 20, 15)
                     self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_paranoia", 20, 12.5)
-                    out("ambush_battle_detected_attacker_won")
+                    out("ambush_battle: attacker won")
                else
                     self.character_traits:apply_trait_by_chance(attacker, "character_traits_expansion_trait_military_admin_bad", 20, 20)
                     self.character_traits:apply_trait_by_chance(attacker, "character_traits_expansion_trait_unlucky", 20, 15)
                     self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_lucky", 20, 35)
                     self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_survivor", 20, 30)
                     self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_paranoia", 20, 7.5)
-                    out("ambush_battle_detected_attacker_lost")
+                    out("ambush_battle: defender won")
                end
           end
 
@@ -1373,9 +1373,8 @@ function event_listener_functions:battle()
           if battle:failed_ambush_battle() then
                if attacker:won_battle() then
                     self.character_traits:apply_trait_by_chance(attacker, "phar_main_trait_blunt", 20, 20)
-                    self.character_traits:apply_trait_by_chance(attacker, "character_traits_expansion_trait_unlucky", 20, 20)
                     self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_unlucky", 20, 25)
-                    out("failed_ambush_battle_detected_attacker_won")
+                    out("failed ambush battle: attacker won, applying blunt and unlucky traits")
                else
                     self.character_traits:apply_trait_by_chance(attacker, "phar_main_trait_blunt", 20, 20)
                     self.character_traits:apply_trait_by_chance(attacker, "character_traits_expansion_trait_unlucky", 20, 15)
@@ -1407,11 +1406,11 @@ function event_listener_functions:battle()
           ------------------------------
           if battle:attacker_battle_result() == "pyrrhic_victory" then
                self.character_traits:apply_trait_by_chance(attacker, "phar_main_trait_blunt", 20, 15)
-               out("character_traits_expansion attacker won battle with a pyrrhic victory so applying traits")
+               out("character_traits_expansion attacker won battle with a pyrrhic victory so applying blunt trait")
           end
           if battle:defender_battle_result() == "pyrrhic_victory" then
                self.character_traits:apply_trait_by_chance(defender, "phar_main_trait_blunt", 20, 15)
-               out("character_traits_expansion defender won battle with a pyrrhic victory so applying traits")
+               out("character_traits_expansion defender won battle with a pyrrhic victory so applying blunt trait")
           end
 
           ------------------------------
@@ -1419,11 +1418,11 @@ function event_listener_functions:battle()
           ------------------------------
           if battle:attacker_battle_result() == "valiant_defeat" then
                self.character_traits:apply_trait_by_chance(attacker, "character_traits_expansion_trait_survivor", 20, 15)
-               out("character_traits_expansion attacker lost battle with a valiant defeat so applying traits")
+               out("character_traits_expansion attacker lost battle with a valiant defeat so applying survivor trait")
           end
           if battle:defender_battle_result() == "valiant_defeat" then
                self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_survivor", 20, 15)
-               out("character_traits_expansion defender lost battle with a valiant defeat so applying traits")
+               out("character_traits_expansion defender lost battle with a valiant defeat so applying survivor trait")
           end
 
           ------------------------------
@@ -1431,11 +1430,11 @@ function event_listener_functions:battle()
           ------------------------------
           if battle:attacker_battle_result() == "close_victory" then
                self.character_traits:apply_trait_by_chance(attacker, "character_traits_expansion_trait_disciplinarian", 20, 15)
-               out("character_traits_expansion attacker won battle with a close victory so applying traits")
+               out("character_traits_expansion attacker won battle with a close victory so applying disciplinarian trait")
           end
           if battle:defender_battle_result() == "close_victory" then
                self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_disciplinarian", 20, 15)
-               out("character_traits_expansion defender won battle with a close victory so applying traits")
+               out("character_traits_expansion defender won battle with a close victory so applying disciplinarian trait")
           end
 
           ----------------------
@@ -1443,11 +1442,11 @@ function event_listener_functions:battle()
           ----------------------
           if battle:attacker_battle_result() == "close_defeat" then
                self.character_traits:apply_trait_by_chance(attacker, "character_traits_expansion_trait_bad_disciplinarian", 20, 10)
-               out("character_traits_expansion attacker lost battle with a close defeat so applying traits")
+               out("character_traits_expansion attacker lost battle with a close defeat so applying bad disciplinarian trait")
           end
           if battle:defender_battle_result() == "close_defeat" then
                self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_bad_disciplinarian", 20, 10)
-               out("character_traits_expansion defender lost battle with a close defeat so applying traits")
+               out("character_traits_expansion defender lost battle with a close defeat so applying bad disciplinarian trait")
           end
 
           --------------------------------
@@ -1504,13 +1503,13 @@ function event_listener_functions:battle()
 
           if reinforcing_attackers:is_empty() then
                self.character_traits:apply_trait_by_chance(attacker, "phar_main_trait_individualistic", 20, 20)
-               out("character_traits_expansion battle fought alone")
+               out("character_traits_expansion battle fought alone, applying individualistic trait")
           end
 
           local reinforcing_defenders = battle:secondary_defenders()
           if reinforcing_defenders:is_empty() then
                self.character_traits:apply_trait_by_chance(defender, "phar_main_trait_individualistic", 20, 20)
-               out("character_traits_expansion battle fought alone")
+               out("character_traits_expansion battle fought alone, applying individualistic trait")
           end
 
           ---------------------------------
@@ -1523,7 +1522,7 @@ function event_listener_functions:battle()
                for i = 0, reinforcing_attackers:num_items() - 1 do
                     local character = reinforcing_attackers:item_at(i)
                     self.character_traits:apply_trait_by_chance(character, "phar_main_trait_cooperative", 20, 15)
-                    out("character_traits_expansion battle reinforced other army")
+                    out("character_traits_expansion battle reinforced other army, applying cooperative trait")
                end
           end
 
@@ -1532,7 +1531,7 @@ function event_listener_functions:battle()
                for i = 0, reinforcing_defenders:num_items() - 1 do
                     local character = reinforcing_defenders:item_at(i)
                     self.character_traits:apply_trait_by_chance(character, "phar_main_trait_cooperative", 20, 15)
-                    out("character_traits_expansion battle reinforced other army")
+                    out("character_traits_expansion battle reinforced other army, applying cooperative trait")
                end
           end
 
@@ -1545,14 +1544,14 @@ function event_listener_functions:battle()
           if not reinforcing_attackers:is_empty() and not battle:attacker():is_null_interface() then
                self.character_traits:apply_trait_by_chance(attacker, "phar_main_trait_cooperative", 20, 15)
                self.character_traits:apply_trait_by_chance(attacker, "character_traits_expansion_trait_trusting", 20, 15)
-               out("character_traits_expansion battle reinforced by other army")
+               out("character_traits_expansion battle reinforced by other army, applying cooperative and trusting traits")
           end
 
           local reinforcing_defenders = battle:secondary_defenders()
           if not reinforcing_defenders:is_empty() and not battle:defender():is_null_interface() then
                self.character_traits:apply_trait_by_chance(defender, "phar_main_trait_cooperative", 20, 20)
                self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_trusting", 20, 15)
-               out("character_traits_expansion battle reinforced by other army")
+               out("character_traits_expansion battle reinforced by other army, applying cooperative and trusting traits")
           end
 
           -- ---------------------------------
