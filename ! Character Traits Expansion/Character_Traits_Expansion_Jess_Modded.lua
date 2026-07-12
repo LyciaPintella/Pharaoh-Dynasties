@@ -2503,7 +2503,7 @@ function event_listener_functions:self_perpetuating_traits()
           ----------------------------------
           for i = 1, #self_perpetuating_traits do
                if character:has_trait(self_perpetuating_traits[i]) then
-                    self.character_traits:apply_trait_by_chance(character, self_perpetuating_traits[i], 20, 3.75)
+                    self.character_traits:apply_trait_by_chance(character, self_perpetuating_traits[i], 20, 5)
                     out("character_" .. character:onscreen_name() .. " has self perpetuating trait: " .. self_perpetuating_traits[i])
                end
           end
