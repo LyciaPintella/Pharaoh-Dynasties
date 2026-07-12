@@ -1208,7 +1208,7 @@ function event_listener_functions:battle()
           end
 
           if character:fought_in_battle() == false then
-               self.character_traits:apply_trait_by_chance(character, "phar_main_trait_cowardly", 20, 7.5)
+               self.character_traits:apply_trait_by_chance(character, "phar_main_trait_cowardly", 20, 10)
                out("CHARACTER_COMPLETED_BATTLE_COWARD_DID_NOT_FIGHT")
           end
 
@@ -1216,7 +1216,7 @@ function event_listener_functions:battle()
           ---- ENERGETIC TRAIT ----
           -------------------------
           if character:fought_in_battle() then
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_energetic", 20, 15)
+               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_energetic", 20, 20)
                out("CHARACTER_COMPLETED_BATTLE_ENERGETIC")
           end
 
@@ -1224,10 +1224,10 @@ function event_listener_functions:battle()
           ---- POPULAR/UNPOPULAR TRAIT ----
           -------------------------------
           if character:won_battle() then
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 7.5)
+               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 20)
                out("CHARACTER_COMPLETED_BATTLE_POPULAR")
           else
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 7.5)
+               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 20)
                out("CHARACTER_COMPLETED_BATTLE_UNPOPULAR")
           end
 
@@ -1236,12 +1236,12 @@ function event_listener_functions:battle()
           ------------------------------
           local casualties_percent = character:percentage_of_own_alliance_killed()
           if casualties_percent >= 0.70 then
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bloody", 20, 20)
+               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bloody", 20, 25)
                self.character_traits:apply_trait_by_chance(character, "phar_main_trait_reckless", 20, 25)
                out("CHARACTER_COMPLETED_BATTLE_BLOODY")
           elseif casualties_percent >= 0.55 then
                self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bloody", 20, 17.5)
-               self.character_traits:apply_trait_by_chance(character, "phar_main_trait_reckless", 20, 20)
+               self.character_traits:apply_trait_by_chance(character, "phar_main_trait_reckless", 20, 17.5)
                out("CHARACTER_COMPLETED_BATTLE_BLOODY")
           elseif casualties_percent >= 0.4 then
                self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bloody", 20, 12.5)
@@ -1261,11 +1261,11 @@ function event_listener_functions:battle()
                          local percent_loss_trigger_high = 35
                          local percent_loss_trigger_low = 25
                          if character:fought_in_battle() and casualties_percent > percent_loss_trigger_high then
-                              self.character_traits:apply_trait_by_chance(character, "phar_main_trait_brave", 20, 15)
+                              self.character_traits:apply_trait_by_chance(character, "phar_main_trait_brave", 20, 20)
                               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_scarred", 20, 15)
                               out("high_bodyguard_casualties_applying_brave_and_scarred")
                          elseif character:fought_in_battle() and casualties_percent < percent_loss_trigger_low then
-                              self.character_traits:apply_trait_by_chance(character, "phar_main_trait_cautious", 20, 3.75)
+                              self.character_traits:apply_trait_by_chance(character, "phar_main_trait_cautious", 20, 12.5)
                               out("low_bodyguard_casualties")
                          end
                     end
@@ -2242,7 +2242,7 @@ function event_listener_functions:misc()
           ---- at sea ----
           ----------------
           if character:is_at_sea() then
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_sea_legs", 20, 25)
+               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_sea_legs", 20, 20)
                out("char_is_at_sea_applying_trait")
           end
      end, true)
@@ -2273,22 +2273,22 @@ function event_listener_functions:pillage_and_conquest()
      core:add_listener("character_traits_expansion_character_looted_settlement", "CharacterLootedSettlement", true, function(context)
           if cm:char_is_general_with_army(context:character()) then
                self.character_traits:apply_trait_by_chance(context:character(), "phar_main_trait_materialistic", 20, 35);
-               self.character_traits:apply_trait_by_chance(context:character(), "character_traits_expansion_trait_authoritarian", 20, 35);
+               self.character_traits:apply_trait_by_chance(context:character(), "character_traits_expansion_trait_authoritarian", 20, 25);
                out("character_looted_settlement")
           end
      end, true)
 
      core:add_listener("character_traits_expansion_character_sacked_settlement", "CharacterSackedSettlement", true, function(context)
           if cm:char_is_general_with_army(context:character()) then
-               self.character_traits:apply_trait_by_chance(context:character(), "phar_main_trait_barbaric", 20, 35);
+               self.character_traits:apply_trait_by_chance(context:character(), "phar_main_trait_barbaric", 20, 20);
                out("character_sacked_settlement")
           end
      end, true)
 
      core:add_listener("character_traits_expansion_character_razed_settlement", "CharacterRazedSettlement", true, function(context)
           if cm:char_is_general_with_army(context:character()) then
-               self.character_traits:apply_trait_by_chance(context:character(), "phar_main_trait_barbaric", 20, 50);
-               self.character_traits:apply_trait_by_chance(context:character(), "character_traits_expansion_trait_authoritarian", 20, 3);
+               self.character_traits:apply_trait_by_chance(context:character(), "phar_main_trait_barbaric", 20, 25);
+               self.character_traits:apply_trait_by_chance(context:character(), "character_traits_expansion_trait_authoritarian", 20, 20);
                out("character_razed_settlement")
           end
      end, true)
