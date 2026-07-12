@@ -1771,7 +1771,7 @@ function event_listener_functions:characters_in_regions()
                          local character_faction_cqi = faction_cqi
                          local character_in_settlement = character:in_settlement()
 
-                         ------------------------------------
+					------------------------------------
                          ---- POPULAR/UNPOPULAR GOVERNOR ----
                          ------------------------------------
                          if character_in_settlement then
