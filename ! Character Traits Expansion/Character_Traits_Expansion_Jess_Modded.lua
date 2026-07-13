@@ -1224,10 +1224,10 @@ function event_listener_functions:battle()
           ---- POPULAR/UNPOPULAR TRAIT ----
           -------------------------------
           if character:won_battle() then
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 20)
+               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 12.5)
                out("CHARACTER_COMPLETED_BATTLE_POPULAR")
           else
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 20)
+               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 15)
                out("CHARACTER_COMPLETED_BATTLE_UNPOPULAR")
           end
 
@@ -1677,13 +1677,13 @@ function event_listener_functions:characters_in_regions()
                local faction = character:faction()
                local faction_cqi = faction:command_queue_index()
                out("characters_in_regions() - character is in a region, starting checks. Faction is: " .. tostring(faction:name()))
-               local region = character:region()
+			local region = character:region()
+			local public_order = region:public_order()
                local region_owning_faction_cqi = region:owning_faction():command_queue_index()
                out("characters_in_regions(): character region is: " .. tostring(region:name()))
                local province = region:province()
-               local province_name = region:province():name()
+
                out("characters_in_regions() - character province is: " .. tostring(province:name()))
-               local character_owns_region = false
                local construction = false
 
                -------------------------------------
@@ -1693,7 +1693,6 @@ function event_listener_functions:characters_in_regions()
                         tostring(region_owning_faction_cqi) .. ". Character's faction CQI: " .. tostring(faction_cqi))
 
                if region_owning_faction_cqi == faction_cqi then
-                    character_owns_region = true
                     --out("Characters in regions - Province under construction: Debug check: character_owns_region is: " .. tostring(character_owns_region))
                     for i = 0, province:regions():num_items() - 1 do
                          -- out("Province under construction: Outer for loop started.")
@@ -1777,37 +1776,37 @@ function event_listener_functions:characters_in_regions()
                          if character_in_settlement then
                               if char_is_general_with_army and character_has_region and region_owning_faction_cqi == character_faction_cqi then
                                    out("character_" .. character:onscreen_name() .. " is governor of region: " .. region:name())
-                                   if region:public_order() == 100 then
+                                   if public_order == 100 then
                                         self.character_traits:apply_trait_by_chance(character, "phar_main_trait_content", 20, 20);
                                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 30)
                                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 7.5)
                                         out("character_" .. character:onscreen_name() .. " ranked up in settlement with high public order. giving popular.")
-                                   elseif region:public_order() >= 80 then
+                                   elseif public_order >= 80 then
                                         self.character_traits:apply_trait_by_chance(character, "phar_main_trait_content", 20, 10);
                                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 12.5)
                                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_bad_disciplinarian", 20, 12.5)
                                         out("character_" .. character:onscreen_name() .. " ranked up in settlement with high public order. giving popular.")
-                                   elseif region:public_order() >= 65 then
+                                   elseif public_order >= 65 then
                                         self.character_traits:apply_trait_by_chance(character, "phar_main_trait_content", 20, 5);
                                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 5)
                                         out("character_" .. character:onscreen_name() .. " ranked up in settlement with high public order. giving popular.")
-                                   elseif region:public_order() >= 50 then
+                                   elseif public_order >= 50 then
                                         self.character_traits:apply_trait_by_chance(character, "phar_main_trait_content", 20, 2.5);
                                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_popular", 20, 2.5)
                                         out("character_" .. character:onscreen_name() .. " ranked up in settlement with high public order. giving popular.")
-                                   elseif region:public_order() <= -25 then
+                                   elseif public_order <= -25 then
                                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 5)
                                         out("character_" .. character:onscreen_name() .. " ranked up in settlement with low public order. giving unpopular.")
-                                   elseif region:public_order() <= -40 then
+                                   elseif public_order <= -40 then
                                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 15)
                                         out("character_" .. character:onscreen_name() .. " ranked up in settlement with low public order. giving unpopular.")
-                                   elseif region:public_order() <= -60 then
+                                   elseif public_order <= -60 then
                                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 22.5)
                                         out("character_" .. character:onscreen_name() .. " ranked up in settlement with low public order. giving unpopular.")
-                                   elseif region:public_order() <= -80 then
+                                   elseif public_order <= -80 then
                                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 30)
                                         out("character_" .. character:onscreen_name() .. " ranked up in settlement with low public order. giving unpopular.")
-                                   elseif region:public_order() == -100 then
+                                   elseif public_order == -100 then
                                         self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_unpopular", 20, 40)
                                         out("character_" .. character:onscreen_name() .. " ranked up in settlement with low public order. giving unpopular.")
                                    end
@@ -1894,7 +1893,7 @@ function event_listener_functions:characters_in_regions()
                                         local sober_chance = 1
                                         local drink_chance = 1
                                         out("character_" .. character:onscreen_name() .. " is governor of region: " .. region:name())
-                                        if region:public_order() >= 40 then
+                                        if public_order >= 40 then
                                              -- old characters are more likely to get lazy traits like in attila
                                              if character:age() > 50 then
                                                   drink_chance = drink_chance + 2
@@ -1985,7 +1984,6 @@ function event_listener_functions:characters_in_regions()
                -------------------------------------------------------------
                ---- PRESENT IN REGION WITH HIGH/LOW PUBLIC ORDER ----
                -------------------------------------------------------------
-               local public_order = region:public_order()
                if character_in_settlement then
                     -- fix precedence: `not character:turns_in_own_regions() < 3` causes a boolean-number compare error
                     if character:turns_in_own_regions() >= 3 and character:military_force():active_stance() ~= "military_force_active_stance_type_muster" then
