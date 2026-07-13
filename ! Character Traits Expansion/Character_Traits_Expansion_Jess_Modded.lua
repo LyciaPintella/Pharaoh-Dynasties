@@ -1212,11 +1212,12 @@ function event_listener_functions:battle()
                out("CHARACTER_COMPLETED_BATTLE_COWARD_DID_NOT_FIGHT")
           end
 
-          -------------------------
-          ---- ENERGETIC TRAIT ----
-          -------------------------
+          ----------------------------------------
+          ---- ENERGETIC & SWORDMASTER TRAITS ----
+          ----------------------------------------
           if character:fought_in_battle() then
-               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_energetic", 20, 20)
+               self.character_traits:apply_trait_by_chance(character, "character_traits_expansion_trait_energetic", 20, 12.5)
+               self.character_traits:apply_trait_by_chance(character, "phar_main_trait_brave", 20, 12.5)
                out("CHARACTER_COMPLETED_BATTLE_ENERGETIC")
           end
 
@@ -1471,8 +1472,9 @@ function event_listener_functions:battle()
                     local home_y = home:logical_position_y()
                     local attacker_x = attacker:logical_position_x()
                     local attacker_y = attacker:logical_position_y()
-				if distance and distance_squared(attacker:logical_position_x(), attacker:logical_position_y(), home:logical_position_x(), home:logical_position_y()) >= distance * distance then
-                    --if distance and distance_squared(attacker_x, attacker_y, home_x, home_y) >= distance * distance then
+                    if distance and distance_squared(attacker:logical_position_x(), attacker:logical_position_y(), home:logical_position_x(), home:logical_position_y()) >=
+                         distance * distance then
+                         -- if distance and distance_squared(attacker_x, attacker_y, home_x, home_y) >= distance * distance then
                          self.character_traits:apply_trait_by_chance(attacker, "character_traits_expansion_trait_campaigner", 20, 20)
                          out("attacker fought battle far from capital, applying campaigner trait")
                     end
@@ -1487,8 +1489,9 @@ function event_listener_functions:battle()
                     local defender_y = defender:logical_position_y()
                     local home_x = home:logical_position_x()
                     local home_y = home:logical_position_y()
-				if distance and distance_squared(defender:logical_position_x(), defender:logical_position_y(), home:logical_position_x(), home:logical_position_y()) >= distance * distance then
-                    --if distance and distance_squared(defender_x, defender_y, home_x, home_y) >= distance * distance then
+                    if distance and distance_squared(defender:logical_position_x(), defender:logical_position_y(), home:logical_position_x(), home:logical_position_y()) >=
+                         distance * distance then
+                         -- if distance and distance_squared(defender_x, defender_y, home_x, home_y) >= distance * distance then
                          self.character_traits:apply_trait_by_chance(defender, "character_traits_expansion_trait_campaigner", 20, 20)
                          out("defender fought battle far from capital, applying campaigner trait")
                     end
@@ -1677,8 +1680,8 @@ function event_listener_functions:characters_in_regions()
                local faction = character:faction()
                local faction_cqi = faction:command_queue_index()
                out("characters_in_regions() - character is in a region, starting checks. Faction is: " .. tostring(faction:name()))
-			local region = character:region()
-			local public_order = region:public_order()
+               local region = character:region()
+               local public_order = region:public_order()
                local region_owning_faction_cqi = region:owning_faction():command_queue_index()
                out("characters_in_regions(): character region is: " .. tostring(region:name()))
                local province = region:province()
@@ -1693,18 +1696,18 @@ function event_listener_functions:characters_in_regions()
                         tostring(region_owning_faction_cqi) .. ". Character's faction CQI: " .. tostring(faction_cqi))
 
                if region_owning_faction_cqi == faction_cqi then
-                    --out("Characters in regions - Province under construction: Debug check: character_owns_region is: " .. tostring(character_owns_region))
+                    -- out("Characters in regions - Province under construction: Debug check: character_owns_region is: " .. tostring(character_owns_region))
                     for i = 0, province:regions():num_items() - 1 do
                          -- out("Province under construction: Outer for loop started.")
                          if province:regions():item_at(i):owning_faction():command_queue_index() == faction_cqi then
-                              --out("Province under construction: character_owns_region if block fired")
+                              -- out("Province under construction: character_owns_region if block fired")
                               local province_region = province:regions():item_at(i)
                               for i = 0, province_region:slot_list():num_items() - 1 do
                                    -- out("Province under construction: or i = 0, province_region:slot_list():num_items() - 1 do block fired")
                                    local slot = province_region:slot_list():item_at(i)
                                    if slot:is_there_construction() then
                                         construction = true
-                                        --out("Province under construction: construction in province: found construction in province. Set construction to true:")
+                                        -- out("Province under construction: construction in province: found construction in province. Set construction to true:")
                                         break
                                    end
                               end
@@ -1770,7 +1773,7 @@ function event_listener_functions:characters_in_regions()
                          local character_faction_cqi = faction_cqi
                          local character_in_settlement = character:in_settlement()
 
-					------------------------------------
+                         ------------------------------------
                          ---- POPULAR/UNPOPULAR GOVERNOR ----
                          ------------------------------------
                          if character_in_settlement then
@@ -2336,10 +2339,10 @@ function event_listener_functions:provincial_construction()
      core:add_listener("character_traits_expansion_building_completed", "BuildingCompleted", true, function(context)
           local building = context:building()
           local province = building:region():province()
-		local building_superchain_key = building:superchain()
-		-- ! Lycia Bookmark
-		for i = 0, province:regions():num_items() - 1 do
-			local settlement = province:regions():item_at(i):settlement()
+          local building_superchain_key = building:superchain()
+          -- ! Lycia Bookmark
+          for i = 0, province:regions():num_items() - 1 do
+               local settlement = province:regions():item_at(i):settlement()
                if settlement:has_commander() then
                     local character = settlement:commander()
 
